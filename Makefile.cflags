@@ -49,8 +49,9 @@ ifeq ($(LTO),1)
 endif
 
 # Forbid common symbols to prevent accidental aliasing.
-CFLAGS += -fno-common
-
+ifneq (mcs51,$(TOOLCHAIN))
+	CFLAGS += -fno-common
+endif
 # Enable all default warnings
 CFLAGS += -Wall
 

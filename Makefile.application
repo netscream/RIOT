@@ -1,6 +1,10 @@
 MODULE = $(APPLICATION)
 
+ifneq (mcs51, $(TOOLCHAIN))
 DIRS += $(RIOTCPU)/$(CPU) $(RIOTBOARD)/$(BOARD)
 DIRS += $(RIOTBASE)/core $(RIOTBASE)/drivers $(RIOTBASE)/sys
-
+else
+DIRS += $(RIOTCPU)/$(CPU) $(RIOTBOARD)/$(BOARD)
+DIRS += $(RIOTBASE)/core8051 $(RIOTBASE)/drivers $(RIOTBASE)/sys8051
+endif
 include $(RIOTBASE)/Makefile.base
