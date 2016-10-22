@@ -19,11 +19,11 @@
 
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
-
+/* 8051 implementation */
 uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t accum_len)
 {
     uint32_t csum = sum;
-
+    int i = 0;
     DEBUG("inet_sum: sum = 0x%04" PRIx16 ", len = %" PRIu16, sum, len);
 #if ENABLE_DEBUG
 #ifdef MODULE_OD
@@ -44,7 +44,7 @@ uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t 
         accum_len++;
     }
 
-    for (int i = 0; i < (len >> 1); buf += 2, i++) {
+    for (i = 0; i < (len >> 1); buf += 2, i++) {
         csum += (uint16_t)(*buf << 8) + *(buf + 1); /* group bytes by 16-byte words */
                                                     /* and add them */
     }

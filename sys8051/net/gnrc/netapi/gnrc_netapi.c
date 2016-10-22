@@ -59,14 +59,16 @@ static inline int _get_set(kernel_pid_t pid, uint16_t type,
     return (int)ack.content.value;
 }
 
+/* 8051 implementation */
 static inline int _snd_rcv(kernel_pid_t pid, uint16_t type, gnrc_pktsnip_t *pkt)
 {
+    int ret = 0;
     msg_t msg;
     /* set the outgoing message's fields */
     msg.type = type;
     msg.content.ptr = (void *)pkt;
     /* send message */
-    int ret = msg_try_send(&msg, pid);
+    ret = msg_try_send(&msg, pid);
     if (ret < 1) {
         DEBUG("gnrc_netapi: dropped message to %" PRIkernel_pid " (%s)\n", pid,
               (ret == 0) ? "receiver queue is full" : "invalid receiver");

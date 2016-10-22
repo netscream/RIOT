@@ -34,18 +34,23 @@ static gnrc_netif_handler_t if_handler[] = {
 
 static kernel_pid_t ifs[GNRC_NETIF_NUMOF];
 
+/*8051 implementation */
 void gnrc_netif_init(void)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         ifs[i] = KERNEL_PID_UNDEF;
     }
 }
 
+/* 8051 implementation **/
 int gnrc_netif_add(kernel_pid_t pid)
 {
+    int i = 0;
+    int j = 0;
     kernel_pid_t *free_entry = NULL;
 
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ifs[i] == pid) {
             return 0;
         }
@@ -55,27 +60,28 @@ int gnrc_netif_add(kernel_pid_t pid)
     }
 
     if (!free_entry) {
-        return -ENOMEM;
+        return -12;
     }
 
     *free_entry = pid;
 
-    for (int j = 0; if_handler[j].add != NULL; j++) {
+    for (j = 0; if_handler[j].add != NULL; j++) {
         if_handler[j].add(pid);
     }
 
     return 0;
 }
 
+/* 8051 implementation */
 void gnrc_netif_remove(kernel_pid_t pid)
 {
-    int i;
-
+    int i = 0;
+    int j = 0;
     for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ifs[i] == pid) {
             ifs[i] = KERNEL_PID_UNDEF;
 
-            for (int j = 0; if_handler[j].remove != NULL; j++) {
+            for (j = 0; if_handler[j].remove != NULL; j++) {
                 if_handler[j].remove(pid);
             }
 
@@ -84,11 +90,12 @@ void gnrc_netif_remove(kernel_pid_t pid)
     }
 }
 
+/* 8051 implementation */
 size_t gnrc_netif_get(kernel_pid_t *netifs)
 {
     size_t size = 0;
-
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ifs[i] != KERNEL_PID_UNDEF) {
             netifs[size++] = ifs[i];
         }
@@ -97,9 +104,11 @@ size_t gnrc_netif_get(kernel_pid_t *netifs)
     return size;
 }
 
+/* 8051 implementation */
 bool gnrc_netif_exist(kernel_pid_t pid)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ifs[i] == pid) {
             return true;
         }

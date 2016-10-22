@@ -121,15 +121,17 @@ static inline void xtimer_usleep(uint32_t microseconds)
     _xtimer_sleep(microseconds, 0);
 }
 
-static inline void xtimer_usleep64(uint64_t microseconds)
+/* 8051 implementation */
+/*static inline void xtimer_usleep64(uint64_t microseconds)
 {
     _xtimer_sleep((uint32_t) microseconds, (uint32_t) (microseconds >> 32));
-}
+}*/
 
-static inline void xtimer_sleep(uint32_t seconds)
-{
+/* 8051 implementation */
+static inline void xtimer_sleep(uint32_t seconds);
+/*{
     xtimer_usleep64((uint64_t)seconds * SEC_IN_USEC);
-}
+}*/
 
 static inline void xtimer_nanosleep(uint32_t nanoseconds)
 {

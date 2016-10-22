@@ -132,7 +132,8 @@ extern "C" {
  *          RFC 4443, section 2.1
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -146,7 +147,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4443, section 3.1
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;               /**< message type */
     uint8_t code;               /**< message code */
     network_uint16_t csum;      /**< checksum */
@@ -161,7 +163,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4443, section 3.2
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -176,7 +179,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4443, section 3.3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;               /**< message type */
     uint8_t code;               /**< message code */
     network_uint16_t csum;      /**< checksum */
@@ -191,7 +195,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4443, section 3.3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -209,7 +214,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4443, section 4.2
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
