@@ -65,7 +65,8 @@ extern "C" {
  *          RFC 2460, section 3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     /**
      * @brief Version, traffic class, and flow label
      *
@@ -249,8 +250,8 @@ static inline uint8_t ipv6_hdr_get_tc_dscp(const ipv6_hdr_t *hdr)
 static inline void ipv6_hdr_set_fl(ipv6_hdr_t *hdr, uint32_t fl)
 {
     hdr->v_tc_fl.u8[1] &= 0xf0;
-    hdr->v_tc_fl.u8[1] |= (0x0f & (byteorder_htonl(fl).u8[1]));
-    hdr->v_tc_fl.u16[1] = byteorder_htonl(fl).u16[1];
+    hdr->v_tc_fl.u8[1] |= (0x0f & (byteorder_htonl(fl)->u8[1]));
+    hdr->v_tc_fl.u16[1] = byteorder_htonl(fl)->u16[1];
 }
 
 /**
@@ -262,7 +263,8 @@ static inline void ipv6_hdr_set_fl(ipv6_hdr_t *hdr, uint32_t fl)
  */
 static inline uint32_t ipv6_hdr_get_fl(const ipv6_hdr_t *hdr)
 {
-    return byteorder_ntohl(hdr->v_tc_fl) & 0x000fffff;
+    network_uint32_t tmp = { hdr->v_tc_fl.u32 }; 
+    return byteorder_ntohl(&tmp) & 0xfffff;
 }
 
 /**
@@ -285,10 +287,12 @@ static inline uint32_t ipv6_hdr_get_fl(const ipv6_hdr_t *hdr)
  *
  * @return  The non-normalized Internet Checksum of the given IPv6 pseudo header.
  */
+/* 8051 implementation */
 static inline uint16_t ipv6_hdr_inet_csum(uint16_t sum, ipv6_hdr_t *hdr,
                                           uint8_t prot_num, uint16_t len)
 {
-    if ((sum + len + prot_num) > 0xffff) {
+    uint32_t tmp = sum+len+prot_num;
+    if (tmp > 0xffff) {
         /* increment by one for overflow to keep it as 1's complement sum */
         sum++;
     }

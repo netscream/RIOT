@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "byteorder.h"
-//#include "net/ipv4/addr.h"
+#include "net/ipv4/addr.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -72,7 +72,7 @@ extern "C" {
  * @brief Data type to represent an IPv6 address.
  */
 /* 8051 implementation */
-typedef union ipv6_addr{
+typedef union {
     uint8_t u8[16];             /**< divided by 16 8-bit words. */
     network_uint16_t u16[8];    /**< divided by 8 16-bit words. */
     network_uint32_t u32[4];    /**< divided by 4 32-bit words. */
@@ -321,10 +321,10 @@ extern const ipv6_addr_t ipv6_addr_solicited_node_prefix;
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr);
-//{
-//    return (memcmp(addr, &ipv6_addr_unspecified, sizeof(ipv6_addr_t)) == 0);
-//}
+static inline uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_unspecified, sizeof(ipv6_addr_t)) == 0);
+}
 
 /**
  * @brief   Checks if @p addr is a loopback address.
@@ -339,10 +339,10 @@ static inline uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_loopback(const ipv6_addr_t *addr);
-//{
-//    return (memcmp(addr, &ipv6_addr_loopback, sizeof(ipv6_addr_t)) == 0);
-//}
+static inline bool ipv6_addr_is_loopback(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_loopback, sizeof(ipv6_addr_t)) == 0);
+}
 
 /**
  * @brief   Checks if @p addr is a IPv4-compatible IPv6 address.
@@ -357,11 +357,11 @@ static inline bool ipv6_addr_is_loopback(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_ipv4_compat(const ipv6_addr_t *addr);
-//{
-//    return (memcmp(addr, &ipv6_addr_unspecified,
-//                   sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t)) == 0);
-//}
+static inline bool ipv6_addr_is_ipv4_compat(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_unspecified,
+                   sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t)) == 0);
+}
 
 /**
  * @brief   Checks if @p addr is a IPv4-mapped IPv6 address.
@@ -376,12 +376,12 @@ static inline bool ipv6_addr_is_ipv4_compat(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implemenation */
-static inline bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr);
-//{
-//    return ((memcmp(addr, &ipv6_addr_unspecified,
-//                    sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t) - 2) == 0) &&
-//            (addr->u16[5].u16 == 0xffff));
-//}
+static inline bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr)
+{
+    return ((memcmp(addr, &ipv6_addr_unspecified,
+                    sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t) - 2) == 0) &&
+            (addr->u16[5].u16 == 0xffff));
+}
 
 /**
  * @brief   Check if @p addr is a multicast address.
@@ -396,10 +396,10 @@ static inline bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_multicast(const ipv6_addr_t *addr);
-//{
-//    return (addr->u8[0] == 0xff);
-//}
+static inline bool ipv6_addr_is_multicast(const ipv6_addr_t *addr)
+{
+    return (addr->u8[0] == 0xff);
+}
 
 /**
  * @brief   Check if @p addr is a link-local address.
@@ -417,12 +417,12 @@ static inline bool ipv6_addr_is_multicast(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_link_local(const ipv6_addr_t *addr);
-//{
-//    return (memcmp(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u64[0])) == 0) ||
-//           (ipv6_addr_is_multicast(addr) &&
-//            (addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
-//}
+static inline bool ipv6_addr_is_link_local(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u32)) == 0) ||
+           (ipv6_addr_is_multicast(addr) &&
+            (addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
+}
 
 /**
  * @brief   Checks if @p addr is a site-local address.
@@ -441,13 +441,15 @@ static inline bool ipv6_addr_is_link_local(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implemenation */
-static inline bool ipv6_addr_is_site_local(const ipv6_addr_t *addr);
-//{
-//    return (((byteorder_ntohs(addr->u16[0]) & 0xffc0) ==
-//             IPV6_ADDR_SITE_LOCAL_PREFIX) ||
-//            (ipv6_addr_is_multicast(addr) &&
-//             (addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_SITE_LOCAL));
-//}
+static inline bool ipv6_addr_is_site_local(const ipv6_addr_t *addr)
+{
+    network_uint16_t tmp = { addr->u16[0].u16 };
+    //return ((byteorder_ntohs(&tmp) & 0xffc0) == (uint16_t)IPV6_ADDR_SITE_LOCAL_PREFIX);
+    return (((byteorder_ntohs(&tmp) & 0xffc0) ==
+             IPV6_ADDR_SITE_LOCAL_PREFIX) ||
+            (ipv6_addr_is_multicast(addr) &&
+             (addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_SITE_LOCAL));
+}
 
 /**
  * @brief   Check if @p addr is unique local unicast address.
@@ -462,10 +464,10 @@ static inline bool ipv6_addr_is_site_local(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr);
-//{
-//    return ((addr->u8[0] == 0xfc) || (addr->u8[0] == 0xfd));
-//}
+static inline bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr)
+{
+    return ((addr->u8[0] == 0xfc) || (addr->u8[0] == 0xfd));
+}
 
 /**
  * @brief   Check if @p addr is global unicast address.
@@ -480,18 +482,18 @@ static inline bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_global(const ipv6_addr_t *addr);
-//{
+static inline bool ipv6_addr_is_global(const ipv6_addr_t *addr)
+{
     /* first check for multicast with global scope */
-//    if (ipv6_addr_is_multicast(addr)) {
-//        return ((addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_GLOBAL);
-//    }
-//    else {
-//        return !(ipv6_addr_is_link_local(addr) ||
-//                 ipv6_addr_is_unspecified(addr) ||
-//                 ipv6_addr_is_loopback(addr));
-//    }
-//}
+    if (ipv6_addr_is_multicast(addr)) {
+        return ((addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_GLOBAL);
+    }
+    else {
+        return !(ipv6_addr_is_link_local(addr) ||
+                 ipv6_addr_is_unspecified(addr) ||
+                 ipv6_addr_is_loopback(addr));
+    }
+}
 
 
 /**
@@ -507,11 +509,11 @@ static inline bool ipv6_addr_is_global(const ipv6_addr_t *addr);
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_solicited_node(const ipv6_addr_t *addr);
-//{
-//    return (memcmp(addr, &ipv6_addr_solicited_node_prefix,
-//                   sizeof(ipv6_addr_t) - 3) == 0);
-//}
+static inline bool ipv6_addr_is_solicited_node(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_solicited_node_prefix,
+                   sizeof(ipv6_addr_t) - 3) == 0);
+}
 
 
 /**
@@ -568,10 +570,10 @@ void ipv6_addr_init_iid(ipv6_addr_t *out, const uint8_t *iid, uint8_t bits);
  * @param[in,out] addr  The address to set.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_unspecified(ipv6_addr_t *addr);
-/*{
+static inline void ipv6_addr_set_unspecified(ipv6_addr_t *addr)
+{
     memset(addr, 0, sizeof(ipv6_addr_t));
-}**/
+}
 
 /**
  * @brief   Sets @p addr dynamically to the loopback IPv6 address (::1).
@@ -583,11 +585,11 @@ static inline void ipv6_addr_set_unspecified(ipv6_addr_t *addr);
  * @param[in,out] addr  The address to set.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_loopback(ipv6_addr_t *addr);
-/*{
+static inline void ipv6_addr_set_loopback(ipv6_addr_t *addr)
+{
     memset(addr, 0, sizeof(ipv6_addr_t));
     addr->u8[15] = 1;
-}*/
+}
 
 /**
  * @brief   Sets the first 64 bit of @p addr to link local prefix (fe08::/64).
