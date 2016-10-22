@@ -38,7 +38,8 @@ extern "C" {
  *          RFC 2460, section 4.1
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t nh;     /**< next header */
     uint8_t len;    /**< length in 8 octets without first octet */
 } ipv6_ext_t;

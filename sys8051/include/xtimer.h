@@ -72,7 +72,8 @@ static inline uint32_t xtimer_now(void);
  *
  * @return  current time as 64bit microsecond value
  */
-uint64_t xtimer_now64(void);
+/* 8051 implementation */
+//uint64_t xtimer_now64(void);
 
 /**
  * @brief get the current system time into a timex_t
@@ -120,7 +121,8 @@ static void xtimer_usleep(uint32_t microseconds);
  *
  * @param[in] microseconds  the amount of microseconds the thread should sleep
  */
-static inline void xtimer_usleep64(uint64_t microseconds);
+/* 8051 implementation */
+//static inline void xtimer_usleep64(uint64_t microseconds);
 
 /**
  * @brief Stop execution of a thread for some time
@@ -197,7 +199,8 @@ void xtimer_set_msg(xtimer_t *timer, uint32_t offset, msg_t *msg, kernel_pid_t t
  * @param[in] msg           ptr to msg that will be sent
  * @param[in] target_pid    pid the message will be sent to
  */
-void xtimer_set_msg64(xtimer_t *timer, uint64_t offset, msg_t *msg, kernel_pid_t target_pid);
+/* 8051 implementation */
+//void xtimer_set_msg64(xtimer_t *timer, uint64_t offset, msg_t *msg, kernel_pid_t target_pid);
 
 /**
  * @brief Set a timer that wakes up a thread
@@ -225,7 +228,8 @@ void xtimer_set_wakeup(xtimer_t *timer, uint32_t offset, kernel_pid_t pid);
  * @param[in] offset        microseconds from now
  * @param[in] pid           pid of the thread that will be woken up
  */
-void xtimer_set_wakeup64(xtimer_t *timer, uint64_t offset, kernel_pid_t pid);
+/* 8051 implementation */
+//void xtimer_set_wakeup64(xtimer_t *timer, uint64_t offset, kernel_pid_t pid);
 
 /**
  * @brief Set a timer to execute a callback at some time in the future
@@ -276,7 +280,8 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  *
  * @return       < 0 on error, other value otherwise
  */
-int xtimer_msg_receive_timeout64(msg_t *msg, uint64_t us);
+/* 8051 implementation */
+//int xtimer_msg_receive_timeout64(msg_t *msg, uint64_t us);
 
 /**
  * @brief xtimer backoff value

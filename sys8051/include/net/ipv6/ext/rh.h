@@ -50,7 +50,7 @@ extern "C" {
  *
  * @extends ipv6_ext_t
  */
-typedef struct __attribute__((packed)) {
+typedef struct {
     uint8_t nh;         /**< next header */
     uint8_t len;        /**< length in 8 octets without first octet */
     uint8_t type;       /**< identifier of a particular routing header type */
