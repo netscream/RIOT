@@ -1,0 +1,59 @@
+/home/hlynurhansen/Documents/RIOT/examples/wixel_hello-world/bin/cc2511/auto_init/auto_init.rel: \
+ /home/hlynurhansen/Documents/RIOT/sys/auto_init/auto_init.c \
+ /home/hlynurhansen/Documents/RIOT/sys/include/auto_init.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/debug.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/sched.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/bitarithm.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/kernel_types.h \
+ /home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/inttypes.h \
+ /home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/sys/types.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/native_sched.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/clist.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/list.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/thread.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/cib.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/assert.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/panic.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/msg.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/arch/thread_arch.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h \
+ /home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/cpu_conf.h
+
+/home/hlynurhansen/Documents/RIOT/sys/include/auto_init.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/debug.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/sched.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/bitarithm.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/kernel_types.h:
+
+/home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/inttypes.h:
+
+/home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/sys/types.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/native_sched.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/clist.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/list.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/thread.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/cib.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/assert.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/panic.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/msg.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/arch/thread_arch.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h:
+
+/home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/cpu_conf.h:

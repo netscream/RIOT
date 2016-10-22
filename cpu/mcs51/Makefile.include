@@ -1,0 +1,4 @@
+#All includes for the 8051 (mcs-51 architecture)
+
+INCLUDES += -I${RIOTCPU}/mcs51/include/
+include ${RIOTCPU}/Makefile.include.mcs51

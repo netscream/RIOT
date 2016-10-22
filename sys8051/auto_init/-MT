@@ -1,0 +1,83 @@
+auto_init.rel: \
+ /home/hlynurhansen/Documents/RIOT/sys/auto_init/auto_init.c \
+ /usr/local/bin/../share/sdcc/include/stdint.h \
+ /usr/local/bin/../share/sdcc/include/stdio.h \
+ /usr/local/bin/../share/sdcc/include/stdarg.h \
+ /usr/local/bin/../share/sdcc/include/sdcc-lib.h \
+ /usr/local/bin/../share/sdcc/include/asm/mcs51/features.h \
+ /home/hlynurhansen/Documents/RIOT/sys/include/auto_init.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/debug.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/sched.h \
+ /usr/local/bin/../share/sdcc/include/stddef.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/bitarithm.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/kernel_types.h \
+ /home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/inttypes.h \
+ /usr/local/bin/../share/sdcc/include/limits.h \
+ /home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/sys/types.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/native_sched.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/clist.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/list.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/thread.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/cib.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/assert.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/panic.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/msg.h \
+ /usr/local/bin/../share/sdcc/include/stdbool.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/arch/thread_arch.h \
+ /home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h \
+ /home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/cpu_conf.h
+
+/usr/local/bin/../share/sdcc/include/stdint.h:
+
+/usr/local/bin/../share/sdcc/include/stdio.h:
+
+/usr/local/bin/../share/sdcc/include/stdarg.h:
+
+/usr/local/bin/../share/sdcc/include/sdcc-lib.h:
+
+/usr/local/bin/../share/sdcc/include/asm/mcs51/features.h:
+
+/home/hlynurhansen/Documents/RIOT/sys/include/auto_init.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/debug.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/sched.h:
+
+/usr/local/bin/../share/sdcc/include/stddef.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/bitarithm.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/kernel_types.h:
+
+/home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/inttypes.h:
+
+/usr/local/bin/../share/sdcc/include/limits.h:
+
+/home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/sys/types.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/native_sched.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/clist.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/list.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/thread.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/cib.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/assert.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/panic.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/msg.h:
+
+/usr/local/bin/../share/sdcc/include/stdbool.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/arch/thread_arch.h:
+
+/home/hlynurhansen/Documents/RIOT/core/include/kernel_defines.h:
+
+/home/hlynurhansen/Documents/RIOT/cpu/mcs51/include/cpu_conf.h:

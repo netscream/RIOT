@@ -1,0 +1,7 @@
+export CPU = mcs51
+
+# Set default port depending on operating system (serial)
+PORT_LINUX ?= /dev/ttyACM0
+
+#setup serial terminal
+include ${RIOTBOARD}/Makefile.include.serial
