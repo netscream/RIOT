@@ -107,7 +107,8 @@ extern "C" {
  *          RFC 4861, section 4.1
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -122,7 +123,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.2
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;                       /**< message type */
     uint8_t code;                       /**< message code */
     network_uint16_t csum;              /**< checksum */
@@ -141,7 +143,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -157,7 +160,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.4
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -174,7 +178,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.5
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -189,7 +194,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.6
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;   /**< option type */
     uint8_t len;    /**< length in units of 8 octets */
 } ndp_opt_t;
@@ -205,7 +211,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.6.2
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;                   /**< option type */
     uint8_t len;                    /**< length in units of 8 octets */
     uint8_t prefix_len;             /**< prefix length */
@@ -224,7 +231,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.6.3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< option type */
     uint8_t len;            /**< length in units of 8 octets */
     uint8_t resv[6];        /**< reserved field */
@@ -238,7 +246,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 4861, section 4.6.4
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< option type */
     uint8_t len;            /**< length in units of 8 octets */
     network_uint16_t resv;  /**< reserved field */

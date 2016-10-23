@@ -42,9 +42,11 @@ static gnrc_pktqueue_t _pkt_nodes[GNRC_IPV6_NC_SIZE * 2];
  *
  * @return  A packet queue node.
  */
+/* 8051 implementation */
 static gnrc_pktqueue_t *_alloc_pkt_node(gnrc_pktsnip_t *pkt)
 {
-    for (size_t i = 0; i < sizeof(_pkt_nodes) / sizeof(gnrc_pktqueue_t); i++) {
+    size_t i = 0;
+    for (i = 0; i < sizeof(_pkt_nodes) / sizeof(gnrc_pktqueue_t); i++) {
         if ((_pkt_nodes[i].pkt == NULL) && (_pkt_nodes[i].next == NULL)) {
             _pkt_nodes[i].pkt = pkt;
 
@@ -150,11 +152,11 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
         /* address resolution */
         ipv6_addr_set_solicited_nodes(&dst_sol, next_hop_ip);
 
-        if (iface == KERNEL_PID_UNDEF) {
+        if (iface == KERNEL_PID_UNDEF) { /* 8051 implementation */
             kernel_pid_t ifs[GNRC_NETIF_NUMOF];
             size_t ifnum = gnrc_netif_get(ifs);
-
-            for (size_t i = 0; i < ifnum; i++) {
+            size_t i = 0;
+            for (i = 0; i < ifnum; i++) {
                 gnrc_ndp_internal_send_nbr_sol(ifs[i], NULL, next_hop_ip, &dst_sol);
             }
 

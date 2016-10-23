@@ -38,16 +38,19 @@ static void _callback_unlock_mutex(void* arg)
     mutex_unlock(mutex);
 }
 
+/* 8051 implementation */
 void _xtimer_sleep(uint32_t offset, uint32_t long_offset)
 {
+    xtimer_t timer;
+    mutex_t mutex;
     if (irq_is_in()) {
         assert(!long_offset);
         xtimer_spin(offset);
         return;
     }
 
-    xtimer_t timer;
-    mutex_t mutex = MUTEX_INIT;
+    //mutex = MUTEX_INIT;
+    mutex.queue.next = NULL;
 
     timer.callback = _callback_unlock_mutex;
     timer.arg = (void*) &mutex;
@@ -60,13 +63,16 @@ void _xtimer_sleep(uint32_t offset, uint32_t long_offset)
 
 void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period) {
     xtimer_t timer;
-    mutex_t mutex = MUTEX_INIT;
-
+    mutex_t mutex; //= MUTEX_INIT; /*8051 implementation*/
+    uint32_t target = 0;
+    uint32_t now = 0;
+    uint32_t offset = 0;
+    mutex.queue.next = NULL; /* 8051 implementation */
     timer.callback = _callback_unlock_mutex;
     timer.arg = (void*) &mutex;
 
-    uint32_t target = (*last_wakeup) + period;
-    uint32_t now = xtimer_now();
+    target = (*last_wakeup) + period;
+    now = xtimer_now();
     /* make sure we're not setting a value in the past */
     if (now < (*last_wakeup)) {
         /* base timer overflowed between last_wakeup and now */
@@ -100,7 +106,7 @@ void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period) {
      *
      * tl;dr Don't return too early!
      */
-    uint32_t offset = target - now;
+    offset = target - now;
     DEBUG("xps, now: %9" PRIu32 ", tgt: %9" PRIu32 ", off: %9" PRIu32 "\n", now, target, offset);
     if (offset < XTIMER_PERIODIC_SPIN) {
         xtimer_spin(offset);
@@ -145,11 +151,11 @@ void xtimer_set_msg(xtimer_t *timer, uint32_t offset, msg_t *msg, kernel_pid_t t
     xtimer_set(timer, offset);
 }
 
-void xtimer_set_msg64(xtimer_t *timer, uint64_t offset, msg_t *msg, kernel_pid_t target_pid)
+/*void xtimer_set_msg64(xtimer_t *timer, uint64_t offset, msg_t *msg, kernel_pid_t target_pid)
 {
     _setup_msg(timer, msg, target_pid);
     _xtimer_set64(timer, offset, offset >> 32);
-}
+}*/
 
 static void _callback_wakeup(void* arg)
 {
@@ -159,26 +165,26 @@ static void _callback_wakeup(void* arg)
 void xtimer_set_wakeup(xtimer_t *timer, uint32_t offset, kernel_pid_t pid)
 {
     timer->callback = _callback_wakeup;
-    timer->arg = (void*) ((intptr_t)pid);
+    //timer->arg = (void*) ((intptr_t)pid);
 
-    xtimer_set(timer, offset);
+    //xtimer_set(timer, offset);
 }
 
-void xtimer_set_wakeup64(xtimer_t *timer, uint64_t offset, kernel_pid_t pid)
+/*void xtimer_set_wakeup64(xtimer_t *timer, uint64_t offset, kernel_pid_t pid)
 {
     timer->callback = _callback_wakeup;
     timer->arg = (void*) ((intptr_t)pid);
 
     _xtimer_set64(timer, offset, offset >> 32);
-}
+}*/
 
-void xtimer_now_timex(timex_t *out)
+/*void xtimer_now_timex(timex_t *out)
 {
     uint64_t now = xtimer_now64();
-
+    
     out->seconds = div_u64_by_1000000(now);
     out->microseconds = now - (out->seconds * SEC_IN_USEC);
-}
+}*/
 
 /* Prepares the message to trigger the timeout.
  * Additionally, the xtimer_t struct gets initialized.
@@ -204,14 +210,14 @@ static int _msg_wait(msg_t *m, msg_t *tmsg, xtimer_t *t)
         return 1;
     }
 }
-
-int xtimer_msg_receive_timeout64(msg_t *m, uint64_t timeout) {
+/* 8051 implementation */
+/*int xtimer_msg_receive_timeout64(msg_t *m, uint64_t timeout) {
     msg_t tmsg;
     xtimer_t t;
     _setup_timer_msg(&tmsg, &t);
     xtimer_set_msg64(&t, timeout, &tmsg, sched_active_pid);
     return _msg_wait(m, &tmsg, &t);
-}
+}*/
 
 int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us)
 {

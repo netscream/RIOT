@@ -369,9 +369,21 @@ do {                                                                            
     LL_APPEND2(head,add,next)
 
 /** @brief LL append with alternative next ptr name 'next' */
+/* 8051 implementation */
 #define LL_APPEND2(head,add,next)                                                              \
 do {                                                                                           \
-  LDECLTYPE(head) _tmp;                                                                        \
+  (add)->next=NULL;                                                                            \
+  if (head) {                                                                                  \
+    while (head->next) { head = head->next; }                                                  \
+    head->next=(add);                                                                          \
+  } else {    \
+    (head)=(add);                                                                              \
+  }                                                                                            \
+} while (0)
+
+/*#define LL_APPEND2(head,add,next)                                                              \
+do {                                                                                           \
+  LLDECLTYPE(head) _tmp;                                                                                  \
   (add)->next=NULL;                                                                            \
   if (head) {                                                                                  \
     _tmp = head;                                                                               \
@@ -380,7 +392,7 @@ do {                                                                            
   } else {                                                                                     \
     (head)=(add);                                                                              \
   }                                                                                            \
-} while (0)
+} while (0)*/
 
 /** @brief LL delete element 'del' from list */
 #define LL_DELETE(head,del)                                                                    \
@@ -389,16 +401,14 @@ do {                                                                            
 /** @brief LL delete with alternative next ptr name 'name' */
 #define LL_DELETE2(head,del,next)                                                              \
 do {                                                                                           \
-  LDECLTYPE(head) _tmp;                                                                        \
   if ((head) == (del)) {                                                                       \
     (head)=(head)->next;                                                                       \
   } else {                                                                                     \
-    _tmp = head;                                                                               \
-    while (_tmp->next && (_tmp->next != (del))) {                                              \
-      _tmp = _tmp->next;                                                                       \
+    while (head->next && (head->next != (del))) {                                              \
+      head = head->next;                                                                       \
     }                                                                                          \
-    if (_tmp->next) {                                                                          \
-      _tmp->next = ((del)->next);                                                              \
+    if (head->next) {                                                                          \
+      head->next = ((del)->next);                                                              \
     }                                                                                          \
   }                                                                                            \
 } while (0)
@@ -511,7 +521,6 @@ do {                                                                            
 /** @brief LL replace element 'el' with element 'add' in list */
 #define LL_REPLACE_ELEM(head, el, add)                                                         \
 do {                                                                                           \
- LDECLTYPE(head) _tmp;                                                                         \
  assert(head != NULL);                                                                         \
  assert(el != NULL);                                                                           \
  assert(add != NULL);                                                                          \
@@ -519,12 +528,11 @@ do {                                                                            
  if ((head) == (el)) {                                                                         \
   (head) = (add);                                                                              \
  } else {                                                                                      \
-  _tmp = head;                                                                                 \
-  while (_tmp->next && (_tmp->next != (el))) {                                                 \
-   _tmp = _tmp->next;                                                                          \
+  while (head->next && (head->next != (el))) {                                                 \
+   head = head->next;                                                                          \
   }                                                                                            \
-  if (_tmp->next) {                                                                            \
-    _tmp->next = (add);                                                                        \
+  if (head->next) {                                                                            \
+    head->next = (add);                                                                        \
   }                                                                                            \
  }                                                                                             \
 } while (0)

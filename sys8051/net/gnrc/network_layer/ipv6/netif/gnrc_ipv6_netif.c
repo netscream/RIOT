@@ -56,13 +56,14 @@ static gnrc_ipv6_netif_t ipv6_ifs[GNRC_NETIF_NUMOF];
 #if ENABLE_DEBUG
 static char addr_str[IPV6_ADDR_MAX_STR_LEN];
 #endif
-
+/* 8051 implementation */
 static ipv6_addr_t *_add_addr_to_entry(gnrc_ipv6_netif_t *entry, const ipv6_addr_t *addr,
                                        uint8_t prefix_len, uint8_t flags)
 {
+    int i = 0;
     gnrc_ipv6_netif_addr_t *tmp_addr = NULL;
 
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         if (ipv6_addr_equal(&(entry->addrs[i].addr), addr)) {
             return &(entry->addrs[i].addr);
         }
@@ -190,19 +191,23 @@ static void _ipv6_netif_remove(gnrc_ipv6_netif_t *entry)
     mutex_unlock(&entry->mutex);
 }
 
+/* 8051 implementation */
 void gnrc_ipv6_netif_init(void)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         mutex_init(&(ipv6_ifs[i].mutex));
         _ipv6_netif_remove(&ipv6_ifs[i]);
     }
 }
 
+/* 8051 implementation */
 void gnrc_ipv6_netif_add(kernel_pid_t pid)
 {
+    int i = 0;
     gnrc_ipv6_netif_t *free_entry = NULL;
 
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ipv6_ifs[i].pid == pid) {
             /* pid has already been added */
             return;
@@ -251,9 +256,11 @@ void gnrc_ipv6_netif_remove(kernel_pid_t pid)
     _ipv6_netif_remove(entry);
 }
 
+/* 8051 implementation */
 gnrc_ipv6_netif_t *gnrc_ipv6_netif_get(kernel_pid_t pid)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ipv6_ifs[i].pid == pid) {
             DEBUG("ipv6 netif: Get IPv6 interface %" PRIkernel_pid " (%p, i = %d)\n", pid,
                   (void *)(&(ipv6_ifs[i])), i);
@@ -312,11 +319,13 @@ ipv6_addr_t *gnrc_ipv6_netif_add_addr(kernel_pid_t pid, const ipv6_addr_t *addr,
     return res;
 }
 
+/* 8051 implementation */
 static void _remove_addr_from_entry(gnrc_ipv6_netif_t *entry, ipv6_addr_t *addr)
 {
+    int i = 0;
     mutex_lock(&entry->mutex);
 
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         if (ipv6_addr_equal(&(entry->addrs[i].addr), addr)) {
             DEBUG("ipv6 netif: Remove %s to interface %" PRIkernel_pid "\n",
                   ipv6_addr_to_str(addr_str, addr, sizeof(addr_str)), entry->pid);
@@ -349,10 +358,12 @@ static void _remove_addr_from_entry(gnrc_ipv6_netif_t *entry, ipv6_addr_t *addr)
     mutex_unlock(&entry->mutex);
 }
 
+/* 8051 implementation */
 void gnrc_ipv6_netif_remove_addr(kernel_pid_t pid, ipv6_addr_t *addr)
 {
+    int i = 0;
     if (pid == KERNEL_PID_UNDEF) {
-        for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+        for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
             if (ipv6_ifs[i].pid == KERNEL_PID_UNDEF) {
                 continue;
             }
@@ -382,9 +393,11 @@ void gnrc_ipv6_netif_reset_addr(kernel_pid_t pid)
     mutex_unlock(&entry->mutex);
 }
 
+/* 8051 implementation */
 kernel_pid_t gnrc_ipv6_netif_find_by_addr(ipv6_addr_t **out, const ipv6_addr_t *addr)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (out != NULL) {
             *out = gnrc_ipv6_netif_find_addr(ipv6_ifs[i].pid, addr);
 
@@ -411,8 +424,10 @@ kernel_pid_t gnrc_ipv6_netif_find_by_addr(ipv6_addr_t **out, const ipv6_addr_t *
     return KERNEL_PID_UNDEF;
 }
 
+/* 8051 implementation */
 ipv6_addr_t *gnrc_ipv6_netif_find_addr(kernel_pid_t pid, const ipv6_addr_t *addr)
 {
+    int i = 0;
     gnrc_ipv6_netif_t *entry = gnrc_ipv6_netif_get(pid);
 
     if (entry == NULL) {
@@ -421,7 +436,7 @@ ipv6_addr_t *gnrc_ipv6_netif_find_addr(kernel_pid_t pid, const ipv6_addr_t *addr
 
     mutex_lock(&entry->mutex);
 
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         if (ipv6_addr_equal(&(entry->addrs[i].addr), addr)) {
             mutex_unlock(&entry->mutex);
             DEBUG("ipv6 netif: Found %s on interface %" PRIkernel_pid "\n",
@@ -438,10 +453,11 @@ ipv6_addr_t *gnrc_ipv6_netif_find_addr(kernel_pid_t pid, const ipv6_addr_t *addr
 
 static uint8_t _find_by_prefix_unsafe(ipv6_addr_t **res, gnrc_ipv6_netif_t *iface,
                                       const ipv6_addr_t *addr, uint8_t *only)
-{
+{   
+    int i = 0;
     uint8_t best_match = 0;
 
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         uint8_t match;
 
         if ((only != NULL) && !(bf_isset(only, i))) {
@@ -493,13 +509,15 @@ static uint8_t _find_by_prefix_unsafe(ipv6_addr_t **res, gnrc_ipv6_netif_t *ifac
     return best_match;
 }
 
+/* 8051 implementation */
 kernel_pid_t gnrc_ipv6_netif_find_by_prefix(ipv6_addr_t **out, const ipv6_addr_t *prefix)
 {
+    int i = 0;
     uint8_t best_match = 0;
     ipv6_addr_t *tmp_res = NULL;
     kernel_pid_t res = KERNEL_PID_UNDEF;
 
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         uint8_t match;
 
         mutex_lock(&(ipv6_ifs[i].mutex));
@@ -550,19 +568,21 @@ kernel_pid_t gnrc_ipv6_netif_find_by_prefix(ipv6_addr_t **out, const ipv6_addr_t
  * @pre the interface entry and its set of addresses must not be changed during
  *      runtime of this function
  */
+/* 8051 implementation */
 static int _create_candidate_set(gnrc_ipv6_netif_t *iface, const ipv6_addr_t *dst,
                                  uint8_t *candidate_set, bool link_local_only)
 {
+    int i = 0;
     int res = -1;
-
+    (void) dst;
     DEBUG("gathering candidates\n");
 
     /* currently this implementation supports only addresses as source address
      * candidates assigned to this interface. Thus we assume all addresses to be
      * on interface @p iface */
-    (void) dst;
+    //(void) dst;
 
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         gnrc_ipv6_netif_addr_t *iter = &(iface->addrs[i]);
 
         DEBUG("Checking address: %s\n",
@@ -663,23 +683,28 @@ static uint8_t _get_scope(const ipv6_addr_t *addr, const bool maybe_multicast)
  * @return The best matching candidate found on @p iface, may be NULL if none
  *         is found.
  */
+/* 8051 implementation */
 static ipv6_addr_t *_source_address_selection(gnrc_ipv6_netif_t *iface, const ipv6_addr_t *dst,
                                               uint8_t *candidate_set)
 {
     /* create temporary set for assigning "points" to candidates wining in the
      * corresponding rules.
      */
+    uint8_t max_pts = 0;
+    uint8_t dst_scope = 0;
+    int i = 0;
+    uint8_t candidate_scope = 0;
+    ipv6_addr_t *res = NULL;
     uint8_t winner_set[GNRC_IPV6_NETIF_ADDR_NUMOF];
     memset(winner_set, 0, GNRC_IPV6_NETIF_ADDR_NUMOF);
 
-    uint8_t max_pts = 0;
 
     /* _create_candidate_set() assures that `dest` is not unspecified and if
      * `dst` is loopback rule 1 will fire anyway.  */
-    uint8_t dst_scope = _get_scope(dst, true);
+    dst_scope = _get_scope(dst, true);
     DEBUG("finding the best match within the source address candidates\n");
 
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         gnrc_ipv6_netif_addr_t *iter = &(iface->addrs[i]);
         DEBUG("Checking address: %s\n",
               ipv6_addr_to_str(addr_str, &(iter->addr), sizeof(addr_str)));
@@ -698,7 +723,7 @@ static ipv6_addr_t *_source_address_selection(gnrc_ipv6_netif_t *iface, const ip
 
         /* Rule 2: Prefer appropriate scope. */
         /* both link local */
-        uint8_t candidate_scope = _get_scope(&(iter->addr), false);
+        candidate_scope = _get_scope(&(iter->addr), false);
         if (candidate_scope == dst_scope) {
             DEBUG("winner for rule 2 (same scope) found\n");
             winner_set[i] += RULE_2A_PTS;
@@ -755,27 +780,31 @@ static ipv6_addr_t *_source_address_selection(gnrc_ipv6_netif_t *iface, const ip
     memset(candidate_set, 0, (GNRC_IPV6_NETIF_ADDR_NUMOF + 7) / 8);
     /* check if we have a clear winner */
     /* collect candidates with maximum points */
-    for (int i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
+    for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
         if (winner_set[i] == max_pts) {
             bf_set(candidate_set, i);
         }
     }
 
     /* otherwise apply rule 8: Use longest matching prefix. */
-    ipv6_addr_t *res = NULL;
+    
     _find_by_prefix_unsafe(&res, iface, dst, candidate_set);
     return res;
 }
 
+/* 8051 implementation */
 ipv6_addr_t *gnrc_ipv6_netif_find_best_src_addr(kernel_pid_t pid, const ipv6_addr_t *dst, bool ll_only)
 {
-    gnrc_ipv6_netif_t *iface = gnrc_ipv6_netif_get(pid);
+    int first_candidate = 0;
     ipv6_addr_t *best_src = NULL;
-    mutex_lock(&(iface->mutex));
     BITFIELD(candidate_set, GNRC_IPV6_NETIF_ADDR_NUMOF);
+
+    gnrc_ipv6_netif_t *iface = gnrc_ipv6_netif_get(pid);    
+    mutex_lock(&(iface->mutex));
+    //BITFIELD(candidate_set, GNRC_IPV6_NETIF_ADDR_NUMOF);
     memset(candidate_set, 0, sizeof(candidate_set));
 
-    int first_candidate = _create_candidate_set(iface, dst, candidate_set, ll_only);
+    first_candidate = _create_candidate_set(iface, dst, candidate_set, ll_only);
     if (first_candidate >= 0) {
         best_src = _source_address_selection(iface, dst, candidate_set);
         if (best_src == NULL) {
@@ -787,6 +816,7 @@ ipv6_addr_t *gnrc_ipv6_netif_find_best_src_addr(kernel_pid_t pid, const ipv6_add
     return best_src;
 }
 
+/* 8051 implementation */
 void gnrc_ipv6_netif_init_by_dev(void)
 {
     kernel_pid_t ifs[GNRC_NETIF_NUMOF];
@@ -794,8 +824,8 @@ void gnrc_ipv6_netif_init_by_dev(void)
 #ifdef MODULE_GNRC_SIXLOWPAN_ND_BORDER_ROUTER
     bool abr_init = false;
 #endif
-
-    for (size_t i = 0; i < ifnum; i++) {
+    size_t i = 0;
+    for (i = 0; i < ifnum; i++) {
         ipv6_addr_t addr;
         eui64_t iid;
         uint16_t tmp;

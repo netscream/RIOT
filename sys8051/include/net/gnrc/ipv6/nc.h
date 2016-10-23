@@ -119,10 +119,10 @@ extern "C" {
  *              RFC 4861, section 5.1
  *          </a>.
  */
-typedef struct {
-#ifdef MODULE_GNRC_NDP_NODE
+typedef struct { /* 8051 implementation */
+//#ifdef MODULE_GNRC_NDP_NODE
     gnrc_pktqueue_t *pkts;                      /**< Packets waiting for address resolution */
-#endif
+//#endif
     ipv6_addr_t ipv6_addr;                      /**< IPv6 address of the neighbor */
     uint8_t l2_addr[GNRC_IPV6_NC_L2_ADDR_MAX];  /**< Link layer address of the neighbor */
     uint8_t l2_addr_len;                        /**< Length of gnrc_ipv6_nc_t::l2_addr */

@@ -16,15 +16,15 @@
 #include <unistd.h>
 
 #include "xtimer.h"
-
+/* 8051 implementation */
 unsigned int sleep(unsigned int seconds)
 {
-    xtimer_usleep64(seconds * SEC_IN_USEC);
+    //xtimer_usleep64(seconds * SEC_IN_USEC);
     return 0;
 }
 
 int usleep(useconds_t usec)
 {
-    xtimer_usleep64(usec);
+    //xtimer_usleep64(usec);
     return 0;
 }

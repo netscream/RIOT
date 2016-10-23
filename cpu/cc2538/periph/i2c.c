@@ -348,12 +348,12 @@ static bool i2c_busy(void) {
     return false;
 }
 
-int i2c_read_byte(i2c_t dev, uint8_t address, void *data)
+int i2c_read_byte(i2c_t dev, uint8_t address, char *data)
 {
     return i2c_read_bytes(dev, address, data, 1);
 }
 
-static int i2c_read_bytes_dumb(uint8_t address, uint8_t *data, int length)
+static int i2c_read_bytes_dumb(uint8_t address, char *data, int length)
 {
     int n = 0;
     uint_fast8_t stat;
@@ -416,7 +416,7 @@ static int i2c_read_bytes_dumb(uint8_t address, uint8_t *data, int length)
     return n;
 }
 
-int i2c_read_bytes(i2c_t dev, uint8_t address, void *data, int length)
+int i2c_read_bytes(i2c_t dev, uint8_t address, char *data, int length)
 {
     switch (dev) {
 #if I2C_0_EN
@@ -447,12 +447,12 @@ int i2c_read_bytes(i2c_t dev, uint8_t address, void *data, int length)
     return i2c_read_bytes_dumb(address, data, length);
 }
 
-int i2c_read_reg(i2c_t dev, uint8_t address, uint8_t reg, void *data)
+int i2c_read_reg(i2c_t dev, uint8_t address, uint8_t reg, char *data)
 {
     return i2c_read_regs(dev, address, reg, data, 1);
 }
 
-int i2c_read_regs(i2c_t dev, uint8_t address, uint8_t reg, void *data, int length)
+int i2c_read_regs(i2c_t dev, uint8_t address, uint8_t reg, char *data, int length)
 {
     uint_fast8_t stat;
 
@@ -492,15 +492,14 @@ int i2c_read_regs(i2c_t dev, uint8_t address, uint8_t reg, void *data, int lengt
     }
 }
 
-int i2c_write_byte(i2c_t dev, uint8_t address, uint8_t data)
+int i2c_write_byte(i2c_t dev, uint8_t address, char data)
 {
     return i2c_write_bytes(dev, address, &data, 1);
 }
 
-int i2c_write_bytes(i2c_t dev, uint8_t address, const void *data, int length)
+int i2c_write_bytes(i2c_t dev, uint8_t address, char *data, int length)
 {
     int n = 0;
-    const uint8_t *my_data = data;
 
     if (dev != I2C_0) {
         return -1;
@@ -522,7 +521,7 @@ int i2c_write_bytes(i2c_t dev, uint8_t address, const void *data, int length)
     for (n = 0; n < length; n++) {
         if (n >= length - 1) flags |= STOP;
         WARN_IF(I2CM_STAT & BUSY);
-        I2CM_DR = my_data[n];
+        I2CM_DR = data[n];
         i2c_ctrl_blocking(flags);
 
         WARN_IF(I2CM_STAT & ARBLST);
@@ -543,21 +542,20 @@ int i2c_write_bytes(i2c_t dev, uint8_t address, const void *data, int length)
 
         if (n < length) {
             DEBUG("%s(%u, %p, %u): %u/%u bytes delivered.\n",
-                  __FUNCTION__, address, (void *)my_data, length, n, length);
+                  __FUNCTION__, address, (void *)data, length, n, length);
         }
 
     return n;
 }
 
-int i2c_write_reg(i2c_t dev, uint8_t address, uint8_t reg, uint8_t data)
+int i2c_write_reg(i2c_t dev, uint8_t address, uint8_t reg, char data)
 {
     return i2c_write_regs(dev, address, reg, &data, 1);
 }
 
-int i2c_write_regs(i2c_t dev, uint8_t address, uint8_t reg, const void *data, int length)
+int i2c_write_regs(i2c_t dev, uint8_t address, uint8_t reg, char *data, int length)
 {
     uint_fast8_t stat;
-    const uint8_t *my_data = data;
 
     if (dev != I2C_0) {
         return -1;
@@ -600,7 +598,7 @@ int i2c_write_regs(i2c_t dev, uint8_t address, uint8_t reg, const void *data, in
         for (n = 0; n < length; n++) {
             if (n >= length - 1) flags |= STOP;
             WARN_IF(I2CM_STAT & BUSY);
-            I2CM_DR = my_data[n];
+            I2CM_DR = data[n];
 
             i2c_ctrl_blocking(flags);
 
@@ -625,7 +623,7 @@ int i2c_write_regs(i2c_t dev, uint8_t address, uint8_t reg, const void *data, in
                 dev,
                 address,
                 reg,
-                data,
+                (void *)data,
                 length,
                 n,
                 length

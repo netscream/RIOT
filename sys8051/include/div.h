@@ -36,13 +36,14 @@ extern "C" {
  * @param[in]   val     dividend
  * @return      (val / 15625)
  */
-static inline uint64_t div_u64_by_15625(uint64_t val)
-{
+/* 8051 implementation */
+/*static inline uint64_t div_u64_by_15625(uint64_t val)
+{*/
     /* a higher value would overflow 2^64 in the multiplication that follows */
-    assert(val <= 16383999997LLU);
+   /* assert(val <= 16383999997LLU);
 
     return (val * 0x431bde83UL) >> (12 + 32);
-}
+}*/
 
 /**
  * @brief Integer divide val by 1000000
@@ -52,13 +53,14 @@ static inline uint64_t div_u64_by_15625(uint64_t val)
  * @param[in]   val     dividend
  * @return      (val / 1000000)
  */
-static inline uint64_t div_u64_by_1000000(uint64_t val)
-{
+/* 8051 implementation */
+//static inline uint64_t div_u64_by_1000000(uint64_t val)
+//{
     /* a higher value would overflow 2^64 in the multiplication that follows */
-    assert(val <= 1048575999808LLU);
+/*    assert(val <= 1048575999808LLU);
 
     return div_u64_by_15625(val>>6);
-}
+}*/
 
 /**
  * @brief Divide val by (15625/512)
@@ -72,9 +74,11 @@ static inline uint64_t div_u64_by_1000000(uint64_t val)
  * @param[in]   val     dividend
  * @return      (val / (15625/512))
  */
+/* 8051 implementation */
 static inline uint32_t div_u32_by_15625div512(uint32_t val)
 {
-    return ((uint64_t)(val) * 0x431bde83ul) >> (12 + 32 - 9);
+    return ((val)/(15625/512));
+    //return ((val) * 0x431bde83ul) >> (12 + 32 - 9);
 }
 
 /**
@@ -83,9 +87,11 @@ static inline uint32_t div_u32_by_15625div512(uint32_t val)
  * @param[in]   val     dividend
  * @return      (val / 44488)
  */
+/* 8051 implementation */
 static inline uint32_t div_u32_by_44488(uint32_t val)
 {
-    return ((uint64_t)val * 0xBC8F1391UL) >> (15 + 32);
+    return (val/44488);
+    //return ((uint64_t)val * 0xBC8F1391UL) >> (15 + 32);
 }
 
 /**

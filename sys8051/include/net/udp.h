@@ -32,7 +32,8 @@ extern "C" {
 /**
  * @brief   UDP header
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     network_uint16_t src_port;      /**< source port */
     network_uint16_t dst_port;      /**< destination port */
     network_uint16_t length;        /**< payload length (including the header) */

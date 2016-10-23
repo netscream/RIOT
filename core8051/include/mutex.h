@@ -47,7 +47,7 @@ typedef struct {
  * @brief Static initializer for mutex_t.
  * @details This initializer is preferable to mutex_init().
  */
-#define MUTEX_INIT { { NULL } }
+#define MUTEX_INIT { NULL  }
 
 /**
  * @brief Initializes a mutex object.

@@ -72,8 +72,8 @@ gnrc_pktsnip_t *gnrc_ipv6_hdr_build(gnrc_pktsnip_t *payload, const ipv6_addr_t *
         DEBUG("ipv6_hdr: set packet destination to ::1\n");
         ipv6_addr_set_loopback(&hdr->dst);
     }
-
-    hdr->v_tc_fl = byteorder_htonl(0x60000000); /* set version, tc and fl in one go*/
+    /* 8051 implementation */
+    hdr->v_tc_fl.u32 = byteorder_htonl(0x60000000)->u32; /* set version, tc and fl in one go*/
     hdr->nh = PROTNUM_RESERVED;
     hdr->hl = 0;
 

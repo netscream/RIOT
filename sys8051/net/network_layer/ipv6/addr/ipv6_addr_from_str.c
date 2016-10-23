@@ -135,8 +135,8 @@ ipv6_addr_t *ipv6_addr_from_str(ipv6_addr_t *result, const char *addr)
          * overlapping regions, we'll do the shift by hand.
          */
         const int32_t n = &(result->u8[i++]) - colonp;
-
-        for (int32_t j = 1; j <= n; j++) {
+        int32_t j = 0; /* 8051 implementation */
+        for (j = 1; j <= n; j++) {
             result->u8[sizeof(ipv6_addr_t) - j] = colonp[n - j];
             colonp[n - j] = 0;
         }

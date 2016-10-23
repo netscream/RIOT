@@ -590,7 +590,7 @@ void gnrc_ndp_internal_send_rtr_adv(kernel_pid_t iface, ipv6_addr_t *src, ipv6_a
     }
 }
 #endif
-
+/* 8051 implementation */
 int gnrc_ndp_internal_sl2a_opt_handle(gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6, uint8_t icmpv6_type,
                                       ndp_opt_t *sl2a_opt, uint8_t *l2src)
 {
@@ -599,7 +599,7 @@ int gnrc_ndp_internal_sl2a_opt_handle(gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6, uin
 
     if ((sl2a_opt->len == 0) || ipv6_addr_is_unspecified(&ipv6->src)) {
         DEBUG("ndp: invalid source link-layer address option received\n");
-        return -EINVAL;
+        return -22; //einval = 22
     }
 
     while (pkt) {
@@ -624,7 +624,7 @@ int gnrc_ndp_internal_sl2a_opt_handle(gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6, uin
         }
         else {
             DEBUG("ndp: invalid source link-layer address option received\n");
-            return -EINVAL;
+            return -22; //einval = 22
         }
     }
 #endif
@@ -649,7 +649,7 @@ int gnrc_ndp_internal_sl2a_opt_handle(gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6, uin
         default:    /* wrong encapsulating message: silently discard */
             DEBUG("ndp: silently discard sl2a_opt for ICMPv6 message type %"
                   PRIu8 "\n", icmpv6_type);
-            return -ENOTSUP;
+            return -252; //enosup = 252 /* 8051 implementation */
     }
 }
 
@@ -662,7 +662,7 @@ int gnrc_ndp_internal_tl2a_opt_handle(gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6,
 
     if ((tl2a_opt->len == 0) || ipv6_addr_is_unspecified(&ipv6->src)) {
         DEBUG("ndp: invalid target link-layer address option received\n");
-        return -EINVAL;
+        return -22; //einval = 22 /* 8051 implementation */
     }
 
     switch (icmpv6_type) {
@@ -688,7 +688,7 @@ int gnrc_ndp_internal_tl2a_opt_handle(gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6,
                 }
                 else {
                     DEBUG("ndp: invalid target link-layer address option received\n");
-                    return -EINVAL;
+                    return -22; //einval = 22 /* 8051 implementation */
                 }
             }
 #endif
@@ -728,7 +728,7 @@ bool gnrc_ndp_internal_mtu_opt_handle(kernel_pid_t iface, uint8_t icmpv6_type,
         return true;
     }
     mutex_lock(&if_entry->mutex);
-    if_entry->mtu = byteorder_ntohl(mtu_opt->mtu);
+    if_entry->mtu = byteorder_ntohl(&mtu_opt->mtu); /* 8051 */
     mutex_unlock(&if_entry->mutex);
     return true;
 }
@@ -761,8 +761,10 @@ bool gnrc_ndp_internal_pi_opt_handle(kernel_pid_t iface, uint8_t icmpv6_type,
         ipv6_addr_t pref_addr = IPV6_ADDR_UNSPECIFIED;
 
         if (pi_opt->flags & NDP_OPT_PI_FLAGS_A) {
-            if ((gnrc_netapi_get(iface, NETOPT_IPV6_IID, 0, &pref_addr.u64[1],
-                                 sizeof(eui64_t)) < 0)) {
+            /*if ((gnrc_netapi_get(iface, NETOPT_IPV6_IID, 0, &pref_addr.u64[1],
+                                 sizeof(eui64_t)) < 0)) {*/ /* 8051 implementation */
+            if ((gnrc_netapi_get(iface, NETOPT_IPV6_IID, 0, &pref_addr.u32[1],
+                               sizeof(eui64_t)) < 0)) {
                 DEBUG("ndp: could not get IID from interface %d\n", iface);
                 return false;
             }
@@ -788,11 +790,11 @@ bool gnrc_ndp_internal_pi_opt_handle(kernel_pid_t iface, uint8_t icmpv6_type,
 
         return true;
     }
-    netif_addr->valid = byteorder_ntohl(pi_opt->valid_ltime);
-    netif_addr->preferred = byteorder_ntohl(pi_opt->pref_ltime);
+    netif_addr->valid = byteorder_ntohl(&pi_opt->valid_ltime); /* 8051 */
+    netif_addr->preferred = byteorder_ntohl(&pi_opt->pref_ltime);
     if (netif_addr->valid != UINT32_MAX) {
         xtimer_set_msg(&netif_addr->valid_timeout,
-                       (byteorder_ntohl(pi_opt->valid_ltime) * SEC_IN_USEC),
+                       (byteorder_ntohl(&pi_opt->valid_ltime) * SEC_IN_USEC),
                        &netif_addr->valid_timeout_msg, thread_getpid());
     }
     /* TODO: preferred lifetime for address auto configuration */

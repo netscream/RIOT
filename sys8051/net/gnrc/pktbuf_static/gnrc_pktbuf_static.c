@@ -41,9 +41,10 @@ typedef struct _unused {
     unsigned int size;
 } _unused_t;
 
-static mutex_t _mutex = MUTEX_INIT;
+/* 8051 implementation */
+static mutex_t _mutex; //= MUTEX_INIT;
 static uint8_t _pktbuf[GNRC_PKTBUF_SIZE];
-static _unused_t *_first_unused;
+static _unused_t *_first_unused = NULL;
 
 #ifdef DEVELHELP
 /* maximum number of bytes allocated */
@@ -92,7 +93,7 @@ void gnrc_pktbuf_init(void)
 gnrc_pktsnip_t *gnrc_pktbuf_add(gnrc_pktsnip_t *next, void *data, size_t size,
                                 gnrc_nettype_t type)
 {
-    gnrc_pktsnip_t *pkt;
+    gnrc_pktsnip_t *pkt = NULL;
 
     if (size > GNRC_PKTBUF_SIZE) {
         DEBUG("pktbuf: size (%u) > GNRC_PKTBUF_SIZE (%u)\n",
@@ -107,7 +108,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_add(gnrc_pktsnip_t *next, void *data, size_t size,
 
 gnrc_pktsnip_t *gnrc_pktbuf_mark(gnrc_pktsnip_t *pkt, size_t size, gnrc_nettype_t type)
 {
-    gnrc_pktsnip_t *marked_snip;
+    gnrc_pktsnip_t *marked_snip = NULL;
     /* size required for chunk */
     size_t required_new_size = (size < sizeof(_unused_t)) ?
                                _align(sizeof(_unused_t)) : _align(size);
@@ -196,7 +197,7 @@ int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t *pkt, size_t size)
         if (new_data == NULL) {
             DEBUG("pktbuf: error allocating new data section\n");
             mutex_unlock(&_mutex);
-            return ENOMEM;
+            return 12; //enomem = 12 /* 8051 implementation */
         }
         if (pkt->data != NULL) {            /* if old data exist */
             memcpy(new_data, pkt->data, (pkt->size < size) ? pkt->size : size);
@@ -258,7 +259,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_start_write(gnrc_pktsnip_t *pkt)
         return NULL;
     }
     if (pkt->users > 1) {
-        gnrc_pktsnip_t *new;
+        gnrc_pktsnip_t *new = NULL;
         new = _create_snip(pkt->next, pkt->data, pkt->size, pkt->type);
         if (new != NULL) {
             pkt->users--;
@@ -272,9 +273,9 @@ gnrc_pktsnip_t *gnrc_pktbuf_start_write(gnrc_pktsnip_t *pkt)
 
 gnrc_pktsnip_t *gnrc_pktbuf_get_iovec(gnrc_pktsnip_t *pkt, size_t *len)
 {
-    size_t length;
-    gnrc_pktsnip_t *head;
-    struct iovec *vec;
+    size_t length = 0;
+    gnrc_pktsnip_t *head = NULL;
+    struct iovec *vec = NULL;
 
     if (pkt == NULL) {
         *len = 0;
@@ -506,31 +507,34 @@ static void _pktbuf_free(void *data, size_t size)
     }
 }
 
-
+/* 8051 implementation */
 gnrc_pktsnip_t *gnrc_pktbuf_remove_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *snip)
 {
-    LL_DELETE(pkt, snip);
+    gnrc_pktsnip_t *tmp = pkt;
+    LL_DELETE(tmp, snip);
     snip->next = NULL;
     gnrc_pktbuf_release(snip);
 
     return pkt;
 }
-
+/* 8051 implementation */
 gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *old, gnrc_pktsnip_t *add)
 {
     /* If add is a list we need to preserve its tail */
     if (add->next != NULL) {
         gnrc_pktsnip_t *tail = add->next;
-        gnrc_pktsnip_t *back;
+        gnrc_pktsnip_t *back = NULL;
+        gnrc_pktsnip_t *tmp = pkt;
         LL_SEARCH_SCALAR(tail, back, next, NULL); /* find the last snip in add */
         /* Replace old */
-        LL_REPLACE_ELEM(pkt, old, add);
+        LL_REPLACE_ELEM(tmp, old, add);
         /* and wire in the tail between */
         back->next = add->next;
         add->next = tail;
     }
     else {
         /* add is a single element, has no tail, simply replace */
+        gnrc_pktsnip_t *tmp = pkt;
         LL_REPLACE_ELEM(pkt, old, add);
     }
     old->next = NULL;
@@ -539,19 +543,27 @@ gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *ol
     return pkt;
 }
 
+/* 8051 implementation */
 gnrc_pktsnip_t *gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type)
-{
+{ 
+    bool is_shared = false; //(pkt->users > 1);
+    size_t size = 0;
+
+    gnrc_pktsnip_t *tmp = NULL;
+    gnrc_pktsnip_t *target = NULL;
+    gnrc_pktsnip_t *next = NULL;
+    gnrc_pktsnip_t *new = NULL;
+
     mutex_lock(&_mutex);
 
-    bool is_shared = pkt->users > 1;
-    size_t size = gnrc_pkt_len_upto(pkt, type);
-
     DEBUG("ipv6_ext: duplicating %d octets\n", (int) size);
-
-    gnrc_pktsnip_t *tmp;
-    gnrc_pktsnip_t *target = gnrc_pktsnip_search_type(pkt, type);
-    gnrc_pktsnip_t *next = (target == NULL) ? NULL : target->next;
-    gnrc_pktsnip_t *new = _create_snip(next, NULL, size, type);
+    
+    target = gnrc_pktsnip_search_type(pkt, type);
+    next = (target == NULL) ? NULL : target->next;
+    new = _create_snip(next, NULL, size, type);
+    
+    is_shared = (pkt->users > 1);
+    size = gnrc_pkt_len_upto(pkt, type);
 
     if (new == NULL) {
         mutex_unlock(&_mutex);

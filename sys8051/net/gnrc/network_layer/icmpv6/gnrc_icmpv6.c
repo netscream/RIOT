@@ -57,9 +57,7 @@ void gnrc_icmpv6_demux(kernel_pid_t iface, gnrc_pktsnip_t *pkt)
 {
     gnrc_pktsnip_t *icmpv6, *ipv6;
     icmpv6_hdr_t *hdr;
-
     icmpv6 = gnrc_pktsnip_search_type(pkt, GNRC_NETTYPE_ICMPV6);
-
     assert(icmpv6 != NULL);
 
     /* there can be extension headers between IPv6 and ICMPv6 header so we have
@@ -162,25 +160,25 @@ gnrc_pktsnip_t *gnrc_icmpv6_build(gnrc_pktsnip_t *next, uint8_t type, uint8_t co
 
     return pkt;
 }
-
+/* 8051 implementation */
 int gnrc_icmpv6_calc_csum(gnrc_pktsnip_t *hdr, gnrc_pktsnip_t *pseudo_hdr)
 {
     uint32_t csum = 0;
 
-    if (hdr == NULL) {
-        return -EFAULT;
+    if (hdr == NULL) { 
+        return -14; //efault = 14
     }
     if (hdr->type != GNRC_NETTYPE_ICMPV6) {
-        return -EBADMSG;
+        return -74; //ebadmsg = 74
     }
 
     csum = _calc_csum(hdr, pseudo_hdr, hdr->next);
 
     if (csum == 0) {
-        return -ENOENT;
+        return -2; //enoent = 2
     }
-
-    ((icmpv6_hdr_t *)hdr->data)->csum = byteorder_htons(csum);
+    /* 8051 implementation */
+    ((icmpv6_hdr_t *)hdr->data)->csum.u16 = byteorder_htons(csum)->u16;
 
     return 0;
 }

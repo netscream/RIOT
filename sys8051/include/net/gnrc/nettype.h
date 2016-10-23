@@ -60,15 +60,17 @@ typedef enum {
      * @{
      * @name Network layer
      */
-#ifdef MODULE_GNRC_IPV6
+/* 8051 implementation */
+//#ifdef MODULE_GNRC_IPV6
     GNRC_NETTYPE_IPV6,          /**< Protocol is IPv6 */
-#endif
+//#endif
 #ifdef MODULE_GNRC_IPV6_EXT
     GNRC_NETTYPE_IPV6_EXT,      /**< Protocol is IPv6 extension header */
 #endif
-#ifdef MODULE_GNRC_ICMPV6
+/* 8051 implementation */
+//#ifdef MODULE_GNRC_ICMPV6
     GNRC_NETTYPE_ICMPV6,        /**< Protocol is ICMPv6 */
-#endif
+//#endif
     /**
      * @}
      */

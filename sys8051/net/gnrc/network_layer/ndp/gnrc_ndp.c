@@ -51,7 +51,7 @@ static char addr_str[IPV6_ADDR_MAX_STR_LEN];
 static void _stale_nc(kernel_pid_t iface, ipv6_addr_t *ipaddr, uint8_t *l2addr,
                       int l2addr_len)
 {
-    if (l2addr_len != -ENOTSUP) {
+    if (l2addr_len != -252) { //enotsup = 252
         gnrc_ipv6_nc_t *nc_entry = gnrc_ipv6_nc_get(iface, ipaddr);
         if (nc_entry == NULL) {
 #ifdef MODULE_GNRC_SIXLOWPAN_ND_ROUTER
@@ -281,7 +281,7 @@ void gnrc_ndp_nbr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
         netif_hdr = netif->data;
     }
 
-    if (l2tgt_len != -ENOTSUP) {
+    if (l2tgt_len != -252) { //enotsup = 252
 #ifdef MODULE_GNRC_SIXLOWPAN_ND
         /* check if entry wasn't removed by ARO, ideally there should not be any TL2A in here */
         nc_entry = gnrc_ipv6_nc_get(iface, &nbr_adv->tgt);
@@ -489,6 +489,7 @@ static inline void _set_reach_time(gnrc_ipv6_netif_t *if_entry, uint32_t mean)
     if_entry->reach_time = reach_time;
 }
 
+/* 8051 implementation */
 void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6,
                              ndp_rtr_adv_t *rtr_adv, size_t icmpv6_size)
 {
@@ -521,7 +522,7 @@ void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt, ipv6_hdr_t
             return;
         }
     }
-    else if ((nc_entry->flags & GNRC_IPV6_NC_IS_ROUTER) && (byteorder_ntohs(rtr_adv->ltime) == 0)) {
+    else if ((nc_entry->flags & GNRC_IPV6_NC_IS_ROUTER) && (byteorder_ntohs(&rtr_adv->ltime) == 0)) {
         nc_entry->flags &= ~GNRC_IPV6_NC_IS_ROUTER;
     }
     else {
@@ -529,7 +530,7 @@ void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt, ipv6_hdr_t
     }
     /* set router life timer */
     if (rtr_adv->ltime.u16 != 0) {
-        uint16_t ltime = byteorder_ntohs(rtr_adv->ltime);
+        uint16_t ltime = byteorder_ntohs(&rtr_adv->ltime);
 #ifdef MODULE_GNRC_SIXLOWPAN_ND
         next_rtr_sol = ltime;
 #endif
@@ -547,12 +548,12 @@ void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt, ipv6_hdr_t
     /* set reachable time from message if it is not the same as the random base
      * value */
     if ((rtr_adv->reach_time.u32 != 0) &&
-        (if_entry->reach_time_base != byteorder_ntohl(rtr_adv->reach_time))) {
-        _set_reach_time(if_entry, byteorder_ntohl(rtr_adv->reach_time));
+        (if_entry->reach_time_base != byteorder_ntohl(&rtr_adv->reach_time))) {
+        _set_reach_time(if_entry, byteorder_ntohl(&rtr_adv->reach_time));
     }
     /* set retransmission timer from message */
     if (rtr_adv->retrans_timer.u32 != 0) {
-        if_entry->retrans_timer = byteorder_ntohl(rtr_adv->retrans_timer);
+        if_entry->retrans_timer = byteorder_ntohl(&rtr_adv->retrans_timer);
     }
     mutex_unlock(&if_entry->mutex);
     sicmpv6_size -= sizeof(ndp_rtr_adv_t);
@@ -660,18 +661,24 @@ void gnrc_ndp_retrans_nbr_sol(gnrc_ipv6_nc_t *nc_entry)
             if (gnrc_ipv6_nc_get_state(nc_entry) == GNRC_IPV6_NC_STATE_INCOMPLETE) {
                 ipv6_addr_set_solicited_nodes(&dst, &nc_entry->ipv6_addr);
             }
-            else {
-                dst.u64[0] = nc_entry->ipv6_addr.u64[0];
-                dst.u64[1] = nc_entry->ipv6_addr.u64[1];
+            else { /* 8051 implementation */
+		dst.u32[0].u32 = nc_entry->ipv6_addr.u32[0].u32;
+                dst.u32[1].u32 = nc_entry->ipv6_addr.u32[1].u32;
+                dst.u32[2].u32 = nc_entry->ipv6_addr.u32[2].u32;
+                dst.u32[3].u32 = nc_entry->ipv6_addr.u32[3].u32;
+                //dst.u64[0] = nc_entry->ipv6_addr.u64[0];
+                //dst.u64[1] = nc_entry->ipv6_addr.u64[1];
             }
 
             nc_entry->probes_remaining--;
-
+	    /* 8051 implementation */
             if (nc_entry->iface == KERNEL_PID_UNDEF) {
+                size_t ifnum = 0;
+                size_t i = 0;
                 kernel_pid_t ifs[GNRC_NETIF_NUMOF];
-                size_t ifnum = gnrc_netif_get(ifs);
+                ifnum = gnrc_netif_get(ifs);
 
-                for (size_t i = 0; i < ifnum; i++) {
+                for (i = 0; i < ifnum; i++) {
                     gnrc_ndp_internal_send_nbr_sol(ifs[i], NULL, &nc_entry->ipv6_addr, &dst);
                 }
 
@@ -754,11 +761,16 @@ gnrc_pktsnip_t *gnrc_ndp_nbr_sol_build(ipv6_addr_t *tgt, gnrc_pktsnip_t *options
 
     pkt = gnrc_icmpv6_build(options, ICMPV6_NBR_SOL, 0, sizeof(ndp_nbr_sol_t));
 
-    if (pkt != NULL) {
+    if (pkt != NULL) { /* 8051 implementation */
         ndp_nbr_sol_t *nbr_sol = pkt->data;
         nbr_sol->resv.u32 = 0;
-        nbr_sol->tgt.u64[0].u64 = tgt->u64[0].u64;
-        nbr_sol->tgt.u64[1].u64 = tgt->u64[1].u64;
+        nbr_sol->tgt.u32[0].u32 = tgt->u32[0].u32;
+        nbr_sol->tgt.u32[1].u32 = tgt->u32[1].u32;
+        nbr_sol->tgt.u32[2].u32 = tgt->u32[2].u32;
+        nbr_sol->tgt.u32[3].u32 = tgt->u32[3].u32;
+
+        //nbr_sol->tgt.u64[0].u64 = tgt->u64[0].u64;
+        //nbr_sol->tgt.u64[1].u64 = tgt->u64[1].u64;
     }
 
     return pkt;
@@ -778,12 +790,17 @@ gnrc_pktsnip_t *gnrc_ndp_nbr_adv_build(uint8_t flags, ipv6_addr_t *tgt,
 
     pkt = gnrc_icmpv6_build(options, ICMPV6_NBR_ADV, 0, sizeof(ndp_nbr_adv_t));
 
-    if (pkt != NULL) {
+    if (pkt != NULL) {  /* 8051 implementation */
         ndp_nbr_adv_t *nbr_adv = pkt->data;
         nbr_adv->flags = (flags & NDP_NBR_ADV_FLAGS_MASK);
         nbr_adv->resv[0] = nbr_adv->resv[1] = nbr_adv->resv[2] = 0;
-        nbr_adv->tgt.u64[0].u64 = tgt->u64[0].u64;
-        nbr_adv->tgt.u64[1].u64 = tgt->u64[1].u64;
+        nbr_adv->tgt.u32[0].u32 = tgt->u32[0].u32; 
+        nbr_adv->tgt.u32[1].u32 = tgt->u32[1].u32;
+        nbr_adv->tgt.u32[2].u32 = tgt->u32[2].u32;
+        nbr_adv->tgt.u32[3].u32 = tgt->u32[3].u32;
+
+        //nbr_adv->tgt.u64[0].u64 = tgt->u64[0].u64;
+        //nbr_adv->tgt.u64[1].u64 = tgt->u64[1].u64;
     }
 
     return pkt;

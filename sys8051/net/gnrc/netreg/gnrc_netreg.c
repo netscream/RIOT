@@ -35,13 +35,14 @@ void gnrc_netreg_init(void)
     memset(netreg, 0, GNRC_NETTYPE_NUMOF * sizeof(gnrc_netreg_entry_t *));
 }
 
+/* 8051 implementation */
 int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t *entry)
 {
     /* only threads with a message queue are allowed to register at gnrc */
-    assert(sched_threads[entry->pid]->msg_array);
+    //assert(sched_threads[entry->pid]->msg_array);
 
     if (_INVALID_TYPE(type)) {
-        return -EINVAL;
+        return -22;
     }
 
     LL_PREPEND(netreg[type], entry);
@@ -114,7 +115,7 @@ int gnrc_netreg_calc_csum(gnrc_pktsnip_t *hdr, gnrc_pktsnip_t *pseudo_hdr)
         /* XXX: Might be allowed for future checksums.
          *      If this is the case: move this to the branches were it
          *      is needed. */
-        return -EINVAL;
+        return -22;
     }
 
     switch (hdr->type) {
@@ -131,7 +132,7 @@ int gnrc_netreg_calc_csum(gnrc_pktsnip_t *hdr, gnrc_pktsnip_t *pseudo_hdr)
             return gnrc_udp_calc_csum(hdr, pseudo_hdr);
 #endif
         default:
-            return -ENOENT;
+            return -64;
     }
 }
 

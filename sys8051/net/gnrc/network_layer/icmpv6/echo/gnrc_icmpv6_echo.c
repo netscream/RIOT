@@ -27,7 +27,7 @@
 /* For PRIu16 etc. */
 #include <inttypes.h>
 #endif
-
+/* 8051 implementation */
 gnrc_pktsnip_t *gnrc_icmpv6_echo_build(uint8_t type, uint16_t id, uint16_t seq,
                                        uint8_t *data, size_t data_len)
 {
@@ -41,8 +41,8 @@ gnrc_pktsnip_t *gnrc_icmpv6_echo_build(uint8_t type, uint16_t id, uint16_t seq,
     DEBUG("icmpv6_echo: Building echo message with type=%" PRIu8 "id=%" PRIu16
           ", seq=%" PRIu16, type, id, seq);
     echo = (icmpv6_echo_t *)pkt->data;
-    echo->id = byteorder_htons(id);
-    echo->seq = byteorder_htons(seq);
+    echo->id.u16 = byteorder_htons(id)->u16;
+    echo->seq.u16 = byteorder_htons(seq)->u16;
 
     if (data != NULL) {
         memcpy(echo + 1, data, data_len);
@@ -60,7 +60,7 @@ gnrc_pktsnip_t *gnrc_icmpv6_echo_build(uint8_t type, uint16_t id, uint16_t seq,
 
     return pkt;
 }
-
+/* 8051 implementation */
 void gnrc_icmpv6_echo_req_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6_hdr,
                                  icmpv6_echo_t *echo, uint16_t len)
 {
@@ -72,9 +72,9 @@ void gnrc_icmpv6_echo_req_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6_hdr,
               ") was < sizeof(icmpv6_echo_t)\n", len);
         return;
     }
-
-    pkt = gnrc_icmpv6_echo_build(ICMPV6_ECHO_REP, byteorder_ntohs(echo->id),
-                                 byteorder_ntohs(echo->seq), payload,
+   
+    pkt = gnrc_icmpv6_echo_build(ICMPV6_ECHO_REP, byteorder_ntohs(&echo->id),
+                                 byteorder_ntohs(&echo->seq), payload,
                                  len - sizeof(icmpv6_echo_t));
 
     if (pkt == NULL) {

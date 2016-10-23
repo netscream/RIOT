@@ -79,7 +79,8 @@ extern "C" {
  *          RFC 6775, section 4.4
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< message type */
     uint8_t code;           /**< message code */
     network_uint16_t csum;  /**< checksum */
@@ -98,7 +99,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 6775, section 4.1
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< option type */
     uint8_t len;            /**< length in units of 8 octets */
     uint8_t status;         /**< indicates registration status in NA response;
@@ -116,7 +118,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 6775, section 4.2
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< option type */
     uint8_t len;            /**< length in units of 8 octets */
     uint8_t ctx_len;        /**< context length */
@@ -133,7 +136,8 @@ typedef struct __attribute__((packed)) {
  *          RFC 6775, section 4.3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+/* 8051 implementation */
+typedef struct {
     uint8_t type;           /**< option type */
     uint8_t len;            /**< length in units of 8 octets */
     network_uint16_t vlow;  /**< version low */

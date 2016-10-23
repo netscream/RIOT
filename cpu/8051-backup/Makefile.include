@@ -1,0 +1,4 @@
+#all includes for 8051 architecture
+
+#INCLUDES += -I$(RIOTBASE)/cpu/8051/include/
+include $(RIOTCPU)/Makefile.include.8051

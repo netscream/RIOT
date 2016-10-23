@@ -132,9 +132,10 @@ extern "C" {
  * @return  Size of frame header on success.
  * @return  0, on error (flags set to unexpected state).
  */
+/* 8051 implementation */
 size_t ieee802154_set_frame_hdr(uint8_t *buf, const uint8_t *src, size_t src_len,
                                 const uint8_t *dst, size_t dst_len,
-                                le_uint16_t src_pan, le_uint16_t dst_pan,
+                                le_uint16_t *src_pan, le_uint16_t *dst_pan,
                                 uint8_t flags, uint8_t seq);
 
 /**

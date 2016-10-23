@@ -87,10 +87,11 @@ void gnrc_ipv6_nc_init(void)
     }
     memset(ncache, 0, sizeof(ncache));
 }
-
+/* 8051 implementation */
 gnrc_ipv6_nc_t *_find_free_entry(void)
 {
-    for (int i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    int i = 0;
+    for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
         if (ipv6_addr_is_unspecified(&(ncache[i].ipv6_addr))) {
             return ncache + i;
         }
@@ -99,9 +100,11 @@ gnrc_ipv6_nc_t *_find_free_entry(void)
     return NULL;
 }
 
+/* 8051 implementation */
 gnrc_ipv6_nc_t *gnrc_ipv6_nc_add(kernel_pid_t iface, const ipv6_addr_t *ipv6_addr,
                                  const void *l2_addr, size_t l2_addr_len, uint8_t flags)
 {
+    int i = 0;
     gnrc_ipv6_nc_t *free_entry = NULL;
 
     if (ipv6_addr == NULL) {
@@ -114,7 +117,7 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_add(kernel_pid_t iface, const ipv6_addr_t *ipv6_add
         return NULL;
     }
 
-    for (int i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
         if (ipv6_addr_equal(&(ncache[i].ipv6_addr), ipv6_addr)) {
             DEBUG("ipv6_nc: Address %s already registered.\n",
                   ipv6_addr_to_str(addr_str, ipv6_addr, sizeof(addr_str)));
@@ -197,14 +200,16 @@ void gnrc_ipv6_nc_remove(kernel_pid_t iface, const ipv6_addr_t *ipv6_addr)
     _nc_remove(iface, entry);
 }
 
+/* 8051 implementation */
 gnrc_ipv6_nc_t *gnrc_ipv6_nc_get(kernel_pid_t iface, const ipv6_addr_t *ipv6_addr)
 {
+    int i = 0;
     if ((ipv6_addr == NULL) || (ipv6_addr_is_unspecified(ipv6_addr))) {
         DEBUG("ipv6_nc: address was NULL or ::\n");
         return NULL;
     }
-
-    for (int i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+   
+    for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
         if (((ncache[i].iface == KERNEL_PID_UNDEF) || (iface == KERNEL_PID_UNDEF) ||
              (iface == ncache[i].iface)) &&
             ipv6_addr_equal(&(ncache[i].ipv6_addr), ipv6_addr)) {
@@ -242,7 +247,8 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get_next(gnrc_ipv6_nc_t *prev)
 
 gnrc_ipv6_nc_t *gnrc_ipv6_nc_get_next_router(gnrc_ipv6_nc_t *prev)
 {
-    for (gnrc_ipv6_nc_t *router = gnrc_ipv6_nc_get_next(prev); router != NULL;
+    gnrc_ipv6_nc_t *router = NULL;
+    for (router = gnrc_ipv6_nc_get_next(prev); router != NULL;
          router = gnrc_ipv6_nc_get_next(router)) {
         if (router->flags & GNRC_IPV6_NC_IS_ROUTER) {
             return router;

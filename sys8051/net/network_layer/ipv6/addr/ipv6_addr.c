@@ -38,14 +38,18 @@ const ipv6_addr_t ipv6_addr_all_routers_site_local = IPV6_ADDR_ALL_ROUTERS_SITE_
 
 bool ipv6_addr_equal(const ipv6_addr_t *a, const ipv6_addr_t *b)
 {
-    return (a->u64[0].u64 == b->u64[0].u64) &&
-           (a->u64[1].u64 == b->u64[1].u64);
+    return ((a->u32[0].u32 == b->u32[0].u32) && 
+           (a->u32[1].u32 == b->u32[1].u32) &&
+           (a->u32[2].u32 == b->u32[2].u32) &&
+           (a->u32[3].u32 == b->u32[3].u32));
+    /*return (a->u64[0].u64 == b->u64[0].u64) &&
+           (a->u64[1].u64 == b->u64[1].u64);*/
 }
 
 uint8_t ipv6_addr_match_prefix(const ipv6_addr_t *a, const ipv6_addr_t *b)
 {
     uint8_t prefix_len = 0;
-
+    int i = 0;
     if ((a == NULL) || (b == NULL)) {
         return 0;
     }
@@ -54,16 +58,16 @@ uint8_t ipv6_addr_match_prefix(const ipv6_addr_t *a, const ipv6_addr_t *b)
         return 128;
     }
 
-    for (int i = 0; i < 16; i++) {
+    for (i = 0; i < 16; i++) {
         /* if bytes are equal add 8 */
         if (a->u8[i] == b->u8[i]) {
             prefix_len += 8;
         }
         else {
             uint8_t xor = (a->u8[i] ^ b->u8[i]);
-
+            int j = 0;
             /* while bits from byte equal add 1 */
-            for (int j = 0; j < 8; j++) {
+            for (j = 0; j < 8; j++) {
                 if ((xor & 0x80) == 0) {
                     prefix_len++;
                     xor = xor << 1;
@@ -138,11 +142,11 @@ int ipv6_addr_split(char *addr_str, char seperator, int _default)
 
     return _default;
 }
-
+/* 8051 implementation */
 void ipv6_addr_print(const ipv6_addr_t *addr)
 {
-    assert(addr);
     char addr_str[IPV6_ADDR_MAX_STR_LEN];
+    assert(addr);
     ipv6_addr_to_str(addr_str, addr, sizeof(addr_str));
 #ifdef MODULE_FMT
     print_str(addr_str);

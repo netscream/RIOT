@@ -284,7 +284,7 @@ static void *_event_loop(void *args)
             case GNRC_NETAPI_MSG_TYPE_GET:
             case GNRC_NETAPI_MSG_TYPE_SET:
                 DEBUG("ipv6: reply to unsupported get/set\n");
-                reply.content.value = -ENOTSUP;
+                reply.content.value = -252; //enotsup = 252
                 msg_reply(&msg, &reply);
                 break;
 
@@ -370,11 +370,12 @@ static void *_event_loop(void *args)
 
     return NULL;
 }
-
+/* 8051 implementation */
 static void _send_to_iface(kernel_pid_t iface, gnrc_pktsnip_t *pkt)
 {
+    gnrc_ipv6_netif_t *if_entry;
     ((gnrc_netif_hdr_t *)pkt->data)->if_pid = iface;
-    gnrc_ipv6_netif_t *if_entry = gnrc_ipv6_netif_get(iface);
+    if_entry = gnrc_ipv6_netif_get(iface);
 
     assert(if_entry != NULL);
     if (gnrc_pkt_len(pkt->next) > if_entry->mtu) {
@@ -413,8 +414,8 @@ static gnrc_pktsnip_t *_create_netif_hdr(uint8_t *dst_l2addr,
         DEBUG("ipv6: error on interface header allocation, dropping packet\n");
         gnrc_pktbuf_release(pkt);
         return NULL;
-    }
-
+    } 
+    /* 8051 implementation */
     if (pkt->type == GNRC_NETTYPE_NETIF) {
         /* remove old netif header, since checking it for correctness would
          * cause to much overhead.
@@ -422,8 +423,10 @@ static gnrc_pktsnip_t *_create_netif_hdr(uint8_t *dst_l2addr,
          * to set a sending interface or some flags. Interface was already
          * copied using iface parameter, so we only need to copy the flags
          * (minus the broadcast/multicast flags) */
+        gnrc_netif_hdr_t *netif_new, *netif_old;
         DEBUG("ipv6: copy old interface header flags\n");
-        gnrc_netif_hdr_t *netif_new = netif->data, *netif_old = pkt->data;
+        netif_new = netif->data; 
+        netif_old = pkt->data;
         netif_new->flags = netif_old->flags & \
                            ~(GNRC_NETIF_HDR_FLAGS_BROADCAST | GNRC_NETIF_HDR_FLAGS_MULTICAST);
         DEBUG("ipv6: removed old interface header\n");
@@ -457,8 +460,8 @@ static int _fill_ipv6_hdr(kernel_pid_t iface, gnrc_pktsnip_t *ipv6,
 {
     int res;
     ipv6_hdr_t *hdr = ipv6->data;
-
-    hdr->len = byteorder_htons(gnrc_pkt_len(payload));
+    /* 8051 implementation */
+    hdr->len.u16 = byteorder_htons(gnrc_pkt_len(payload))->u16;
     DEBUG("ipv6: set payload length to %u (network byteorder %04" PRIx16 ")\n",
           (unsigned) gnrc_pkt_len(payload), hdr->len.u16);
 
@@ -501,8 +504,8 @@ static int _fill_ipv6_hdr(kernel_pid_t iface, gnrc_pktsnip_t *ipv6,
 
     DEBUG("ipv6: calculate checksum for upper header.\n");
 
-    if ((res = gnrc_netreg_calc_csum(payload, ipv6)) < 0) {
-        if (res != -ENOENT) {   /* if there is no checksum we are okay */
+    if ((res = gnrc_netreg_calc_csum(payload, ipv6)) < 0) { 
+        if (res != -2) {   /* if there is no checksum we are okay */ //enoent = 2 
             DEBUG("ipv6: checksum calculation failed.\n");
             return res;
         }
@@ -745,9 +748,10 @@ static void _send(gnrc_pktsnip_t *pkt, bool prep_hdr)
             gnrc_pktbuf_release(rcv_pkt);
         }
     }
-    else {
+    else { /* 8051 implementation */
         uint8_t l2addr_len = GNRC_IPV6_NC_L2_ADDR_MAX;
-        uint8_t l2addr[l2addr_len];
+        //uint8_t l2addr[l2addr_len];
+        uint8_t l2addr[GNRC_IPV6_NC_L2_ADDR_MAX];
 
         iface = _next_hop_l2addr(l2addr, &l2addr_len, iface, &hdr->dst, pkt);
 
@@ -885,10 +889,10 @@ static void _receive(gnrc_pktsnip_t *pkt)
 
     /* if available, remove any padding that was added by lower layers
      * to fulfill their minimum size requirements (e.g. ethernet) */
-    if (byteorder_ntohs(hdr->len) < pkt->size) {
-        gnrc_pktbuf_realloc_data(pkt, byteorder_ntohs(hdr->len));
-    }
-    else if (byteorder_ntohs(hdr->len) >
+    if (byteorder_ntohs((network_uint16_t*) &hdr->len)  < pkt->size) {
+        gnrc_pktbuf_realloc_data(pkt, byteorder_ntohs((network_uint16_t*) &hdr->len));
+    } /* 8051 implementation */
+    else if (byteorder_ntohs((network_uint16_t*) &hdr->len) >
              (gnrc_pkt_len_upto(pkt, GNRC_NETTYPE_IPV6) - sizeof(ipv6_hdr_t))) {
         DEBUG("ipv6: invalid payload length: %d, actual: %d, dropping packet\n",
               (int) byteorder_ntohs(hdr->len),

@@ -42,6 +42,8 @@
 char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len)
 {
     char tmp[IPV6_ADDR_MAX_STR_LEN], *tp;
+    uint8_t k = 0;
+    int i = 0;
     struct {
         int16_t base, len;
     } best = { -1, 0}, cur = { -1, 0};
@@ -54,10 +56,10 @@ char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len
      * Preprocess:
      *  Find the longest run of 0x0000's in address for :: shorthanding.
      */
-    for (uint8_t i = 0; i < IPV6_ADDR_WORD_LEN; i++) {
-        if (addr->u16[i].u16 == 0) {
+    for (k = 0; k < IPV6_ADDR_WORD_LEN; k++) {
+        if (addr->u16[k].u16 == 0) {
             if (cur.base == -1) {
-                cur.base = i;
+                cur.base = k;
                 cur.len = 1;
             }
             else {
@@ -67,7 +69,9 @@ char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len
         else {
             if (cur.base != -1) {
                 if (best.base == -1 || cur.len > best.len) {
-                    best = cur;
+                    //best = cur;
+                    best.base = cur.base;
+                    best.len = best.len;
                 }
 
                 cur.base = -1;
@@ -77,7 +81,9 @@ char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len
 
     if (cur.base != -1) {
         if (best.base == -1 || cur.len > best.len) {
-            best = cur;
+            //best = cur;
+            best.base = cur.base;
+            best.len = best.len;
         }
     }
 
@@ -90,7 +96,7 @@ char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len
      */
     tp = tmp;
 
-    for (int i = 0; i < ((int)IPV6_ADDR_WORD_LEN);) {
+    for (i = 0; i < ((int)IPV6_ADDR_WORD_LEN);) {
         /* Are we inside the best run of 0x00's? */
         if (i == best.base) {
             *tp++ = ':';

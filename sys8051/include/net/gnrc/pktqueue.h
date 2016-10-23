@@ -52,7 +52,8 @@ typedef struct gnrc_pktqueue {
  */
 static inline void gnrc_pktqueue_add(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *node)
 {
-    LL_APPEND(*queue, node);
+     gnrc_pktqueue_t *tmp = *queue;
+     LL_APPEND(tmp, node);
 }
 
 /**
@@ -66,7 +67,8 @@ static inline void gnrc_pktqueue_add(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *n
 static inline gnrc_pktqueue_t *gnrc_pktqueue_remove(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *node)
 {
     if (node) {
-        LL_DELETE(*queue, node);
+	gnrc_pktqueue_t *tmp = *queue;
+        LL_DELETE(tmp, node);
         node->next = NULL;
     }
 
