@@ -27,23 +27,6 @@
 
 int main(void)
 {
-    kernel_pid_t ifs[GNRC_NETIF_NUMOF];
-    size_t numof = 0;
-    int i = 0;
-    puts("RIOT network stack example application");
-
-    /* get the first IPv6 interface and prints its address */
-    numof = gnrc_netif_get(ifs);
-    if (numof > 0) {
-        gnrc_ipv6_netif_t *entry = gnrc_ipv6_netif_get(ifs[0]);
-        for (i = 0; i < GNRC_IPV6_NETIF_ADDR_NUMOF; i++) {
-            if ((ipv6_addr_is_link_local(&entry->addrs[i].addr)) && !(entry->addrs[i].flags & GNRC_IPV6_NETIF_ADDR_FLAGS_NON_UNICAST)) {
-                char ipv6_addr[IPV6_ADDR_MAX_STR_LEN];
-                ipv6_addr_to_str(ipv6_addr, &entry->addrs[i].addr, IPV6_ADDR_MAX_STR_LEN);
-                printf("My address is %s\n", ipv6_addr);
-            }
-        }
-    }
 
     /* main thread exits */
     return 0;

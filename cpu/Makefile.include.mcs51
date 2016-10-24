@@ -1,8 +1,10 @@
 export GDBPREFIX ?= $(PREFIX)
 export CC = $(PREFIX)sdcc
 export AS = $(PREFIX)sdas8051
-export AR = $(PREFIX)sdcclib
+#export AR = $(PREFIX)sdcclib
+export LINK = $(PREFIX)sdcclib
 #export LINK = $(PREFIX)sdld
+export AR = $(PREFIX)sdar
 export LINK = $(CC)
 export PACKIHX = $(PREFIX)packihx
 export WIXELCMD = $(PREFIX)wixelcmd
@@ -10,7 +12,6 @@ export WIXELCONFIG = $(PREFIX)wixelconfig
 
 # Model flags for cflags
 MODEL = --model-medium
-INCDIRS += libraries/include
 
 WARNING = --disable-warning 110
 CFLAGS_CPU += $(WARNINGS)
