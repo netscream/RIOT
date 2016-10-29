@@ -279,10 +279,12 @@ int msg_send_int(msg_t *m, kernel_pid_t target_pid);
  * @returns `== 0` if *not* sent by an ISR
  * @returns `!= 0` if sent by an ISR
  */
-static inline int msg_sent_by_int(const msg_t *m)
+/* 8051 implementation */
+static int msg_sent_by_int(const msg_t *m);
+/*static inline int msg_sent_by_int(const msg_t *m)
 {
     return (m->sender_pid == KERNEL_PID_ISR);
-}
+}*/
 
 /**
  * @brief Receive a message.

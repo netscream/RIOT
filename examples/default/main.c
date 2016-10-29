@@ -44,6 +44,11 @@
 
 int main(void)
 {
+char line_buf[SHELL_DEFAULT_BUFSIZE];
+#ifdef MODULE_NETIF
+	gnrc_netreg_entry_t dump;
+#endif
+
 #ifdef MODULE_LTC4150
     ltc4150_start();
 #endif
@@ -53,7 +58,7 @@ int main(void)
 #endif
 
 #ifdef MODULE_NETIF
-    gnrc_netreg_entry_t dump;
+    //gnrc_netreg_entry_t dump;
 
     dump.pid = gnrc_pktdump_pid;
     dump.demux_ctx = GNRC_NETREG_DEMUX_CTX_ALL;
@@ -62,7 +67,7 @@ int main(void)
 
     (void) puts("Welcome to RIOT!");
 
-    char line_buf[SHELL_DEFAULT_BUFSIZE];
+    //char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(NULL, line_buf, SHELL_DEFAULT_BUFSIZE);
 
     return 0;

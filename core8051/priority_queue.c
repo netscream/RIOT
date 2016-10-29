@@ -25,6 +25,21 @@
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
+/* 8051 implementation */
+static void priority_queue_node_init(priority_queue_node_t *priority_queue_node)
+{
+    //8051 implementation
+    priority_queue_node->next = NULL;
+    priority_queue_node->priority = 0;
+    priority_queue_node->data = 0;
+}
+
+/* 8051 implementation */
+static void priority_queue_init(priority_queue_t *priority_queue)
+{
+     priority_queue->first = NULL;
+}
+
 void priority_queue_remove(priority_queue_t *root_, priority_queue_node_t *node)
 {
     /* The strict aliasing rules allow this assignment. */

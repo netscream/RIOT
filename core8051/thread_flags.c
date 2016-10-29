@@ -27,6 +27,8 @@
 #include "debug.h"
 
 #ifdef MODULE_CORE_THREAD_FLAGS
+/* 8051 implementation */
+
 static thread_flags_t _thread_flags_clear_atomic(thread_t *thread, thread_flags_t mask)
 {
     unsigned state = irq_disable();
@@ -99,7 +101,7 @@ thread_flags_t thread_flags_wait_all(thread_flags_t mask)
     return _thread_flags_clear_atomic(me, mask);
 }
 
-inline int __attribute__((always_inline)) thread_flags_wake(thread_t *thread)
+int thread_flags_wake(thread_t *thread)
 {
     unsigned wakeup = 0;
     thread_flags_t mask = (uint16_t)(unsigned)thread->wait_data;
@@ -119,6 +121,26 @@ inline int __attribute__((always_inline)) thread_flags_wake(thread_t *thread)
 
     return wakeup;
 }
+/*inline int __attribute__((always_inline)) thread_flags_wake(thread_t *thread)
+{
+    unsigned wakeup = 0;
+    thread_flags_t mask = (uint16_t)(unsigned)thread->wait_data;
+    switch(thread->status) {
+        case STATUS_FLAG_BLOCKED_ANY:
+            wakeup = (thread->flags & mask);
+            break;
+        case STATUS_FLAG_BLOCKED_ALL:
+            wakeup = ((thread->flags & mask) == mask);
+            break;
+    }
+
+    if (wakeup) {
+        DEBUG("_thread_flags_wake(): wakeing up pid %"PRIkernel_pid"\n", thread->pid);
+        sched_set_status(thread, STATUS_RUNNING);
+    }
+
+    return wakeup;
+}*/
 
 void thread_flags_set(thread_t *thread, thread_flags_t mask)
 {

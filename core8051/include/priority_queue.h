@@ -55,20 +55,22 @@ typedef struct {
  * @param[out] priority_queue_node
  *          pre-allocated priority_queue_node_t object, must not be NULL.
  */
-static inline void priority_queue_node_init(
+/* 8051 implementation */
+static void priority_queue_node_init(priority_queue_node_t *priority_queue_node);
+/*static inline void priority_queue_node_init(
         priority_queue_node_t *priority_queue_node)
 {
-    //priority_queue_node_t qn = PRIORITY_QUEUE_NODE_INIT;
+    //priority_queue_node_t qn = PRIORITY_QUEUE_NODE_INIT;*/
     /*priority_queue_node_t qn;
     qn.next = NULL;
     qn.priority = 0;
     qn.data = 0;
     *priority_queue_node = qn;*/
     //8051 implementation
-    priority_queue_node->next = NULL;
+/*    priority_queue_node->next = NULL;
     priority_queue_node->priority = 0;
     priority_queue_node->data = 0;
-}
+}*/
 
 /**
  * @brief Static initializer for priority_queue_t.
@@ -83,13 +85,15 @@ static inline void priority_queue_node_init(
  * @param[out] priority_queue
  *          pre-allocated priority_queue_t object, must not be NULL.
  */
-static inline void priority_queue_init(priority_queue_t *priority_queue)
+/* 8051 implementation */
+static void priority_queue_init(priority_queue_t *priority_queue);
+/*static inline void priority_queue_init(priority_queue_t *priority_queue)
 {
     //priority_queue_t q = PRIORITY_QUEUE_INIT;
-    //*priority_queue = q;
+    *priority_queue = q;
     //8051 implementation
     priority_queue->first = NULL;
-}
+}*/
 
 /**
  * @brief remove the priority queue's head

@@ -32,7 +32,8 @@ extern "C" {
 
 /** Static initializer for mbox objects */
 //#define MBOX_INIT(queue, queue_size) {{0}, {0}, CIB_INIT(queue_size), queue}
-#define MBOX_INIT(queue, queue_size) (0, 0, CIB_INIT(queue_size), queue)
+//#define MBOX_INIT(queue, queue_size) (0, 0, CIB_INIT(queue_size), queue)
+
 /**
  * @brief Mailbox struct definition
  */
@@ -61,22 +62,15 @@ enum {
  * @param[in]   queue       array of msg_t used as queue
  * @param[in]   queue_size  number of msg_t objects in queue
  */
-static inline void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size)
+/* 8051 implementation */
+static void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size);
+/*static inline void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size)
 {
-    //8051 implementation
-    //mbox_t m = MBOX_INIT(queue, queue_size);
-    //*mbox = m;
-    //*mbox = MBOX_INIT(queue, queue_size);
-    //*mbox = (0, 0, CIB_INIT(queue_size), queue);
-    //mbox->readers =(list_node_t*)0;
-    //*mbox->writers = 0;
-    //*mbox->cib = CIB_INIT(queue_size);
-    //*mbox->msg_array = queue;
     mbox->msg_array->sender_pid = queue->sender_pid;
     mbox->msg_array->type = queue->type;
     mbox->msg_array->content.ptr = queue->content.ptr;
     mbox->msg_array->content.value = queue->content.value;
-}
+}*/
 
 /**
  * @brief Add message to mailbox
@@ -119,10 +113,12 @@ int _mbox_get(mbox_t *mbox, msg_t *msg, int blocking);
  * @param[in] mbox  ptr to mailbox to operate on
  * @param[in] msg   ptr to message that will be copied into mailbox
  */
-static inline void mbox_put(mbox_t *mbox, msg_t *msg)
+/* 8051 implementation */
+static void mbox_put(mbox_t *mbox, msg_t *msg);
+/*static inline void mbox_put(mbox_t *mbox, msg_t *msg)
 {
     _mbox_put(mbox, msg, BLOCKING);
-}
+}*/
 
 /**
  * @brief Add message to mailbox
@@ -135,10 +131,12 @@ static inline void mbox_put(mbox_t *mbox, msg_t *msg)
  * @return  1   if msg could be delivered
  * @return  0   otherwise
  */
-static inline int mbox_try_put(mbox_t *mbox, msg_t *msg)
+/* 8051 implementation */
+static int mbox_try_put(mbox_t *mbox, msg_t *msg);
+/*static inline int mbox_try_put(mbox_t *mbox, msg_t *msg)
 {
     return _mbox_put(mbox, msg, NON_BLOCKING);
-}
+}*/
 
 /**
  * @brief Get message from mailbox
@@ -149,10 +147,12 @@ static inline int mbox_try_put(mbox_t *mbox, msg_t *msg)
  * @param[in] mbox  ptr to mailbox to operate on
  * @param[in] msg   ptr to storage for retrieved message
  */
-static inline void mbox_get(mbox_t *mbox, msg_t *msg)
+/* 8051 implementation */
+static void mbox_get(mbox_t *mbox, msg_t *msg);
+/*static inline void mbox_get(mbox_t *mbox, msg_t *msg)
 {
     _mbox_get(mbox, msg, BLOCKING);
-}
+}*/
 
 /**
  * @brief Get message from mailbox
@@ -165,10 +165,12 @@ static inline void mbox_get(mbox_t *mbox, msg_t *msg)
  * @return  1   if msg could be retrieved
  * @return  0   otherwise
  */
-static inline int mbox_try_get(mbox_t *mbox, msg_t *msg)
+/* 8051 implementation */
+static int mbox_try_get(mbox_t *mbox, msg_t *msg);
+/*static inline int mbox_try_get(mbox_t *mbox, msg_t *msg)
 {
     return _mbox_get(mbox, msg, NON_BLOCKING);
-}
+}*/
 
 #ifdef __cplusplus
 }

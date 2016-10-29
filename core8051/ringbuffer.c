@@ -19,6 +19,14 @@
 #include "ringbuffer.h"
 
 #include <string.h>
+/* 8051 implementation */
+static void ringbuffer_init(ringbuffer_t *restrict rb, char *buffer, unsigned bufsize)
+{
+    rb->buf = buffer;
+    rb->size = bufsize;
+    rb->start = 0;
+    rb->avail = 0;
+}
 
 /**
  * @brief           Add an element to the end of the ringbuffer.
@@ -128,6 +136,23 @@ unsigned ringbuffer_remove(ringbuffer_t *restrict rb, unsigned n)
 
     return n;
 }
+
+/* 8051 implementation */
+static int ringbuffer_empty(const ringbuffer_t *restrict rb)
+{
+    return rb->avail == 0;
+}
+
+static int ringbuffer_full(const ringbuffer_t *restrict rb)
+{
+    return rb->avail == rb->size;
+}
+
+static unsigned int ringbuffer_get_free(const ringbuffer_t *restrict rb)
+{
+    return rb->size - rb->avail;
+}
+
 
 int ringbuffer_peek_one(const ringbuffer_t *restrict rb_)
 {

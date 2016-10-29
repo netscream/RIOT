@@ -337,11 +337,13 @@ int thread_wakeup(kernel_pid_t pid);
  *
  * @return          obviously you are not a golfer.
  */
-static inline kernel_pid_t thread_getpid(void)
+/* 8051 implementation */
+static kernel_pid_t thread_getpid(void);
+/*static inline kernel_pid_t thread_getpid(void)
 {
     extern volatile kernel_pid_t sched_active_pid;
     return sched_active_pid;
-}
+}*/
 
 /**
  * @brief   Gets called upon thread creation to set CPU registers

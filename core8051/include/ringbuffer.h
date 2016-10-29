@@ -41,7 +41,7 @@ typedef struct {
  * @param[in]    BUF   Buffer to use for the ringbuffer. The size is deduced through `sizeof (BUF)`.
  * @returns      The static initializer.
  */
-#define RINGBUFFER_INIT(BUF) { (BUF), sizeof (BUF), 0, 0 }
+//#define RINGBUFFER_INIT(BUF) { (BUF), sizeof (BUF), 0, 0 }
 
 /**
  * @brief        Initialize a ringbuffer.
@@ -49,13 +49,15 @@ typedef struct {
  * @param[in]    buffer    Buffer to use by rb.
  * @param[in]    bufsize   `sizeof (buffer)`
  */
-static inline void ringbuffer_init(ringbuffer_t *restrict rb, char *buffer, unsigned bufsize)
+/* 8051 implementation */
+static void ringbuffer_init(ringbuffer_t *restrict rb, char *buffer, unsigned bufsize);
+/*static inline void ringbuffer_init(ringbuffer_t *restrict rb, char *buffer, unsigned bufsize)
 {
     rb->buf = buffer;
     rb->size = bufsize;
     rb->start = 0;
     rb->avail = 0;
-}
+}*/
 
 /**
  * @brief           Add an element to the ringbuffer.
@@ -109,30 +111,36 @@ unsigned ringbuffer_remove(ringbuffer_t *restrict rb, unsigned n);
  * @param[in,out]   rb    Ringbuffer to operate on.
  * @returns         0 iff not empty
  */
-static inline int ringbuffer_empty(const ringbuffer_t *restrict rb)
+/* 8051 implementation */
+static int ringbuffer_empty(const ringbuffer_t *restrict rb);
+/*static inline int ringbuffer_empty(const ringbuffer_t *restrict rb)
 {
     return rb->avail == 0;
-}
+}*/
 
 /**
  * @brief           Test if the ringbuffer is full.
  * @param[in,out]   rb    Ringbuffer to operate on.
  * @returns         0 iff not full
  */
-static inline int ringbuffer_full(const ringbuffer_t *restrict rb)
+/* 8051 implementation */
+static int ringbuffer_full(const ringbuffer_t *restrict rb);
+/*static inline int ringbuffer_full(const ringbuffer_t *restrict rb)
 {
     return rb->avail == rb->size;
-}
+}*/
 
 /**
  * @brief           Return available space in ringbuffer
  * @param[in,out]   rb Ringbuffer to query.
  * @returns         number of available bytes
  */
-static inline unsigned int ringbuffer_get_free(const ringbuffer_t *restrict rb)
+/* 8051 implementation */
+static unsigned int ringbuffer_get_free(const ringbuffer_t *restrict rb);
+/*static inline unsigned int ringbuffer_get_free(const ringbuffer_t *restrict rb)
 {
     return rb->size - rb->avail;
-}
+}*/
 
 /**
  * @brief           Read, but don't remove, the oldest element in the buffer.

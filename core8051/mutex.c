@@ -37,7 +37,30 @@
 
 //#define MUTEX_LOCKED ((void*)-1)
 //8051 implementation
-#define MUTEX_LOCKED (((void*)0)-1)
+//#define MUTEX_LOCKED (((void*)0)-1)
+void* MUTEX_LOCKED()
+{
+	return ((void*)-1);
+}
+
+/* 8051 implementation */
+static void mutex_init(mutex_t *mutex)
+{
+	mutex->queue.next = NULL;
+}
+
+/* 8051 implementation */
+static int mutex_trylock(mutex_t *mutex)
+{
+    return _mutex_lock(mutex, 0);
+}
+
+/* 8051 implementation */
+static void mutex_lock(mutex_t *mutex)
+{
+	_mutex_lock(mutex, 1);
+}
+
 int _mutex_lock(mutex_t *mutex, int blocking)
 {
     unsigned irqstate = irq_disable();
@@ -46,7 +69,8 @@ int _mutex_lock(mutex_t *mutex, int blocking)
 
     if (mutex->queue.next == NULL) {
         /* mutex is unlocked. */
-        mutex->queue.next = MUTEX_LOCKED;
+        //mutex->queue.next = ((void*)-1);
+        mutex->queue.next = MUTEX_LOCKED();
                
         DEBUG("PID[%" PRIkernel_pid "]: mutex_wait early out.\n",
               sched_active_pid);
@@ -58,7 +82,7 @@ int _mutex_lock(mutex_t *mutex, int blocking)
         DEBUG("PID[%" PRIkernel_pid "]: Adding node to mutex queue: prio: %"
               PRIu32 "\n", sched_active_pid, (uint32_t)me->priority);
         sched_set_status(me, STATUS_MUTEX_BLOCKED);
-        if (mutex->queue.next == MUTEX_LOCKED) {
+        if (mutex->queue.next == MUTEX_LOCKED()) {
             mutex->queue.next = (list_node_t*)&me->rq_entry;
             mutex->queue.next->next = NULL;
         }
@@ -77,11 +101,11 @@ int _mutex_lock(mutex_t *mutex, int blocking)
     }
 }
 //8051 implementation
-list_node_t *next;
-thread_t *process;
-uint16_t process_priority;
 void mutex_unlock(mutex_t *mutex)
 {
+    list_node_t *next;
+    thread_t *process;
+    uint16_t process_priority;
     unsigned irqstate = irq_disable();
 
     DEBUG("mutex_unlock(): queue.next: 0x%08x pid: %" PRIkernel_pid "\n",
@@ -93,7 +117,7 @@ void mutex_unlock(mutex_t *mutex)
         return;
     }
 
-    if (mutex->queue.next == MUTEX_LOCKED) {
+    if (mutex->queue.next == MUTEX_LOCKED()) {
         mutex->queue.next = NULL;
         /* the mutex was locked and no thread was waiting for it */
         irq_restore(irqstate);
@@ -111,7 +135,7 @@ void mutex_unlock(mutex_t *mutex)
     sched_set_status(process, STATUS_PENDING);
 
     if (!mutex->queue.next) {
-        mutex->queue.next = MUTEX_LOCKED;
+        mutex->queue.next = MUTEX_LOCKED();
     }
 
     //uint16_t process_priority = process->priority;
@@ -120,16 +144,18 @@ void mutex_unlock(mutex_t *mutex)
     sched_switch(process_priority);
 }
 //8051 implementation
-unsigned irqstate;
 void mutex_unlock_and_sleep(mutex_t *mutex)
 {
+    list_node_t *next;
+    thread_t *process;
+    unsigned irqstate;
     DEBUG("PID[%" PRIkernel_pid "]: unlocking mutex. queue.next: 0x%08x, and "
           "taking a nap\n", sched_active_pid, (unsigned)mutex->queue.next);
    // unsigned irqstate = irq_disable();
     irqstate = irq_disable();
 
     if (mutex->queue.next) {
-        if (mutex->queue.next == MUTEX_LOCKED) {
+        if (mutex->queue.next == MUTEX_LOCKED()) {
             mutex->queue.next = NULL;
         }
         else {
@@ -141,7 +167,7 @@ void mutex_unlock_and_sleep(mutex_t *mutex)
             DEBUG("PID[%" PRIkernel_pid "]: waking up waiter.\n", process->pid);
             sched_set_status(process, STATUS_PENDING);
             if (!mutex->queue.next) {
-                mutex->queue.next = MUTEX_LOCKED;
+                mutex->queue.next = MUTEX_LOCKED();
             }
         }
     }

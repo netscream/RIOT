@@ -89,10 +89,12 @@ typedef int16_t kernel_pid_t;
  *
  * @return      true if the pid is valid, false otherwise
  */
-static inline int pid_is_valid(kernel_pid_t pid)
+/* 8051 implementation */
+static int pid_is_valid(kernel_pid_t pid);
+/*static inline int pid_is_valid(kernel_pid_t pid)
 {
     return ((KERNEL_PID_FIRST <= pid) && (pid <= KERNEL_PID_LAST));
-}
+}*/
 
 #ifdef __cplusplus
 }

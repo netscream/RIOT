@@ -66,10 +66,10 @@ void thread_sleep(void)
 }
 
 //8051 implementation
-thread_t *other_thread;
-unsigned old_state;
 int thread_wakeup(kernel_pid_t pid)
 {
+    thread_t *other_thread;
+    unsigned old_state;
     DEBUG("thread_wakeup: Trying to wakeup PID %" PRIkernel_pid "...\n", pid);
 
     //unsigned old_state = irq_disable();
@@ -98,6 +98,13 @@ int thread_wakeup(kernel_pid_t pid)
 
     irq_restore(old_state);
     return STATUS_NOT_FOUND;
+}
+
+/* 8051 implementation */
+static kernel_pid_t thread_getpid(void)
+{
+    extern volatile kernel_pid_t sched_active_pid;
+    return sched_active_pid;
 }
 
 void thread_yield(void)
@@ -151,13 +158,13 @@ uintptr_t thread_measure_stack_free(char *stack)
 #endif
 
 //8051 implementation
-thread_t *cb;
-unsigned state;
-kernel_pid_t pid;
-kernel_pid_t i;
-uintptr_t misalignment;
 kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags, thread_task_func_t function, void *arg, const char *name)
 {
+    thread_t *cb;
+    unsigned state;
+    kernel_pid_t pid;
+    kernel_pid_t i;
+    uintptr_t misalignment;
     if (priority >= SCHED_PRIO_LEVELS) {
 	//8051 implementation EINVAL = 22
         //return -EINVAL;

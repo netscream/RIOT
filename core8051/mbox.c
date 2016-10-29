@@ -29,6 +29,34 @@
 #include "debug.h"
 
 #ifdef MODULE_CORE_MBOX
+/* 8051 implementation */
+static void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size)
+{
+    mbox->msg_array->sender_pid = queue->sender_pid;
+    mbox->msg_array->type = queue->type;
+    mbox->msg_array->content.ptr = queue->content.ptr;
+    mbox->msg_array->content.value = queue->content.value;
+}
+/* 8051 implementation */
+static void mbox_put(mbox_t *mbox, msg_t *msg)
+{
+    _mbox_put(mbox, msg, BLOCKING);
+}
+/* 8051 implementation */
+static int mbox_try_put(mbox_t *mbox, msg_t *msg)
+{
+    return _mbox_put(mbox, msg, NON_BLOCKING);
+}
+/* 8051 implementation */
+static void mbox_get(mbox_t *mbox, msg_t *msg)
+{
+    _mbox_get(mbox, msg, BLOCKING);
+}
+/* 8051 implementation */
+static int mbox_try_get(mbox_t *mbox, msg_t *msg)
+{
+    return _mbox_get(mbox, msg, NON_BLOCKING);
+}
 
 static void _wake_waiter(thread_t *thread, unsigned irqstate)
 {

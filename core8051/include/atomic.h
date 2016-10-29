@@ -32,7 +32,8 @@ extern "C" {
  *          if int is assigned regularly).
  */
 typedef struct {
-    volatile int value;         /**< the actual value */
+    //volatile int value;         /**< the actual value */
+    int value;
 } atomic_int_t;
 
 /**
@@ -40,7 +41,10 @@ typedef struct {
  *
  * @param[in] val  initial value for the atomic integer
  */
-#define ATOMIC_INIT(val) {(val)}
+/* 8051 implementation */
+/* only needed in atomic testing, then we need to initalize values not aggregates */
+/* tests/unittests/tests-core/tests-core-atomic.c */
+//#define ATOMIC_INIT(val) {(val)}
 
 /**
  * @brief Atomic Compare and Swap
@@ -63,7 +67,9 @@ int atomic_cas(atomic_int_t *var, int old, int now);
  *
  * @return The value of *val* before the increment.
  */
-static inline int atomic_inc(atomic_int_t *var)
+/* 8051 implementation */
+static int atomic_inc(atomic_int_t *var);
+/*static inline int atomic_inc(atomic_int_t *var)
 {
     int old;
 
@@ -72,7 +78,7 @@ static inline int atomic_inc(atomic_int_t *var)
     } while (!atomic_cas(var, old, old + 1));
 
     return old;
-}
+}*/
 
 /**
  * @brief Decrement a counter variable by one atomically and return the old value.
@@ -81,7 +87,9 @@ static inline int atomic_inc(atomic_int_t *var)
  *
  * @return The value of *val* before the decrement.
  */
-static inline int atomic_dec(atomic_int_t *var)
+/* 8051 implementation */
+static int atomic_dec(atomic_int_t *var);
+/*static inline int atomic_dec(atomic_int_t *var)
 {
     int old;
 
@@ -90,7 +98,7 @@ static inline int atomic_dec(atomic_int_t *var)
     } while (!atomic_cas(var, old, old - 1));
 
     return old;
-}
+}*/
 
 /**
  * @brief Set an atomic variable to 1.
@@ -100,7 +108,9 @@ static inline int atomic_dec(atomic_int_t *var)
  * @return 1 if the old value was 0 and the variable was successfully updated
  * @return 0 if the variable was already set
  */
-static inline int atomic_set_to_one(atomic_int_t *var)
+/* 8051 implementation */
+static int atomic_set_to_one(atomic_int_t *var);
+/*static inline int atomic_set_to_one(atomic_int_t *var)
 {
     do {
         if (var->value != 0) {
@@ -109,7 +119,7 @@ static inline int atomic_set_to_one(atomic_int_t *var)
     } while (!atomic_cas(var, 0, 1));
 
     return 1;
-}
+}*/
 
 /**
  * @brief Set an atomic variable to 0.
@@ -119,7 +129,9 @@ static inline int atomic_set_to_one(atomic_int_t *var)
  * @return 1 if the old value was not 0 and the variable was successfully updated
  * @return 0 if the variable was already cleared
  */
-static inline int atomic_set_to_zero(atomic_int_t *var)
+/* 8051 implementation */
+static int atomic_set_to_zero(atomic_int_t *var);
+/*static inline int atomic_set_to_zero(atomic_int_t *var)
 {
     int old;
 
@@ -132,7 +144,7 @@ static inline int atomic_set_to_zero(atomic_int_t *var)
     } while (!atomic_cas(var, old, 0));
 
     return 1;
-}
+}*/
 
 /**
  * @brief Get the value of an atomic int
@@ -143,8 +155,8 @@ static inline int atomic_set_to_zero(atomic_int_t *var)
  *
  * @note This can be used for non-thread-safe assignment of the atomic integer
  */
-#define ATOMIC_VALUE(var) ((var).value)
-
+//#define ATOMIC_VALUE(var) ((var).value)
+static int ATOMIC_VALUE(atomic_int_t *var);
 #ifdef __cplusplus
 }
 #endif

@@ -208,6 +208,12 @@ int msg_send_int(msg_t *m, kernel_pid_t target_pid)
     }
 }
 
+/* 8051 implementation */
+static int msg_sent_by_int(const msg_t *m)
+{
+    return (m->sender_pid == KERNEL_PID_ISR);
+}
+
 int msg_send_receive(msg_t *m, msg_t *reply, kernel_pid_t target_pid)
 {
     assert(sched_active_pid != target_pid);

@@ -33,14 +33,74 @@ int atomic_cas(atomic_int_t *var, int old, int now)
 {
     unsigned int mask = irq_disable();
 
-    if (ATOMIC_VALUE(*var) != old) {
+    if (ATOMIC_VALUE(var) != old) {
         irq_restore(mask);
         return 0;
     }
 
-    ATOMIC_VALUE(*var) = now;
+    //ATOMIC_VALUE(var) = now;
+    /* 8051 implementation */
+    var->value = now;
     irq_restore(mask);
     return 1;
+}
+
+/* 8051 implementation */
+static int atomic_inc(atomic_int_t *var)
+{
+    int old;
+
+    do {
+        old = var->value;
+    } while (!atomic_cas(var, old, old + 1));
+
+    return old;
+}
+
+/* 8051 implementation */
+static int atomic_dec(atomic_int_t *var)
+{
+    int old;
+
+    do {
+        old = var->value;
+    } while (!atomic_cas(var, old, old - 1));
+
+    return old;
+}
+
+/* 8051 implementation */
+static int atomic_set_to_one(atomic_int_t *var)
+{
+    do {
+        if (var->value != 0) {
+            return 0;
+        }
+    } while (!atomic_cas(var, 0, 1));
+
+    return 1;
+}
+
+/* 8051 implementation */
+static int atomic_set_to_zero(atomic_int_t *var)
+{
+    int old;
+
+    do {
+        old = var->value;
+
+        if (old == 0) {
+            return 0;
+        }
+    } while (!atomic_cas(var, old, 0));
+
+    return 1;
+}
+
+/* 8051 implementation */
+static int ATOMIC_VALUE(atomic_int_t *var)
+{
+        return var->value;
 }
 
 #endif

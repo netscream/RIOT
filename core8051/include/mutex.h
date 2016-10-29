@@ -47,7 +47,7 @@ typedef struct {
  * @brief Static initializer for mutex_t.
  * @details This initializer is preferable to mutex_init().
  */
-#define MUTEX_INIT { NULL  }
+//#define MUTEX_INIT { NULL  }
 
 /**
  * @brief Initializes a mutex object.
@@ -55,10 +55,11 @@ typedef struct {
  *          Only use the function call for dynamically allocated mutexes.
  * @param[out] mutex    pre-allocated mutex structure, must not be NULL.
  */
-static inline void mutex_init(mutex_t *mutex)
+static void mutex_init(mutex_t *mutex);
+/*static inline void mutex_init(mutex_t *mutex)
 {
     mutex->queue.next = NULL;
-}
+}*/
 
 /**
  * @brief Lock a mutex, blocking or non-blocking.
@@ -84,20 +85,22 @@ int _mutex_lock(mutex_t *mutex, int blocking);
  * @return 1 if mutex was unlocked, now it is locked.
  * @return 0 if the mutex was locked.
  */
-static inline int mutex_trylock(mutex_t *mutex)
+static int mutex_trylock(mutex_t *mutex);
+/*static inline int mutex_trylock(mutex_t *mutex)
 {
     return _mutex_lock(mutex, 0);
-}
+}*/
 
 /**
  * @brief Locks a mutex, blocking.
  *
  * @param[in] mutex Mutex object to lock. Has to be initialized first. Must not be NULL.
  */
-static inline void mutex_lock(mutex_t *mutex)
+static void mutex_lock(mutex_t *mutex);
+/*static inline void mutex_lock(mutex_t *mutex)
 {
     _mutex_lock(mutex, 1);
-}
+}*/
 
 /**
  * @brief Unlocks the mutex.

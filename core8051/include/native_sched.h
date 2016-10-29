@@ -43,11 +43,13 @@ typedef struct {
 /**
  * @brief In all test the function has never been called, hence it is empty for now.
  */
-inline int sched_yield(void)
+/* 8051 implementation */
+int sched_yield(void);
+/*inline int sched_yield(void)
 {
     puts("[ERROR] sched_yield called (defined in sched.h)\n");
     return 0;
-}
+}*/
 #endif /* BOARD_NATIVE */
 
 #ifdef __cplusplus

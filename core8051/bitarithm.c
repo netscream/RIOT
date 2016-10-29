@@ -66,3 +66,10 @@ unsigned bitarithm_bits_set(unsigned v)
 
     return c;
 }
+
+/* 8051 implementation */
+int sched_yield(void)
+{
+    puts("[ERROR] sched_yield called (defined in sched.h)\n");
+    return 0;
+}

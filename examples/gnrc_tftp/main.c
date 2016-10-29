@@ -40,6 +40,7 @@ static const shell_command_t shell_commands[] = {
 
 int main(void)
 {
+    char line_buf[SHELL_DEFAULT_BUFSIZE];
     /* we need a message queue for the thread running the shell in order to
      * receive potentially fast incoming networking packets */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
@@ -47,7 +48,7 @@ int main(void)
 
     /* start shell */
     puts("All up, running the shell now");
-    char line_buf[SHELL_DEFAULT_BUFSIZE];
+    //char line_buf[SHELL_DEFAULT_BUFSIZE];
 
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
 
