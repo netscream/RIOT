@@ -3,6 +3,7 @@ DEFAULT_MODULE += board cpu core core_msg sys
 
 DEFAULT_MODULE += auto_init
 else
-DEFAULT_MODULE += board cpu core8051 core_msg sys8051
+DEFAULT_MODULE += board cpu core8051 core_msg
+
 DEFAULT_MODULE += auto_init
 endif

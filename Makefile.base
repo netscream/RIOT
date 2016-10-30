@@ -12,7 +12,8 @@ MODULE ?= $(shell basename $(CURDIR))
 ifneq (mcs51,$(TOOLCHAIN))
 all: $(BINDIR)$(MODULE).a ..nothing
 else
-all: $(TARGET_MCS51) $(BINDIR)$(MODULE).rel ..nothing
+#all: $(TARGET_MCS51) $(BINDIR)$(MODULE).rel ..nothing
+all: $(TARGET_MCS51) $(BINDIR)$(MODULE).lib ..nothing
 endif
 
 ..nothing:
@@ -41,49 +42,40 @@ endif
 
 ifneq (mcs51,$(TOOLCHAIN))
 OBJC_LTO    := $(SRC:%.c=$(BINDIR)$(MODULE)/%.o)
- OBJC_NOLTO  := $(SRC_NOLTO:%.c=$(BINDIR)$(MODULE)/%.o)
+OBJC_NOLTO  := $(SRC_NOLTO:%.c=$(BINDIR)$(MODULE)/%.o)
 OBJC        := $(OBJC_NOLTO) $(OBJC_LTO)
 OBJCXX      := $(SRCXX:%.cpp=$(BINDIR)$(MODULE)/%.o)
 ASMOBJ      := $(ASMSRC:%.s=$(BINDIR)$(MODULE)/%.o)
 ASSMOBJ     := $(ASSMSRC:%.S=$(BINDIR)$(MODULE)/%.o)
 else
-ifeq ($(strip $(OBJL)),)
-    SRCL := $(wildcard *.lib)
-endif
-
 OBJC_LTO    := $(SRC:%.c=$(BINDIR)$(MODULE)/%.rel)
 OBJC_NOLTO  := $(SRC_NOLTO:%.c=$(BINDIR)$(MODULE)/%.rel)
 OBJC        := $(OBJC_NOLTO) $(OBJC_LTO)
-OBJLIB 		:= $(SRCL:%.rel=$(BINDIR)$(MODULE)/%.lib)
-
 endif
 
 ifneq (mcs51,$(TOOLCHAIN))
 OBJ := $(OBJC) $(OBJCXX) $(ASMOBJ) $(ASSMOBJ)
 DEP := $(OBJC:.o=.d) $(OBJCXX:.o=.d) $(ASSMOBJ:.o=.d)
 else #8051/mcs51 specific architecture
-OBJ := $(OBJC) $(ASMOBJ) $(ASSMOBJ)
+OBJ := $(OBJC)
 DEP := $(OBJC:.o=.d) $(OBJCXX:.o=.d) $(ASSMOBJ:.o=.d)
-OBJL := $(OBJLIB)
 endif
 
 $(BINDIR)$(MODULE)/:
 	$(AD)mkdir -p $@
-
+	
 ifneq (mcs51,$(TOOLCHAIN))
 $(BINDIR)$(MODULE).a $(OBJ): | $(BINDIR)$(MODULE)/
 
 $(BINDIR)$(MODULE).a: $(OBJ) | ${DIRS:%=ALL--%}
 	$(AD)$(AR) $(ARFLAGS) $@ $?
-
 CXXFLAGS = $(filter-out $(CXXUWFLAGS), $(CFLAGS)) $(CXXEXFLAGS)
 else #8051/mcs51 specific architecture
-$(BINDIR)$(MODULE).rel $(OBJ): | $(BINDIR)$(MODULE)/
+$(BINDIR)$(MODULE).lib $(OBJ): | $(BINDIR)$(MODULE)/
 
-$(BINDIR)$(MODULE).rel: $(OBJ) | ${DIRS:%=ALL--%}
-	$(AD)$(AR) $(ARFLAGS) $@ $?
+$(BINDIR)$(MODULE).lib: $(OBJ) | ${DIRS:%=ALL--%}
+	$(AD) if [ "$?" == "" ]; then echo "rusl"; elif [ "$?" != "$(BINDIR)$(APPLICATION)/main.rel" ]; then $(LINK) $(ARFLAGS) $@ $? ; else $(AR) $(ARFLAGS) $(BINDIR)$(MODULE).rel $?; cp $(BINDIR)$(MODULE)/main.lst $(BINDIR)$(MODULE).lst; fi 
 endif
-
 # compile and generate dependency info
 
 
@@ -108,13 +100,11 @@ $(ASMOBJ): $(BINDIR)$(MODULE)/%.o: %.s
 $(ASSMOBJ): $(BINDIR)$(MODULE)/%.o: %.S
 	$(AD)$(CC) $(CFLAGS) $(INCLUDES) -MD -MP -c -o $@ $(abspath $<)
 else #8051/mcs51 specific architecture no .s or .S At this moment
-$(OBJC_LTO): CFLAGS+=$(LTOFLAGS)
 $(OBJC): $(BINDIR)$(MODULE)/%.rel: %.c $(RIOTBUILD_CONFIG_HEADER_C)
 	$(AD)$(CCACHE) $(CC) -c $(abspath $<) \
 		-DRIOT_FILE_RELATIVE=\"$(patsubst $(RIOTBASE)/%,%,$(abspath $<))\" \
 		-DRIOT_FILE_NOPATH=\"$(notdir $<)\" \
 		-Wp,-MMD,$(@:%.rel=%.d),-MT,$@,-MP $(INCLUDES)-Wa,-p --model-medium --debug -o $@
-
 endif
 # pull in dependency info for *existing* .o files
 # deleted header files will be silently ignored

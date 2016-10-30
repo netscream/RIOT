@@ -312,7 +312,8 @@ ifneq (mcs51, $(TOOLCHAIN))
 	$(AD)$(SIZE) $(ELFFILE)
 	$(AD)$(OBJCOPY) $(OFLAGS) $(ELFFILE) $(HEXFILE)
 else
-	$(AD)$(SIZE) $(ELFFILE)
+	$(AD)size $(ELFFILE)
+	$(AD)cp $(ELFFILE) $(HEXFILE)
 endif
 endif
 endif # BUILD_IN_DOCKER

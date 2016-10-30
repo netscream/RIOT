@@ -1,4 +1,6 @@
 export CPU = mcs51
+export SIZE ?= $(PREFIX)size
+export OBJCOPY ?= $(PREFIX)objcopy
 
 # Set default port depending on operating system (serial)
 PORT_LINUX ?= /dev/ttyACM0

@@ -1,5 +1,8 @@
+ifneq (mcs51, $(TOOLCHAIN))
 DIST_FILES += bin/$(BOARD)/$(APPLICATION).a
-
+else
+DIST_FILES += bin/$(BOARD)/$(APPLICATION).rel
+endif
 ifneq (, $(filter check_bindist, $(MAKECMDGOALS)))
 	include Makefile.distcheck
 else
