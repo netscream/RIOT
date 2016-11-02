@@ -44,22 +44,23 @@ int thread_getstatus(kernel_pid_t pid)
     return t ? (int) t->status : STATUS_NOT_FOUND;
 }
 
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
 const char *thread_getname(kernel_pid_t pid)
 {
     volatile thread_t *t = thread_get(pid);
     return t ? t->name : NULL;
 }
-#endif
+#endif*/
 
 void thread_sleep(void)
 {
+    unsigned state;
     if (irq_is_in()) {
         return;
     }
     //8051 implementation
     //unsigned state = irq_disable();
-  
+    state = irq_disable();
     sched_set_status((thread_t *)sched_active_thread, STATUS_SLEEPING);
     irq_restore(irq_disable());
     thread_yield_higher();
@@ -127,7 +128,8 @@ void thread_add_to_list(list_node_t *list, thread_t *thread)
     //list_node_t *new_node = (list_node_t*)&thread->rq_entry;
 
     while (list->next) {
-        thread_t *list_entry = container_of((clist_node_t*)list->next, thread_t, rq_entry);
+        //thread_t *list_entry = container_of((clist_node_t*)list->next, thread_t, rq_entry);
+        thread_t *list_entry = ((thread_t*) ((char*) ((clist_node_t*)list->next) - offsetof(thread_t, rq_entry)));
         //if (list_entry->priority > my_prio) {
         if (list_entry->priority > thread->priority) {
             break;
@@ -141,21 +143,21 @@ void thread_add_to_list(list_node_t *list, thread_t *thread)
     //list->next = new_node;
 }
 
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
 uintptr_t thread_measure_stack_free(char *stack)
 {
     uintptr_t *stackp = (uintptr_t *)stack;
-
+*/
     /* assume that the comparison fails before or after end of stack */
     /* assume that the stack grows "downwards" */
-    while (*stackp == (uintptr_t) stackp) {
+  /*  while (*stackp == (uintptr_t) stackp) {
         stackp++;
     }
 
     uintptr_t space_free = (uintptr_t) stackp - (uintptr_t) stack;
     return space_free;
 }
-#endif
+#endif*/
 
 //8051 implementation
 kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags, thread_task_func_t function, void *arg, const char *name)
@@ -171,11 +173,11 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
         return -22;
     }
 
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
     int total_stacksize = stacksize;
 #else
     (void) name;
-#endif
+#endif*/
 
     /* align the stack on a 16/32bit boundary */
     //8051 implementation
@@ -228,7 +230,8 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     //kernel_pid_t pid = KERNEL_PID_UNDEF;
     pid = KERNEL_PID_UNDEF;
     //for (kernel_pid_t i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; ++i) {
-    for (i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; ++i) {
+    //for (i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; ++i) {
+    for (i = 1; i <= (MAXTHREADS-1); ++i) {
         if (sched_threads[i] == NULL) {
             pid = i;
             break;
@@ -273,13 +276,15 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
 
     DEBUG("Created thread %s. PID: %" PRIkernel_pid ". Priority: %u.\n", name, cb->pid, priority);
 
-    if (flags & THREAD_CREATE_SLEEPING) {
+    //if (flags & THREAD_CREATE_SLEEPING) {
+    if (flags & 1) {
         sched_set_status(cb, STATUS_SLEEPING);
     }
     else {
         sched_set_status(cb, STATUS_PENDING);
 
-        if (!(flags & THREAD_CREATE_WOUT_YIELD)) {
+        //if (!(flags & THREAD_CREATE_WOUT_YIELD)) {
+        if (!(flags & 4)) {
             irq_restore(state);
             sched_switch(priority);
             return pid;

@@ -25,9 +25,9 @@
 #ifndef IRQ_ARCH_H
 #define IRQ_ARCH_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @name Define mapping between kernel internal and arch interfaces
@@ -36,12 +36,12 @@
  * new platforms should always use the *_arch_* interfaces.
  * @{
  */
-#ifdef COREIF_NG
+/*#ifdef COREIF_NG
 #define irq_enable      irq_arch_enable
 #define irq_disable     irq_arch_disable
 #define irq_restore     irq_arch_restore
 #define irq_is_in       irq_arch_in
-#endif
+#endif*/
 /** @} */
 
 /**
@@ -73,9 +73,9 @@ void irq_arch_restore(unsigned int state);
  */
 int irq_arch_in(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* IRQ_ARCH_H */
 /** @} */

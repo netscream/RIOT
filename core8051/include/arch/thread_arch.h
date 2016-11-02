@@ -56,7 +56,7 @@ typedef void *(*thread_task_func_t)(void *arg);
  *
  * @return                  pointer to the new top of the stack
  */
-char *thread_arch_stack_init(thread_task_func_t task_func, void *arg, void *stack_start, int stack_size);
+char *thread_arch_stack_init(thread_task_func_t *task_func, void *arg, void *stack_start, int stack_size);
 
 /**
  * @brief   Get the number of bytes used on the ISR stack

@@ -20,6 +20,10 @@
  */
 
 #include <stdio.h>
+#include "kernel_init.h"
+#include "cpu.h"
+#include "board.h"
+
 void putchar(char c)
 {
    
@@ -27,6 +31,12 @@ void putchar(char c)
 
 int main(void)
 {
+    systemInit();
+    boardIoInit();
+    boardStartBootloader();
+    
+    puts("Board initialization complete. \n");
+    kernel_init();
     puts("Hello World!");
 
     /* printf("You are running RIOT on a(n) %s board.\n", RIOT_BOARD); */

@@ -18,7 +18,7 @@
  * @}
  */
 //8051 implementation
-#define RIOT_VERSION "STUFF"
+#include "riotbuild.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -91,13 +91,17 @@ void kernel_init(void)
     (void) irq_disable();
 
     thread_create(idle_stack, sizeof(idle_stack),
-            THREAD_PRIORITY_IDLE,
-            THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
+            //THREAD_PRIORITY_IDLE,
+            15,
+            //THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
+            4 | 8,
             idle_thread, NULL, idle_name);
 
     thread_create(main_stack, sizeof(main_stack),
-            THREAD_PRIORITY_MAIN,
-            THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
+	    //THREAD_PRIORITY_MAIN,
+            7,
+            //THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
+            4 | 8,
             main_trampoline, NULL, main_name);
 
     cpu_switch_context_exit();

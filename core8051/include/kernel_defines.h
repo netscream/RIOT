@@ -39,7 +39,7 @@
  * @return      Pointer to the container of PTR.
  */
 //8051 implementation
-#if __STDC_VERSION__ >= 201112L
+//#if __STDC_VERSION__ >= 201112L
 /*#   define container_of(PTR, TYPE, MEMBER) \
         (_Generic((PTR), \
             const __typeof__ (((TYPE *) 0)->MEMBER) *: \
@@ -54,20 +54,20 @@
             ((TYPE *) ((char *) __m____ - offsetof(TYPE, MEMBER))); \
         }))
 #else*/
-#   define container_of(PTR, TYPE, MEMBER) \
-        ((TYPE *) ((char *) (PTR) - offsetof(TYPE, MEMBER)))
-#endif
+/*#define container_of(PTR, TYPE, MEMBER) \
+        ((TYPE *) ((char *) (PTR) - offsetof(TYPE, MEMBER)))*/
+//#endif
 
 /**
  * @def NORETURN
  * @brief The *NORETURN* keyword tells the compiler to assume that the function
  *        cannot return.
  */
-#ifdef __GNUC__
+/*#ifdef __GNUC__
 #define NORETURN  __attribute__((noreturn))
-#else
+#else*/
 #define NORETURN
-#endif
+//#endif
 
 /**
  * @def CONST
@@ -75,11 +75,11 @@
  *        examine global memory. I.e. a *CONST* function cannot even
  *        dereference a pointer parameter.
  */
-#ifdef __GNUC__
+/*#ifdef __GNUC__
 #define CONST  __attribute__((const))
 #else
 #define CONST
-#endif
+#endif*/
 
 /**
  * @def PURE
@@ -88,11 +88,11 @@
  *        function can be subject to common subexpression elimination and loop
  *        optimization just as an arithmetic operator would be.
  */
-#ifdef __GNUC__
+/*#ifdef __GNUC__
 #define PURE  __attribute__((pure))
 #else
 #define PURE
-#endif
+#endif*/
 
 /**
  * @def       UNREACHABLE()
@@ -101,11 +101,11 @@
  *            Use this if the compiler cannot tell that e.g.
  *            an assembler instruction causes a longjmp, or a write causes a reboot.
  */
-#if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 5)) || (__GNUC__ >= 5)
-#define UNREACHABLE() __builtin_unreachable()
-#else
-#define UNREACHABLE() do { /* nothing */ } while (1)
-#endif
+//#if ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 5)) || (__GNUC__ >= 5)
+//#define UNREACHABLE() __builtin_unreachable()
+//#else
+//#define UNREACHABLE() do { /* nothing */ } while (1)
+//#endif
 
 /**
  * @def         ALIGN_OF(T)

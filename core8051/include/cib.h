@@ -24,14 +24,14 @@
 
 #include "assert.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief circular integer buffer structure
  */
-typedef struct cib_t{
+typedef struct cib{
     unsigned int read_count;    /**< number of (successful) read accesses */
     unsigned int write_count;   /**< number of (successful) write accesses */
     unsigned int mask;          /**< Size of buffer -1, i.e. mask of the bits */
@@ -41,7 +41,7 @@ typedef struct cib_t{
  * @brief   Initialize cib_t to a given size.
  */
 //#define CIB_INIT(SIZE) { 0, 0, (SIZE) - 1 }
-#define CIB_INIT(SIZE) ( 0, 0, (SIZE) - 1 )
+//#define CIB_INIT(SIZE) ( 0, 0, (SIZE) - 1 )
 /**
  * @brief Initialize @p cib to 0 and set buffer size to @p size.
  *
@@ -181,9 +181,9 @@ static int cib_put_unsafe(cib_t *cib);
     return (int) (cib->write_count++ & cib->mask);
 }*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* CIB_H */
 /** @} */

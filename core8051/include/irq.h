@@ -24,9 +24,9 @@
 #include <stdbool.h>
 #include "arch/irq_arch.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   This function sets the IRQ disable bit in the status register
@@ -67,9 +67,9 @@ void irq_restore(unsigned state);
  */
 int irq_is_in(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* IRQ_H_ */
 /** @} */

@@ -87,9 +87,9 @@
 #include "native_sched.h"
 #include "clist.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief forward declaration for thread_t, defined in thread.h
@@ -147,7 +147,8 @@ extern volatile unsigned int sched_context_switch_request;
 /**
  *  Thread table
  */
-extern volatile thread_t *sched_threads[KERNEL_PID_LAST + 1];
+//extern volatile thread_t *sched_threads[KERNEL_PID_LAST + 1];
+extern volatile thread_t *sched_threads[MAXTHREADS];
 
 /**
  *  Currently active thread
@@ -198,9 +199,9 @@ extern schedstat sched_pidlist[KERNEL_PID_LAST + 1];
 void sched_register_cb(void (*callback)(uint32_t, uint32_t));
 #endif /* MODULE_SCHEDSTATISTICS */
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* SCHEDULER_H */
 /** @} */

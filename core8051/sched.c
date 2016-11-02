@@ -29,41 +29,49 @@
 #include "irq.h"
 #include "log.h"
 
-#ifdef MODULE_SCHEDSTATISTICS
+/*#ifdef MODULE_SCHEDSTATISTICS
 #include "xtimer.h"
-#endif
+#endif*/
 
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
-#if ENABLE_DEBUG
+//#if ENABLE_DEBUG
 /* For PRIu16 etc. */
-#include <inttypes.h>
-#endif
+//#include <inttypes.h>
+//#endif
 
-volatile int sched_num_threads = 0;
+/*volatile int sched_num_threads = 0;
 
-volatile unsigned int sched_context_switch_request;
+//volatile unsigned int sched_context_switch_request;
 
-volatile thread_t *sched_threads[KERNEL_PID_LAST + 1];
-volatile thread_t *sched_active_thread;
+//volatile thread_t *sched_threads[KERNEL_PID_LAST + 1];
+//volatile thread_t *sched_active_thread;
 
-volatile kernel_pid_t sched_active_pid = KERNEL_PID_UNDEF;
+//volatile kernel_pid_t sched_active_pid = KERNEL_PID_UNDEF;*/
 
-clist_node_t sched_runqueues[SCHED_PRIO_LEVELS];
+/*int sched_num_threads = 0;
+//unsigned int sched_context_switch_request;
+//thread_t *sched_threads[KERNEL_PID_LAST +1];
+//thread_t *sched_active_thread;
+//kernel_pid_t sched_active_pid = KERNEL_PID_UNDEF;*/
+//unsigned int sched_context_switch_request;
+//thread_t *sched_threads[MAXTHREADS];
+//thread_t *sched_active_thread;
+//clist_node_t sched_runqueues[SCHED_PRIO_LEVELS];
 static uint32_t runqueue_bitcache = 0;
 
-#ifdef MODULE_SCHEDSTATISTICS
+/*#ifdef MODULE_SCHEDSTATISTICS
 static void (*sched_cb) (uint32_t timestamp, uint32_t value) = NULL;
 schedstat sched_pidlist[KERNEL_PID_LAST + 1];
-#endif
+#endif*/
 
 //int __attribute__((used)) sched_run(void)
 //8051 implementation
-thread_t *active_thread;
-thread_t *next_thread;
 int sched_run(void)
 {
+    thread_t *active_thread = NULL;
+    thread_t *next_thread = NULL;
     sched_context_switch_request = 0;
     
     //thread_t *active_thread = (thread_t *) sched_active_thread;
@@ -99,7 +107,8 @@ int sched_run(void)
     //u_int32_t *nextrq = bitarithm_lsb(runqueue_bitcache);
     //thread_t *next_thread = container_of(sched_runqueues[nextrq].next->next, thread_t, rq_entry);
     //next_thread = container_of(sched_runqueues[nextrq].next->next, thread_t, rq_entry);
-    next_thread = container_of(sched_runqueues[bitarithm_lsb(runqueue_bitcache)].next->next, thread_t, rq_entry);
+    //next_thread = container_of(sched_runqueues[bitarithm_lsb(runqueue_bitcache)].next->next, thread_t, rq_entry);
+    next_thread = ((thread_t*) ((char*) sched_runqueues[bitarithm_lsb(runqueue_bitcache)].next->next - offsetof(thread_t, rq_entry)));
 
     DEBUG("sched_run: active thread: %" PRIkernel_pid ", next thread: %" PRIkernel_pid "\n",
           (active_thread == NULL) ? KERNEL_PID_UNDEF : active_thread->pid,

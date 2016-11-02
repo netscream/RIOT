@@ -22,9 +22,9 @@
 #ifndef LPM_ARCH_H
 #define LPM_ARCH_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Define the mapping between the architecture independent interfaces
@@ -34,14 +34,14 @@
  * new platforms should always use the *_arch_* interfaces.
  * @{
  */
-#ifdef COREIF_NG
+/*#ifdef COREIF_NG
 #define lpm_init            lpm_arch_init
 #define lpm_set             lpm_arch_set
 #define lpm_get             lpm_arch_get
 #define lpm_awake           lpm_arch_awake
 #define lpm_begin_awake     lpm_arch_begin_awake
 #define lpm_end_awake       lpm_arch_end_awake
-#endif
+#endif*/
 /** @} */
 
 /**
@@ -92,9 +92,9 @@ void lpm_arch_begin_awake(void);
  */
 void lpm_arch_end_awake(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* LPM_ARCH_H */
 /** @} */

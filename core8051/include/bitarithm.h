@@ -20,9 +20,9 @@
 #ifndef BITARITHM_H_
 #define BITARITHM_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @def SETBIT
@@ -33,7 +33,7 @@
  *
  * @return The modified bitfield
  */
-#define SETBIT(val, bit)    val |= (bit)
+//#define SETBIT(val, bit)    val |= (bit)
 
 /**
  * @def CLRBIT
@@ -44,13 +44,13 @@
  *
  * @return The modified bitfield
  */
-#define CLRBIT(val, bit)    val &= (~(bit))
+//#define CLRBIT(val, bit)    val &= (~(bit))
 
 /**
  * @name    Single Bit Defines
  * @{
  */
-#ifndef BIT0
+/*#ifndef BIT0
 #define BIT0  0x00000001
 #define BIT1  0x00000002
 #define BIT2  0x00000004
@@ -85,10 +85,10 @@
 #define BIT29 0x20000000
 #define BIT30 0x40000000
 #define BIT31 0x80000000
-#endif
+#endif*/
 /** @} */
 
-#define ARCH_32_BIT   (__INT_MAX__ == 2147483647) /**< 1 for 32 bit architectures, 0 otherwise */
+//#define ARCH_32_BIT   (__INT_MAX__ == 2147483647) /**< 1 for 32 bit architectures, 0 otherwise */
 
 /**
  * @brief   Returns the number of the highest '1' bit in a value
@@ -118,9 +118,9 @@ unsigned bitarithm_lsb(register unsigned v);
  */
 unsigned bitarithm_bits_set(unsigned v);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* BITARITHM_H_ */
 /** @} */

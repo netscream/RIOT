@@ -25,8 +25,8 @@
  *  * @brief   Prints the last instruction's address
  *    @todo: Not supported
  *   */
-static inline void cpu_print_last_instruction(void)
-{
+static void cpu_print_last_instruction(void);
+/*{
    //puts("n/a");
-}
+}*/
 #endif

@@ -33,9 +33,9 @@
 #include "thread_flags.h"
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Thread status list
@@ -47,15 +47,26 @@
  * @brief Blocked states.
  * @{
  */
-#define STATUS_STOPPED              0   /**< has terminated                     */
-#define STATUS_SLEEPING             1   /**< sleeping                           */
-#define STATUS_MUTEX_BLOCKED        2   /**< waiting for a locked mutex         */
-#define STATUS_RECEIVE_BLOCKED      3   /**< waiting for a message              */
-#define STATUS_SEND_BLOCKED         4   /**< waiting for message to be delivered*/
-#define STATUS_REPLY_BLOCKED        5   /**< waiting for a message response     */
-#define STATUS_FLAG_BLOCKED_ANY     6   /**< waiting for any flag from flag_mask*/
-#define STATUS_FLAG_BLOCKED_ALL     7   /**< waiting for all flags in flag_mask */
-#define STATUS_MBOX_BLOCKED         8   /**< waiting for get/put on mbox        */
+enum threadstatus {
+	STATUS_STOPPED,
+        STATUS_SLEEPING,
+        STATUS_MUTEX_BLOCKED,
+        STATUS_RECEIVE_BLOCKED,
+        STATUS_SEND_BLOCKED,
+        STATUS_REPLY_BLOCKED,
+        STATUS_FLAG_BLOCKED_ANY,
+	STATUS_FLAG_BLOCKED_ALL,
+	STATUS_MBOX_BLOCKED 
+};
+//#define STATUS_STOPPED              0   /**< has terminated                     */
+//#define STATUS_SLEEPING             1   /**< sleeping                           */
+//#define STATUS_MUTEX_BLOCKED        2   /**< waiting for a locked mutex         */
+//#define STATUS_RECEIVE_BLOCKED      3   /**< waiting for a message              */
+//#define STATUS_SEND_BLOCKED         4   /**< waiting for message to be delivered*/
+//#define STATUS_REPLY_BLOCKED        5   /**< waiting for a message response     */
+//#define STATUS_FLAG_BLOCKED_ANY     6   /**< waiting for any flag from flag_mask*/
+//#define STATUS_FLAG_BLOCKED_ALL     7   /**< waiting for all flags in flag_mask */
+//#define STATUS_MBOX_BLOCKED         8   /**< waiting for get/put on mbox        */
 /** @} */
 
 /**
@@ -158,27 +169,27 @@ struct _thread {
 /**
  * @brief Minimum stack size
  */
-#ifndef THREAD_STACKSIZE_MINIMUM
+/*#ifndef THREAD_STACKSIZE_MINIMUM
 #define THREAD_STACKSIZE_MINIMUM  (sizeof(thread_t))
-#endif
+#endif*/
 
 /**
  * @def THREAD_PRIORITY_MIN
  * @brief Least priority a thread can have
  */
-#define THREAD_PRIORITY_MIN            (SCHED_PRIO_LEVELS-1)
+//#define THREAD_PRIORITY_MIN            (SCHED_PRIO_LEVELS-1)
 
 /**
  * @def THREAD_PRIORITY_IDLE
  * @brief Priority of the idle thread
  */
-#define THREAD_PRIORITY_IDLE           (THREAD_PRIORITY_MIN)
+//#define THREAD_PRIORITY_IDLE           (THREAD_PRIORITY_MIN)
 
 /**
  * @def THREAD_PRIORITY_MAIN
  * @brief Priority of the main thread
  */
-#define THREAD_PRIORITY_MAIN           (THREAD_PRIORITY_MIN - (SCHED_PRIO_LEVELS/2))
+//#define THREAD_PRIORITY_MAIN           (THREAD_PRIORITY_MIN - (SCHED_PRIO_LEVELS/2))
 
 /**
  * @name Optional flags for controlling a threads initial state
@@ -187,23 +198,23 @@ struct _thread {
 /**
  * @brief Set the new thread to sleeping
  **/
-#define THREAD_CREATE_SLEEPING          (1)
+//#define THREAD_CREATE_SLEEPING          (1)
 
 /**
  * @brief Currently not implemented
  */
-#define THREAD_AUTO_FREE                (2)
+//#define THREAD_AUTO_FREE                (2)
 
 /**
  * @brief Do not automatically call thread_yield() after creation
  */
-#define THREAD_CREATE_WOUT_YIELD        (4)
+//#define THREAD_CREATE_WOUT_YIELD        (4)
 
  /**
   * @brief Write markers into the thread's stack to measure stack usage (for
   *        debugging)
   */
-#define THREAD_CREATE_STACKTEST         (8)
+//#define THREAD_CREATE_STACKTEST         (8)
 /** @} */
 
 /**
@@ -355,7 +366,7 @@ static kernel_pid_t thread_getpid(void);
  *
  * @return stack pointer
  */
-char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_start, int stack_size);
+char *thread_stack_init(thread_task_func_t *task_func, void *arg, void *stack_start, int stack_size);
 
 /**
  * @brief Add thread to list, sorted by priority (internal)
@@ -400,9 +411,9 @@ uintptr_t thread_measure_stack_free(char *stack);
  */
 void thread_print_stack(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 /** @} */
 #endif /* THREAD_H */

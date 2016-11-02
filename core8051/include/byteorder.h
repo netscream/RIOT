@@ -21,13 +21,13 @@
 
 #include <stdint.h>
 
-#if defined(__MACH__)
+/*#if defined(__MACH__)
 #   include "clang_compat.h"
-#endif
+#endif*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /* ******************************* INTERFACE ******************************* */
 
@@ -292,9 +292,9 @@ static uint32_t NTOHL(uint32_t v);
 /* 8051 implementation */
 //static inline uint64_t NTOHLL(uint64_t v);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* BYTEORDER_H_ */
 /** @} */

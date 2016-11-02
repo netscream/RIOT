@@ -128,7 +128,8 @@ void mutex_unlock(mutex_t *mutex)
     //list_node *next = list_remove_head(&mutex->queue);
 
     //thread_t *process = container_of((clist_node_t*)next, thread_t, rq_entry);    
-    process = container_of((clist_node_t*)next, thread_t, rq_entry);        
+    //process = container_of((clist_node_t*)next, thread_t, rq_entry);        
+    process = ((thread_t*) ((char*) ((clist_node_t*)next) - offsetof(thread_t, rq_entry)));
 
     DEBUG("mutex_unlock: waking up waiting thread %" PRIkernel_pid "\n",
           process->pid);
@@ -163,7 +164,8 @@ void mutex_unlock_and_sleep(mutex_t *mutex)
             next = list_remove_head(&mutex->queue);
             //thread_t *process = container_of((clist_node_t*)next, thread_t,
             //                                 rq_entry);
-            process = container_of((clist_node_t*)next, thread_t, rq_entry);
+            //process = container_of((clist_node_t*)next, thread_t, rq_entry);
+            process = ((thread_t*) ((char*) ((clist_node_t*)next) - offsetof(thread_t, rq_entry)));
             DEBUG("PID[%" PRIkernel_pid "]: waking up waiter.\n", process->pid);
             sched_set_status(process, STATUS_PENDING);
             if (!mutex->queue.next) {

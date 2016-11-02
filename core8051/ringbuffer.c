@@ -62,9 +62,10 @@ static char get_head(ringbuffer_t *restrict rb)
 
 unsigned ringbuffer_add(ringbuffer_t *restrict rb, const char *buf, unsigned n)
 {
-    unsigned i;
+    unsigned i = 0;
     for (i = 0; i < n; i++) {
-        if (ringbuffer_full(rb)) {
+        //if (ringbuffer_full(rb)) {
+        if (rb->avail == rb->size) {
             break;
         }
         add_tail(rb, buf[i]);
@@ -75,7 +76,8 @@ unsigned ringbuffer_add(ringbuffer_t *restrict rb, const char *buf, unsigned n)
 int ringbuffer_add_one(ringbuffer_t *restrict rb, char c)
 {
     int result = -1;
-    if (ringbuffer_full(rb)) {
+    //if (ringbuffer_full(rb)) {
+    if (rb->avail == rb->size) {
         result = (unsigned char) get_head(rb);
     }
     add_tail(rb, c);
@@ -84,7 +86,8 @@ int ringbuffer_add_one(ringbuffer_t *restrict rb, char c)
 
 int ringbuffer_get_one(ringbuffer_t *restrict rb)
 {
-    if (!ringbuffer_empty(rb)) {
+    //if (!ringbuffer_empty(rb)) {
+    if (!(rb->avail == 0)) {
         return (unsigned char) get_head(rb);
     }
     else {
@@ -138,7 +141,7 @@ unsigned ringbuffer_remove(ringbuffer_t *restrict rb, unsigned n)
 }
 
 /* 8051 implementation */
-static int ringbuffer_empty(const ringbuffer_t *restrict rb)
+/*static int ringbuffer_empty(const ringbuffer_t *restrict rb)
 {
     return rb->avail == 0;
 }
@@ -157,13 +160,9 @@ static unsigned int ringbuffer_get_free(const ringbuffer_t *restrict rb)
 int ringbuffer_peek_one(const ringbuffer_t *restrict rb_)
 {
     return ringbuffer_get_one((ringbuffer_t*)&rb_);
-    //ringbuffer_t rb = *rb_;  //8051 removal
-    //return ringbuffer_get_one(&rb);
 }
 
 unsigned ringbuffer_peek(const ringbuffer_t *restrict rb_, char *buf, unsigned n)
 {
     return ringbuffer_get((ringbuffer_t*) &rb_, buf, n);
-    //ringbuffer_t rb = *rb_;
-    //return ringbuffer_get(&rb, buf, n);
-}
+}*/

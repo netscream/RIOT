@@ -61,9 +61,9 @@
  * @name reserved thread flags
  * @{
  */
-#define THREAD_FLAG_MSG_WAITING      (0x1<<15)
-#define THREAD_FLAG_MUTEX_UNLOCKED   (0x1<<14)
-#define THREAD_FLAG_TIMEOUT          (0x1<<13)
+#define THREAD_FLAG_MSG_WAITING      (0x1<<7) //15
+#define THREAD_FLAG_MUTEX_UNLOCKED   (0x1<<6) //14
+#define THREAD_FLAG_TIMEOUT          (0x1<<5) //13
 /** @} */
 
 /**

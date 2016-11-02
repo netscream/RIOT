@@ -21,9 +21,9 @@
 #ifndef ATOMIC_H_
 #define ATOMIC_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Integer variable for use in atomic counters.
@@ -157,9 +157,9 @@ static int atomic_set_to_zero(atomic_int_t *var);
  */
 //#define ATOMIC_VALUE(var) ((var).value)
 static int ATOMIC_VALUE(atomic_int_t *var);
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* ATOMIC_H_ */
 /** @} */

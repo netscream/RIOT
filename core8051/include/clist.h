@@ -84,9 +84,9 @@
 #include <stddef.h>
 #include "list.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief List node structure
@@ -359,9 +359,9 @@ static void clist_foreach(clist_node_t *list, int(*func)(clist_node_t *));
     } while (node != list->next);
 }*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* CLIST_H */
 /** @} */

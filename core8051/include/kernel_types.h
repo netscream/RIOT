@@ -45,16 +45,16 @@
 #   endif
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @def MAXTHREADS
  * @brief The maximum number of threads to be scheduled
  */
 #ifndef MAXTHREADS
-#define MAXTHREADS 32
+#define MAXTHREADS 8
 #endif
 
 /**
@@ -70,7 +70,7 @@
 /**
  * The last valid PID (inclusive).
  */
-#define KERNEL_PID_LAST (KERNEL_PID_FIRST + MAXTHREADS - 1)
+//#define KERNEL_PID_LAST (KERNEL_PID_FIRST + MAXTHREADS - 1)
 
 /**
  * Macro for printing formatter
@@ -93,12 +93,13 @@ typedef int16_t kernel_pid_t;
 static int pid_is_valid(kernel_pid_t pid);
 /*static inline int pid_is_valid(kernel_pid_t pid)
 {
-    return ((KERNEL_PID_FIRST <= pid) && (pid <= KERNEL_PID_LAST));
+    //return ((KERNEL_PID_FIRST <= pid) && (pid <= KERNEL_PID_LAST));
+    return (1 <= pid) && (pid <= (MAXTHREADS - 1));
 }*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* KERNEL_TYPES_H */
 /** @} */

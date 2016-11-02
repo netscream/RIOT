@@ -19,9 +19,9 @@
 #ifndef REBOOT_H_
 #define REBOOT_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Immediately reboots the system.
@@ -30,9 +30,9 @@
  */
 void reboot(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* REBOOT_H_ */
 /** @} */

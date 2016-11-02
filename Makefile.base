@@ -51,13 +51,15 @@ else
 OBJC_LTO    := $(SRC:%.c=$(BINDIR)$(MODULE)/%.rel)
 OBJC_NOLTO  := $(SRC_NOLTO:%.c=$(BINDIR)$(MODULE)/%.rel)
 OBJC        := $(OBJC_NOLTO) $(OBJC_LTO)
+ASMOBJ      := $(ASMSRC:%.s=$(BINDIR)$(MODULE)/%.rel)
+ASSMOBJ     := $(ASSMSRC:%.S=$(BINDIR)$(MODULE)/%.rel)
 endif
 
 ifneq (mcs51,$(TOOLCHAIN))
 OBJ := $(OBJC) $(OBJCXX) $(ASMOBJ) $(ASSMOBJ)
 DEP := $(OBJC:.o=.d) $(OBJCXX:.o=.d) $(ASSMOBJ:.o=.d)
 else #8051/mcs51 specific architecture
-OBJ := $(OBJC)
+OBJ := $(OBJC) $(ASMOBJ)
 DEP := $(OBJC:.o=.d) $(OBJCXX:.o=.d) $(ASSMOBJ:.o=.d)
 endif
 
@@ -105,6 +107,9 @@ $(OBJC): $(BINDIR)$(MODULE)/%.rel: %.c $(RIOTBUILD_CONFIG_HEADER_C)
 		-DRIOT_FILE_RELATIVE=\"$(patsubst $(RIOTBASE)/%,%,$(abspath $<))\" \
 		-DRIOT_FILE_NOPATH=\"$(notdir $<)\" \
 		-Wp,-MMD,$(@:%.rel=%.d),-MT,$@,-MP $(INCLUDES)-Wa,-p --model-medium --debug -o $@
+		
+$(ASMOBJ): $(BINDIR)$(MODULE)/%.rel: %.s
+	$(AD)$(AS) -glos -p $@ $(abspath $<)
 endif
 # pull in dependency info for *existing* .o files
 # deleted header files will be silently ignored

@@ -21,9 +21,9 @@
 #ifndef LIST_H
 #define LIST_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief List node structure
@@ -74,9 +74,9 @@ static list_node_t* list_remove_head(list_node_t *list);
     return head;
 }*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* LIST_H */
 /** @} */
