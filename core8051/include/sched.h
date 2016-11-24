@@ -142,33 +142,33 @@ NORETURN void cpu_switch_context_exit(void);
  * Flag indicating whether a context switch is necessary after handling an
  * interrupt. Supposed to be set in an ISR.
  */
-extern volatile unsigned int sched_context_switch_request;
+extern unsigned int XDATA sched_context_switch_request;
 
 /**
  *  Thread table
  */
-//extern volatile thread_t *sched_threads[KERNEL_PID_LAST + 1];
-extern volatile thread_t *sched_threads[MAXTHREADS];
+extern thread_t* XDATA sched_threads[KERNEL_PID_LAST + 1];
+//extern thread_t XDATA *sched_threads[MAXTHREADS];
 
 /**
  *  Currently active thread
  */
-extern volatile thread_t *sched_active_thread;
+extern thread_t* XDATA sched_active_thread;
 
 /**
  *  Number of running (non-terminated) threads
  */
-extern volatile int sched_num_threads;
+extern int XDATA sched_num_threads;
 
 /**
  *  Process ID of active thread
  */
-extern volatile kernel_pid_t sched_active_pid;
+extern kernel_pid_t XDATA sched_active_pid;
 
 /**
  * List of runqueues per priority level
  */
-extern clist_node_t sched_runqueues[SCHED_PRIO_LEVELS];
+extern clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
 
 /**
  * @brief  Removes thread from scheduler and set status to #STATUS_STOPPED
@@ -189,7 +189,7 @@ typedef struct {
 /**
  *  Thread statistics table
  */
-extern schedstat sched_pidlist[KERNEL_PID_LAST + 1];
+extern schedstat XDATA sched_pidlist[KERNEL_PID_LAST + 1];
 
 /**
  *  @brief  Register a callback that will be called on every scheduler run

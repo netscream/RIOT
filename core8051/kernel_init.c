@@ -18,7 +18,7 @@
  * @}
  */
 //8051 implementation
-#include "riotbuild.h"
+#include "riotbuild.h" //riot version
 #include <stdint.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -28,14 +28,14 @@
 #include "lpm.h"
 #include "irq.h"
 #include "log.h"
-
-#ifdef MODULE_SCHEDSTATISTICS
+//#include "board.h" //for testing purposes
+/*#ifdef MODULE_SCHEDSTATISTICS
 #include "sched.h"
 #endif
 
 #define ENABLE_DEBUG (0)
 #include "debug.h"
-
+*/
 #ifdef MODULE_AUTO_INIT
 #include <auto_init.h>
 #endif
@@ -89,14 +89,13 @@ static char idle_stack[THREAD_STACKSIZE_IDLE];
 void kernel_init(void)
 {
     (void) irq_disable();
-
     thread_create(idle_stack, sizeof(idle_stack),
             //THREAD_PRIORITY_IDLE,
             15,
             //THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
             4 | 8,
             idle_thread, NULL, idle_name);
-
+       
     thread_create(main_stack, sizeof(main_stack),
 	    //THREAD_PRIORITY_MAIN,
             7,

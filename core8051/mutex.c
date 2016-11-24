@@ -103,9 +103,9 @@ int _mutex_lock(mutex_t *mutex, int blocking)
 //8051 implementation
 void mutex_unlock(mutex_t *mutex)
 {
-    list_node_t *next;
-    thread_t *process;
-    uint16_t process_priority;
+    list_node_t *next = NULL;
+    thread_t *process = NULL;   
+    uint16_t process_priority = 0;
     unsigned irqstate = irq_disable();
 
     DEBUG("mutex_unlock(): queue.next: 0x%08x pid: %" PRIkernel_pid "\n",
@@ -147,9 +147,9 @@ void mutex_unlock(mutex_t *mutex)
 //8051 implementation
 void mutex_unlock_and_sleep(mutex_t *mutex)
 {
-    list_node_t *next;
-    thread_t *process;
-    unsigned irqstate;
+    list_node_t *next = NULL;
+    thread_t *process = NULL;
+    unsigned irqstate = 0;
     DEBUG("PID[%" PRIkernel_pid "]: unlocking mutex. queue.next: 0x%08x, and "
           "taking a nap\n", sched_active_pid, (unsigned)mutex->queue.next);
    // unsigned irqstate = irq_disable();

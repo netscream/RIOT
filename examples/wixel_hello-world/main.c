@@ -20,27 +20,45 @@
  */
 
 #include <stdio.h>
-#include "kernel_init.h"
-#include "cpu.h"
 #include "board.h"
+#include "riotbuild.h"
+//#include "kernel_init.h"
+#include "usb.h"
+#include "usb_com.h"
+
+/*  parameters */
+char XDATA stuff[5];
 
 void putchar(char c)
 {
-   
+	
 }
 
 int main(void)
 {
-    systemInit();
-    boardIoInit();
-    boardStartBootloader();
-    
-    puts("Board initialization complete. \n");
+    //systemInit(); 
     kernel_init();
-    puts("Hello World!");
+    systemInit();
+    stuff[0] = 'h';
+    stuff[1] = 'e'; 
+    stuff[2] = 'l';
+    stuff[3] = 'l';
+    stuff[4] = 'o';
 
-    /* printf("You are running RIOT on a(n) %s board.\n", RIOT_BOARD); */
-    /* printf("This board features a(n) %s MCU.\n", RIOT_MCU); */
-
+    LED_RED(1); 
+    while(1) { 
+	    int CODE i = 0;
+	    boardService();
+	    usbComService();
+	    puts("Hello World!");
+	    i = usbComTxAvailable();
+	    if (i > 1)
+	    { 
+		usbComTxSend(stuff, 5);
+	    }
+	    //LED_RED(0);
+	    printf("You are running RIOT on a(n) %s board.\n", RIOT_BOARD);
+	    //printf("This board features a(n) %s MCU.\n", RIOT_MCU);
+    }
     return 0;
 }

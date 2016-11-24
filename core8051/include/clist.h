@@ -105,7 +105,7 @@ typedef list_node_t clist_node_t;
  * @param[in,out]   new_node    Node which gets inserted.
  *                              Must not be NULL.
  */
-static void clist_rpush(clist_node_t *list, clist_node_t *new_node);
+void clist_rpush(clist_node_t *list, clist_node_t *new_node);
 /*static inline void clist_rpush(clist_node_t *list, clist_node_t *new_node)
 {
     if (list->next) {
@@ -128,7 +128,7 @@ static void clist_rpush(clist_node_t *list, clist_node_t *new_node);
  * @param[in,out]   new_node    Node which gets inserted.
  *                              Must not be NULL.
  */
-static void clist_lpush(clist_node_t *list, clist_node_t *new_node);
+void clist_lpush(clist_node_t *list, clist_node_t *new_node);
 /*static inline void clist_lpush(clist_node_t *list, clist_node_t *new_node)
 {
     if (list->next) {
@@ -149,7 +149,7 @@ static void clist_lpush(clist_node_t *list, clist_node_t *new_node);
  * @param[in,out]   list        Pointer to the *list* to remove first element
  *                              from.
  */
-static clist_node_t *clist_lpop(clist_node_t *list);
+clist_node_t *clist_lpop(clist_node_t *list);
 /*static inline clist_node_t *clist_lpop(clist_node_t *list)
 {
     if (list->next) {
@@ -180,7 +180,7 @@ static clist_node_t *clist_lpop(clist_node_t *list);
  *
  * @param[in,out]   list        The list to work upon.
  */
-static void clist_lpoprpush(clist_node_t *list);
+void clist_lpoprpush(clist_node_t *list);
 /*static inline void clist_lpoprpush(clist_node_t *list)
 {
     if (list->next) {
@@ -197,7 +197,7 @@ static void clist_lpoprpush(clist_node_t *list);
  * @returns     first (leftmost) list element, or NULL if list is empty
  */
 /* 8051 implementation */
-static clist_node_t *clist_lpeek(const clist_node_t *list);
+clist_node_t *clist_lpeek(const clist_node_t *list);
 /*static inline clist_node_t *clist_lpeek(const clist_node_t *list)
 {
     if (list->next) {
@@ -214,7 +214,7 @@ static clist_node_t *clist_lpeek(const clist_node_t *list);
  * @param[in]   list        The list to work upon.
  * @returns     last (rightmost) list element, or NULL if list is empty
  */
-static clist_node_t *clist_rpeek(const clist_node_t *list);
+clist_node_t *clist_rpeek(const clist_node_t *list);
 /*static inline clist_node_t *clist_rpeek(const clist_node_t *list)
 {
     return list->next;
@@ -229,7 +229,7 @@ static clist_node_t *clist_rpeek(const clist_node_t *list);
  *                      tatic clist_node_t *clist_lpeek(const clist_node_t *list)       from.
  */
 /* 8051 implementation */
-static clist_node_t *clist_rpop(clist_node_t *list);
+clist_node_t *clist_rpop(clist_node_t *list);
 /*static inline clist_node_t *clist_rpop(clist_node_t *list)
 {
     if (list->next) {
@@ -257,7 +257,7 @@ static clist_node_t *clist_rpop(clist_node_t *list);
  * @returns         NULL if node is not a list member
  */
 /* 8051 implementation */
-static clist_node_t *clist_find_before(const clist_node_t *list, const clist_node_t *node);
+clist_node_t *clist_find_before(const clist_node_t *list, const clist_node_t *node);
 /*static inline clist_node_t *clist_find_before(const clist_node_t *list, const clist_node_t *node)
 {
     clist_node_t *pos = list->next;
@@ -287,7 +287,7 @@ static clist_node_t *clist_find_before(const clist_node_t *list, const clist_nod
  * @returns         NULL if node is not a list member
  */
 /* 8051 implementation */
-static clist_node_t *clist_find(const clist_node_t *list, const clist_node_t *node);
+clist_node_t *clist_find(const clist_node_t *list, const clist_node_t *node);
 /*static inline clist_node_t *clist_find(const clist_node_t *list, const clist_node_t *node)
 {
     clist_node_t *tmp = clist_find_before(list, node);
@@ -312,7 +312,7 @@ static clist_node_t *clist_find(const clist_node_t *list, const clist_node_t *no
  * @returns         NULL if node is not a list member
  */
 /* 8051 implementation */
-static clist_node_t *clist_remove(clist_node_t *list, clist_node_t *node);
+clist_node_t *clist_remove(clist_node_t *list, clist_node_t *node);
 /*static inline clist_node_t *clist_remove(clist_node_t *list, clist_node_t *node)
 {
     if (list->next) {
@@ -344,7 +344,7 @@ static clist_node_t *clist_remove(clist_node_t *list, clist_node_t *node);
  * @param[in]       func        Function to call for each member.
  */
 /* 8051 implementation */
-static void clist_foreach(clist_node_t *list, int(*func)(clist_node_t *));
+void clist_foreach(clist_node_t *list, int(*func)(clist_node_t *));
 /*static inline void clist_foreach(clist_node_t *list, int(*func)(clist_node_t *))
 {
     clist_node_t *node = list->next;

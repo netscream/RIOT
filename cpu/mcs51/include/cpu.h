@@ -19,13 +19,13 @@
 #include <dma.h>
 #include <adc.h>
 #include <gpio.h>
-#include <random.h>
+//#include <random.h> //Some problem with random, will fix
 
 /**
  *  * @brief   Prints the last instruction's address
  *    @todo: Not supported
  *   */
-static void cpu_print_last_instruction(void);
+//extern void cpu_print_last_instruction(void);
 /*{
    //puts("n/a");
 }*/

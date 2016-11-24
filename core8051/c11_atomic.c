@@ -50,7 +50,8 @@ typedef uint32_t I4;
  * \param n         width of the data, in bytes
  * \param prefixop  optional prefix unary operator (use ~ for inverting, NAND, NOR etc)
  */
-#define TEMPLATE_ATOMIC_FETCH_OP_N(opname, op, n, prefixop) \
+// 8051 implementation. ekki viss hvad tetta gerir en virdist vera otarft
+/*#define TEMPLATE_ATOMIC_FETCH_OP_N(opname, op, n, prefixop) \
     I##n __atomic_fetch_##opname##_##n (volatile void *ptr, I##n val, int memmodel) \
     { \
         unsigned int mask = irq_disable();    \
@@ -60,7 +61,7 @@ typedef uint32_t I4;
         irq_restore(mask);                    \
         return tmp;                           \
     }
-
+*/
 /* Template instantiations below */
 //TEMPLATE_ATOMIC_FETCH_OP_N( add, +, 1,  ) /* __atomic_fetch_add_1 */
 //TEMPLATE_ATOMIC_FETCH_OP_N( add, +, 2,  ) /* __atomic_fetch_add_2 */

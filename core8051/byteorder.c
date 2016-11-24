@@ -36,15 +36,15 @@ static unsigned long builtin_bswap32(unsigned long a)
 
 static uint16_t byteorder_swaps(uint16_t v)
 {
-#ifndef MODULE_MSP430_COMMON
+//#ifndef MODULE_MSP430_COMMON
     return builtin_bswap16(v);
-#else
+/*#else
     network_uint16_t result = { v };
     uint8_t tmp = result.u8[0];
     result.u8[0] = result.u8[1];
     result.u8[1] = tmp;
     return result.u16;
-#endif
+#endif*/
 }
 
 static uint32_t byteorder_swapl(uint32_t v)

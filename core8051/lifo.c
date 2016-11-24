@@ -28,25 +28,21 @@ int lifo_empty(int *array)
 
 void lifo_init(int *array, int n)
 {
+    int i = 0;
     DEBUG("lifo_init(%i)\n", n);
-    /*for (int i = 0; i <= n; i++) {
+    for (i = 0; i <= n; i++) {
         array[i] = -1;
-    }*/
+    }
    //8051 implementation
-   while(n != 0)
-   {
-	array[n-1] = -1;
-	n--;
-   }
 }
 
 void lifo_insert(int *array, int i)
 {
+    int index = i + 1;
     DEBUG("lifo_insert(%i)\n", i);
     //8051 implementation
-    //int index = i + 1;
     #ifdef DEVELHELP
-    if ((array[i+1] != -1) && (array[0] != -1)) {
+    if ((array[index] != -1) && (array[0] != -1)) {
         LOG_WARNING("lifo_insert: overwriting array[%i] == %i with %i\n\n\n\t\tThe lifo is broken now.\n\n\n", index, array[index], array[0]);
     }
     #endif
@@ -56,32 +52,26 @@ void lifo_insert(int *array, int i)
     }
 #endif*/
 
-    array[i+1] = array[0];
+    array[index] = array[0];
     array[0] = i;
 }
 
 int lifo_get(int *array)
 {
+    int head = array[0];
     //8051 implementation
     DEBUG("lifo_get\n");
-    //int head = array[0];
 
-    /*if (head != -1) {
+    if (head != -1) {
         array[0] = array[head + 1];
-    }*/
-    if (array[0] != -1) {
-	array[0] = array[array[0] + 1];
     }
 
 #ifdef DEVELHELP
     /* make sure a double insert does not result in an infinite
      * resource of values */
-    //array[head+1] = -1;
-    array[array[0] + 1] = -1;
+    array[head+1] = -1;
 #endif
 
-    //DEBUG("lifo_get: returning %i\n", head);
-    //return head;
-    DEBUG("lifo_get: returning %i\n", array[0]);
-    return array[0];
+    DEBUG("lifo_get: returning %i\n", head);
+    return head;
 }

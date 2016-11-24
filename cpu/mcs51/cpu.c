@@ -14,13 +14,6 @@
 #include "sched.h"
 #include "thread.h"
 
-/* defined for the wixel workaround from sched.h */
-volatile unsigned int sched_context_switch_request;
-volatile thread_t *sched_threads[MAXTHREADS];
-volatile thread_t *sched_active_thread;
-volatile int sched_num_threads;
-volatile kernel_pid_t sched_active_pid;
-clist_node_t sched_runqueues[SCHED_PRIO_LEVELS];
 
 /*
  *
@@ -28,13 +21,8 @@ clist_node_t sched_runqueues[SCHED_PRIO_LEVELS];
  */
 void thread_yield_higher(void)
 {
-   // __asm("push r2");
-    //disable_irq();
-    //irq_disable();
-    //save_context();
-    sched_run();
-    //restore_context();
-    //UNREACHABLE();
+    // __asm__("push ar2");
+   return;
 }
 
 /* This function calculates the ISR_usage */
@@ -85,15 +73,15 @@ void reboot(void)
 
 NORETURN void cpu_switch_context_exit(void)
 {
-    sched_active_thread = sched_threads[0];
-    sched_run();
+    //sched_active_thread = sched_threads[0];
+    //sched_run();
 
     //restore_context();
 
     //UNREACHABLE();
 }
 
-static void cpu_print_last_instruction(void)
+void cpu_print_last_instruction(void)
 {
    //puts("n/a");
 }

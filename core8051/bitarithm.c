@@ -23,23 +23,24 @@
 
 unsigned bitarithm_msb(unsigned v)
 {
-    register unsigned r; // result of log2(v) will go here
+    register unsigned r = 0; // result of log2(v) will go here
 
-#if ARCH_32_BIT
-    register unsigned shift;
+/* not needed for the 8051 arch */
+/*#if ARCH_32_BIT
+    register unsigned shift = 0;
 
     r =     (v > 0xFFFF) << 4; v >>= r;
     shift = (v > 0xFF  ) << 3; v >>= shift; r |= shift;
     shift = (v > 0xF   ) << 2; v >>= shift; r |= shift;
     shift = (v > 0x3   ) << 1; v >>= shift; r |= shift;
                                             r |= (v >> 1);
-#else
+#else*/
     r = 0;
     while (v >>= 1) { // unroll for more speed...
         r++;
     }
 
-#endif
+//#endif
 
     return r;
 }
@@ -58,7 +59,7 @@ unsigned bitarithm_lsb(register unsigned v)
 /*---------------------------------------------------------------------------*/
 unsigned bitarithm_bits_set(unsigned v)
 {
-    unsigned c; // c accumulates the total bits set in v
+    unsigned c = 0; // c accumulates the total bits set in v
 
     for (c = 0; v; c++) {
         v &= v - 1; // clear the least significant bit set

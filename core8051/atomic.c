@@ -28,7 +28,6 @@
 
 /* Set ARCH_HAS_ATOMIC_COMPARE_AND_SWAP within cpu.h to override this function */
 #if (ARCH_HAS_ATOMIC_COMPARE_AND_SWAP == 0)
-
 int atomic_cas(atomic_int_t *var, int old, int now)
 {
     unsigned int mask = irq_disable();
@@ -48,8 +47,7 @@ int atomic_cas(atomic_int_t *var, int old, int now)
 /* 8051 implementation */
 static int atomic_inc(atomic_int_t *var)
 {
-    int old;
-
+    int old = 0;
     do {
         old = var->value;
     } while (!atomic_cas(var, old, old + 1));
@@ -60,8 +58,7 @@ static int atomic_inc(atomic_int_t *var)
 /* 8051 implementation */
 static int atomic_dec(atomic_int_t *var)
 {
-    int old;
-
+    int old = 0;
     do {
         old = var->value;
     } while (!atomic_cas(var, old, old - 1));
@@ -84,8 +81,7 @@ static int atomic_set_to_one(atomic_int_t *var)
 /* 8051 implementation */
 static int atomic_set_to_zero(atomic_int_t *var)
 {
-    int old;
-
+    int old = 0;
     do {
         old = var->value;
 

@@ -48,15 +48,17 @@
  * @{
  */
 enum threadstatus {
-	STATUS_STOPPED,
-        STATUS_SLEEPING,
-        STATUS_MUTEX_BLOCKED,
-        STATUS_RECEIVE_BLOCKED,
-        STATUS_SEND_BLOCKED,
-        STATUS_REPLY_BLOCKED,
-        STATUS_FLAG_BLOCKED_ANY,
-	STATUS_FLAG_BLOCKED_ALL,
-	STATUS_MBOX_BLOCKED 
+	STATUS_STOPPED = 0,
+        STATUS_SLEEPING = 1,
+        STATUS_MUTEX_BLOCKED = 2,
+        STATUS_RECEIVE_BLOCKED = 3,
+        STATUS_SEND_BLOCKED = 4,
+        STATUS_REPLY_BLOCKED = 5,
+        STATUS_FLAG_BLOCKED_ANY = 6,
+	STATUS_FLAG_BLOCKED_ALL = 7,
+	STATUS_MBOX_BLOCKED = 8,
+	STATUS_RUNNING = 9,
+	STATUS_PENDING = 10 
 };
 //#define STATUS_STOPPED              0   /**< has terminated                     */
 //#define STATUS_SLEEPING             1   /**< sleeping                           */
@@ -74,8 +76,8 @@ enum threadstatus {
  * @{*/
 #define STATUS_ON_RUNQUEUE      STATUS_RUNNING  /**< to check if on run queue:
                                                  `st >= STATUS_ON_RUNQUEUE`             */
-#define STATUS_RUNNING          9               /**< currently running                  */
-#define STATUS_PENDING         10               /**< waiting to be scheduled to run     */
+//#define STATUS_RUNNING          9               /**< currently running                  */
+//#define STATUS_PENDING         10               /**< waiting to be scheduled to run     */
 /** @} */
 /** @} */
 

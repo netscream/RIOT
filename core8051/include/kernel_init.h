@@ -21,18 +21,18 @@
 #ifndef KERNEL_INIT_H
 #define KERNEL_INIT_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Initializes scheduler and creates main and idle task
  */
 void kernel_init(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* KERNEL_INIT_H */
 /** @} */

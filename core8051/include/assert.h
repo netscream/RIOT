@@ -21,9 +21,9 @@
 
 #include "panic.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   the string that is passed to panic in case of a failing assertion
@@ -49,9 +49,11 @@ extern const char assert_crash_message[];
 #define assert(cond) ((cond) ? (void)0 : core_panic(PANIC_ASSERT_FAIL, assert_crash_message))
 #endif
 
-#ifdef __cplusplus
+
+/*#ifdef __cplusplus
 }
 #endif
+*/
 
 #endif /* ASSERT_H */
 /** @} */

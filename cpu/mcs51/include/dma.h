@@ -18,8 +18,8 @@ void dmaInit(void);
 
 /*! This is the number of the DMA channel we have chosen to use for
  * transmitting and receiving radio packets. */
-#define DMA_CHANNEL_RADIO  1
-
+//#define DMA_CHANNEL_RADIO  1
+static unsigned CODE DMA_CHANNEL_RADIO = 1;
 /*! This struct consists of 4 DMA config registers
  * for DMA channels 1-4. */
 typedef struct DMA14_CONFIG

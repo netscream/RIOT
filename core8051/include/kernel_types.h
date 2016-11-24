@@ -25,14 +25,14 @@
 #include <inttypes.h>
 #include <limits.h>
 
-#ifndef NATIVE_INCLUDES
-#   include <stddef.h>
-#   include <sys/types.h>
+//#ifndef NATIVE_INCLUDES
+//#   include <stddef.h>
+//#   include <sys/types.h>
 
 /**
  * @brief Maximum value for ssize_t
  */
-#   ifndef SSIZE_MAX
+/*#   ifndef SSIZE_MAX
 #       ifdef _POSIX_SSIZE_MAX
 #           define SSIZE_MAX _POSIX_SSIZE_MAX
 #       else
@@ -43,7 +43,7 @@
 #   ifdef MODULE_MSP430_COMMON
         typedef signed ssize_t;
 #   endif
-#endif
+#endif*/
 
 /*#ifdef __cplusplus
  extern "C" {
@@ -70,7 +70,7 @@
 /**
  * The last valid PID (inclusive).
  */
-//#define KERNEL_PID_LAST (KERNEL_PID_FIRST + MAXTHREADS - 1)
+#define KERNEL_PID_LAST (KERNEL_PID_FIRST + MAXTHREADS - 1)
 
 /**
  * Macro for printing formatter
@@ -90,7 +90,7 @@ typedef int16_t kernel_pid_t;
  * @return      true if the pid is valid, false otherwise
  */
 /* 8051 implementation */
-static int pid_is_valid(kernel_pid_t pid);
+int pid_is_valid(kernel_pid_t pid);
 /*static inline int pid_is_valid(kernel_pid_t pid)
 {
     //return ((KERNEL_PID_FIRST <= pid) && (pid <= KERNEL_PID_LAST));

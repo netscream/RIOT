@@ -21,9 +21,9 @@
 
 #include "kernel_defines.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @name Define the mapping between the architecture independent interfaces
@@ -33,12 +33,12 @@
  * new platforms should always use the *_arch_* interfaces.
  * @{
  */
-#ifdef COREIF_NG
+/*#ifdef COREIF_NG
 #define thread_stack_init               thread_arch_stack_init
 #define thread_print_stack              thread_arch_print_stack
 #define cpu_switch_context_exit         thread_arch_start_threading
 #define thread_yield_higher             thread_arch_yield
-#endif
+#endif*/
 /** @} */
 
 /**
@@ -56,41 +56,41 @@ typedef void *(*thread_task_func_t)(void *arg);
  *
  * @return                  pointer to the new top of the stack
  */
-char *thread_arch_stack_init(thread_task_func_t *task_func, void *arg, void *stack_start, int stack_size);
+extern char *thread_arch_stack_init(thread_task_func_t *task_func, void *arg, void *stack_start, int stack_size);
 
 /**
  * @brief   Get the number of bytes used on the ISR stack
  */
-int thread_arch_isr_stack_usage(void);
+extern int thread_arch_isr_stack_usage(void);
 
 /**
  * @brief   Get the current ISR stack pointer
  */
-void *thread_arch_isr_stack_pointer(void);
+extern void *thread_arch_isr_stack_pointer(void);
 
 /**
  * @brief   Get the start of the ISR stack
  */
-void *thread_arch_isr_stack_start(void);
+extern void *thread_arch_isr_stack_start(void);
 
 /**
  * @brief Print the current stack to stdout
  */
-void thread_arch_stack_print(void);
+extern void thread_arch_stack_print(void);
 
 /**
  * @brief Start threading by loading a threads initial information from the stack
  */
-void thread_arch_start_threading(void) NORETURN;
+extern void thread_arch_start_threading(void) NORETURN;
 
 /**
  * @brief Pause the current thread and schedule the next pending, if available
  */
-void thread_arch_yield(void);
+extern void thread_arch_yield(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* THREAD_ARCH_H */
 /** @} */

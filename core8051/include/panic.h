@@ -24,9 +24,9 @@
 
 #include "kernel_defines.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Definition of available panic modes
@@ -73,9 +73,9 @@ typedef enum {
  * */
 NORETURN void core_panic(core_panic_t crash_code, const char *message);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* PANIC_H */
 /** @} */

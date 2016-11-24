@@ -37,8 +37,8 @@
 #if defined(DEVELHELP) && defined(MODULE_PS)
 #include "ps.h"
 #endif
-
-const char assert_crash_message[] = "FAILED ASSERTION.";
+// lets store this in the code section of the module
+const char CODE assert_crash_message[] = "FAILED ASSERTION.";
 
 /* flag preventing "recursive crash printing loop" */
 static int crashed = 0;
@@ -80,5 +80,5 @@ NORETURN void core_panic(core_panic_t crash_code, const char *message)
 
     /* tell the compiler that we won't return from this function
        (even if we actually won't even get here...) */
-    UNREACHABLE();
+  // UNREACHABLE();
 }

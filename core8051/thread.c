@@ -29,6 +29,7 @@
 #include "debug.h"
 #include "bitarithm.h"
 #include "sched.h"
+//#include "board.h" //for debugging
 
 volatile thread_t *thread_get(kernel_pid_t pid)
 {
@@ -54,7 +55,7 @@ const char *thread_getname(kernel_pid_t pid)
 
 void thread_sleep(void)
 {
-    unsigned state;
+    unsigned state = 0;
     if (irq_is_in()) {
         return;
     }
@@ -69,8 +70,8 @@ void thread_sleep(void)
 //8051 implementation
 int thread_wakeup(kernel_pid_t pid)
 {
-    thread_t *other_thread;
-    unsigned old_state;
+    thread_t *other_thread = NULL;
+    unsigned old_state = 0;
     DEBUG("thread_wakeup: Trying to wakeup PID %" PRIkernel_pid "...\n", pid);
 
     //unsigned old_state = irq_disable();
@@ -122,25 +123,24 @@ void thread_yield(void)
 
 void thread_add_to_list(list_node_t *list, thread_t *thread)
 {
+    uint16_t my_prio = 0;
+    list_node_t	*new_node = (list_node_t*)&thread->rq_entry;
     assert (thread->status < STATUS_ON_RUNQUEUE);
     //8051 implementation
-    //uint16_t my_prio = thread->priority;
+    my_prio = thread->priority;
     //list_node_t *new_node = (list_node_t*)&thread->rq_entry;
 
     while (list->next) {
         //thread_t *list_entry = container_of((clist_node_t*)list->next, thread_t, rq_entry);
         thread_t *list_entry = ((thread_t*) ((char*) ((clist_node_t*)list->next) - offsetof(thread_t, rq_entry)));
-        //if (list_entry->priority > my_prio) {
-        if (list_entry->priority > thread->priority) {
+        if (list_entry->priority > my_prio) {
             break;
         }
         list = list->next;
     }
 
-    //new_node->next = list->next;
-    thread->rq_entry.next = list->next;
-    list->next = (list_node_t*) thread->rq_entry;
-    //list->next = new_node;
+    new_node->next = list->next;
+    list->next = new_node;
 }
 
 /*#ifdef DEVELHELP
@@ -162,11 +162,12 @@ uintptr_t thread_measure_stack_free(char *stack)
 //8051 implementation
 kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags, thread_task_func_t function, void *arg, const char *name)
 {
-    thread_t *cb;
-    unsigned state;
+    thread_t *cb = NULL;
+    unsigned state = 0;
     kernel_pid_t pid;
     kernel_pid_t i;
     uintptr_t misalignment;
+    
     if (priority >= SCHED_PRIO_LEVELS) {
 	//8051 implementation EINVAL = 22
         //return -EINVAL;
@@ -178,7 +179,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
 #else
     (void) name;
 #endif*/
-
+  
     /* align the stack on a 16/32bit boundary */
     //8051 implementation
     //uintptr_t misalignment = (uintptr_t) stack % ALIGN_OF(void *);
@@ -193,13 +194,13 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
 	stacksize -= ALIGN_OF(void *) - (stack % ALIGN_OF(void *));
     }*/
 	
-
+    
     /* make room for the thread control block */
     stacksize -= sizeof(thread_t);
-
+    
     /* round down the stacksize to a multiple of thread_t alignments (usually 16/32bit) */
-    stacksize -= stacksize % ALIGN_OF(thread_t);
-
+    //stacksize -= stacksize % ALIGN_OF(thread_t);
+     //stacksize needs fixing 8051
     if (stacksize < 0) {
         DEBUG("thread_create: stacksize is too small!\n");
     }
@@ -207,7 +208,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     //8051 implementation
     //thread_t *cb = (thread_t *) (stack + stacksize);
     cb = (thread_t *) (stack + stacksize);    
-
+    
 #if defined(DEVELHELP) || defined(SCHED_TEST_STACK)
     if (flags & THREAD_CREATE_STACKTEST) {
         /* assign each int of the stack the value of it's address */
@@ -226,7 +227,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
 #endif
 
     state = irq_disable();
-
+    
     //kernel_pid_t pid = KERNEL_PID_UNDEF;
     pid = KERNEL_PID_UNDEF;
     //for (kernel_pid_t i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; ++i) {
@@ -271,18 +272,17 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     cib_init(&(cb->msg_queue), 0);
     cb->msg_array = NULL;
 #endif
-
+    
     sched_num_threads++;
-
+    
     DEBUG("Created thread %s. PID: %" PRIkernel_pid ". Priority: %u.\n", name, cb->pid, priority);
 
     //if (flags & THREAD_CREATE_SLEEPING) {
-    if (flags & 1) {
+    if (flags & 1) {	
         sched_set_status(cb, STATUS_SLEEPING);
     }
     else {
         sched_set_status(cb, STATUS_PENDING);
-
         //if (!(flags & THREAD_CREATE_WOUT_YIELD)) {
         if (!(flags & 4)) {
             irq_restore(state);
@@ -290,7 +290,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
             return pid;
         }
     }
-
+    
     irq_restore(state);
 
     return pid;

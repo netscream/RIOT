@@ -19,9 +19,9 @@
 #ifndef PANIC_ARCH_H
 #define PANIC_ARCH_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
  /**
   * @brief architecture dependent handling of an panic case
@@ -31,9 +31,9 @@
   */
 void panic_arch(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* REBOOT_ARCH_H */
 /** @} */
