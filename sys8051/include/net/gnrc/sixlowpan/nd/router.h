@@ -26,9 +26,9 @@
 #include "net/gnrc/sixlowpan/ctx.h"
 #include "net/gnrc/ipv6/netif.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Number of registerable border routers
@@ -37,19 +37,18 @@ extern "C" {
  *          of the context information (see
  *          [RFC 6775, section 8.1](https://tools.ietf.org/html/rfc6775#section-8.1))
  */
-#ifndef GNRC_SIXLOWPAN_ND_ROUTER_ABR_NUMOF
+/*#ifndef GNRC_SIXLOWPAN_ND_ROUTER_ABR_NUMOF
 #define GNRC_SIXLOWPAN_ND_ROUTER_ABR_NUMOF  (1)
-#endif
+#endif*/
 
 /**
  * @brief   The number of non-link-local prefixes associated with border routers
  *          at maximum.
  */
-#ifndef GNRC_SIXLOWPAN_ND_ROUTER_ABR_PRF_NUMOF
+//#ifndef GNRC_SIXLOWPAN_ND_ROUTER_ABR_PRF_NUMOF
 /* One prefix per interface */
-#define GNRC_SIXLOWPAN_ND_ROUTER_ABR_PRF_NUMOF   \
-        (GNRC_SIXLOWPAN_ND_ROUTER_ABR_NUMOF * GNRC_NETIF_NUMOF)
-#endif
+//#define GNRC_SIXLOWPAN_ND_ROUTER_ABR_PRF_NUMOF (GNRC_SIXLOWPAN_ND_ROUTER_ABR_NUMOF * GNRC_NETIF_NUMOF)
+//#endif
 
 /**
  * @brief   Representation for prefixes coming from a router
@@ -104,13 +103,16 @@ static inline void gnrc_sixlowpan_nd_router_gc_nc(gnrc_ipv6_nc_t *nc_entry)
  * @param[in] netif     An IPv6 interface. Must not be NULL.
  * @param[in] enable    Status for the GNRC_IPV6_NETIF_FLAGS_ROUTER flag.
  */
+/* 8051 implementation */
 static inline void gnrc_sixlowpan_nd_router_set_router(gnrc_ipv6_netif_t *netif, bool enable)
 {
     if (enable) {
-        netif->flags |= GNRC_IPV6_NETIF_FLAGS_ROUTER;
+        //netif->flags |= GNRC_IPV6_NETIF_FLAGS_ROUTER;
+        netif->flags |= 0x0002;
     }
     else {
-        netif->flags &= ~GNRC_IPV6_NETIF_FLAGS_ROUTER;
+        //netif->flags &= ~GNRC_IPV6_NETIF_FLAGS_ROUTER;
+	netif->flags &= ~0x0002;
     }
 }
 
@@ -218,9 +220,9 @@ void gnrc_sixlowpan_nd_router_abr_rem_ctx(gnrc_sixlowpan_nd_router_abr_t *abr, u
 #define gnrc_sixlowpan_nd_router_abr_create(addr, ltime)    (NULL)
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_SIXLOWPAN_ND_ROUTER_H_ */
 /** @} */

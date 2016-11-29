@@ -32,14 +32,15 @@ static gnrc_netif_handler_t if_handler[] = {
     { NULL, NULL }
 };
 
-static kernel_pid_t ifs[GNRC_NETIF_NUMOF];
+static kernel_pid_t XDATA ifs[GNRC_NETIF_NUMOF];
 
 /*8051 implementation */
 void gnrc_netif_init(void)
 {
     int i = 0;
     for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
-        ifs[i] = KERNEL_PID_UNDEF;
+        //ifs[i] = KERNEL_PID_UNDEF;
+	ifs[i] = 0;
     }
 }
 
@@ -54,7 +55,8 @@ int gnrc_netif_add(kernel_pid_t pid)
         if (ifs[i] == pid) {
             return 0;
         }
-        else if (ifs[i] == KERNEL_PID_UNDEF && !free_entry) {
+        //else if (ifs[i] == KERNEL_PID_UNDEF && !free_entry) {
+	else if (ifs[i] == 0 && !free_entry) {
             free_entry = &ifs[i];
         }
     }
@@ -79,7 +81,8 @@ void gnrc_netif_remove(kernel_pid_t pid)
     int j = 0;
     for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
         if (ifs[i] == pid) {
-            ifs[i] = KERNEL_PID_UNDEF;
+            //ifs[i] = KERNEL_PID_UNDEF;
+	    ifs[i] = 0;
 
             for (j = 0; if_handler[j].remove != NULL; j++) {
                 if_handler[j].remove(pid);
@@ -96,7 +99,8 @@ size_t gnrc_netif_get(kernel_pid_t *netifs)
     size_t size = 0;
     int i = 0;
     for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
-        if (ifs[i] != KERNEL_PID_UNDEF) {
+        //if (ifs[i] != KERNEL_PID_UNDEF) {
+	if (ifs[i] != 0) {
             netifs[size++] = ifs[i];
         }
     }

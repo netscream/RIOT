@@ -30,30 +30,32 @@
 #include "net/ethertype.h"
 #include "net/protnum.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Definition of protocol types in the network stack.
  *
  * @note    Expand at will.
  */
+/* 8051 implementation */
+/* because limitations of 8051 arch we need to eliminate all negative values */ 
 typedef enum {
     /**
      * @brief   Not so much protocol but data type that is passed to network
      *          devices using the netdev interface
      */
-    GNRC_NETTYPE_IOVEC = -2,
+    GNRC_NETTYPE_IOVEC = 0, /* this should be 1 */
     /**
      * @brief   Protocol is as defined in @ref gnrc_netif_hdr_t. Not usable with
      *          @ref net_gnrc_netreg
      */
-    GNRC_NETTYPE_NETIF = -1,
-    GNRC_NETTYPE_UNDEF = 0,     /**< Protocol is undefined */
+    GNRC_NETTYPE_NETIF = 1,    /* this should be 0*/
+    GNRC_NETTYPE_UNDEF = 2,    /*this should be -1*/ /**< Protocol is undefined */
 
 #ifdef MODULE_GNRC_SIXLOWPAN
-    GNRC_NETTYPE_SIXLOWPAN,     /**< Protocol is 6LoWPAN */
+    GNRC_NETTYPE_SIXLOWPAN = 3,     /**< Protocol is 6LoWPAN */
 #endif
 
     /**
@@ -62,14 +64,14 @@ typedef enum {
      */
 /* 8051 implementation */
 //#ifdef MODULE_GNRC_IPV6
-    GNRC_NETTYPE_IPV6,          /**< Protocol is IPv6 */
+    GNRC_NETTYPE_IPV6 = 4,          /**< Protocol is IPv6 */
 //#endif
 #ifdef MODULE_GNRC_IPV6_EXT
-    GNRC_NETTYPE_IPV6_EXT,      /**< Protocol is IPv6 extension header */
+    GNRC_NETTYPE_IPV6_EXT = 5,      /**< Protocol is IPv6 extension header */
 #endif
 /* 8051 implementation */
 //#ifdef MODULE_GNRC_ICMPV6
-    GNRC_NETTYPE_ICMPV6,        /**< Protocol is ICMPv6 */
+    GNRC_NETTYPE_ICMPV6 = 6,        /**< Protocol is ICMPv6 */
 //#endif
     /**
      * @}
@@ -80,18 +82,18 @@ typedef enum {
      * @name Transport layer
      */
 #ifdef MODULE_GNRC_TCP
-    GNRC_NETTYPE_TCP,           /**< Protocol is TCP */
+    GNRC_NETTYPE_TCP = 7,           /**< Protocol is TCP */
 #endif
 #ifdef MODULE_GNRC_UDP
-    GNRC_NETTYPE_UDP,           /**< Protocol is UDP */
+    GNRC_NETTYPE_UDP = 8,           /**< Protocol is UDP */
 #endif
     /**
      * @}
      */
 
 #ifdef MODULE_CCN_LITE
-    GNRC_NETTYPE_CCN,           /**< Protocol is CCN */
-    GNRC_NETTYPE_CCN_CHUNK,     /**< Protocol is CCN, packet contains a content
+    GNRC_NETTYPE_CCN = 9,           /**< Protocol is CCN */
+    GNRC_NETTYPE_CCN_CHUNK = 10,     /**< Protocol is CCN, packet contains a content
                                      chunk */
 #endif
 
@@ -100,13 +102,13 @@ typedef enum {
      * @name Testing
      */
 #ifdef TEST_SUITES
-    GNRC_NETTYPE_TEST,
+    GNRC_NETTYPE_TEST = 11,
 #endif
     /**
      * @}
      */
 
-    GNRC_NETTYPE_NUMOF,         /**< maximum number of available protocols */
+    GNRC_NETTYPE_NUMOF = 12,         /**< maximum number of available protocols */
 } gnrc_nettype_t;
 
 /**
@@ -243,9 +245,9 @@ static inline uint8_t gnrc_nettype_to_protnum(gnrc_nettype_t type)
     }
 }
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETTYPE_H_ */
 /** @} */

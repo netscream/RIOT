@@ -113,12 +113,14 @@ void color_rgb2str(const color_rgb_t *rgb, char *str);
  * @param[in] rgb       Input rgb color, that should be converted. Must be NOT NULL
  * @param[out] inv_rgb  Output rgb color, result of the conversion. Must be NOT NULL
  */
-static inline void color_rgb_invert(const color_rgb_t *rgb, color_rgb_t *inv_rgb)
+/* 8051 implementation */
+static void color_rgb_invert(const color_rgb_t *rgb, color_rgb_t *inv_rgb);
+/*static inline void color_rgb_invert(const color_rgb_t *rgb, color_rgb_t *inv_rgb)
 {
     inv_rgb->r = rgb->r ^ 0xFF;
     inv_rgb->g = rgb->g ^ 0xFF;
     inv_rgb->b = rgb->b ^ 0xFF;
-}
+}*/
 
 /**
  * @brief Calculate the complementary color of a given rgb color.

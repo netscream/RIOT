@@ -36,9 +36,9 @@
 #include "board.h"
 #include "periph_conf.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief xtimer callback type
@@ -65,7 +65,8 @@ typedef struct xtimer {
  *
  * @return  current time as 32bit microsecond value
  */
-static inline uint32_t xtimer_now(void);
+//static inline uint32_t xtimer_now(void);
+extern uint32_t xtimer_now(void);
 
 /**
  * @brief get the current system time as 64bit microsecond value
@@ -99,7 +100,9 @@ void xtimer_init(void);
  *
  * @param[in] seconds   the amount of seconds the thread should sleep
  */
-static void xtimer_sleep(uint32_t seconds);
+/* 8051 implementation */
+//static void xtimer_sleep(uint32_t seconds);
+void xtimer_sleep(uint32_t seconds);
 
 /**
  * @brief Pause the execution of a thread for some microseconds
@@ -110,7 +113,9 @@ static void xtimer_sleep(uint32_t seconds);
  *
  * @param[in] microseconds  the amount of microseconds the thread should sleep
  */
-static void xtimer_usleep(uint32_t microseconds);
+/* 8051 implementation */
+//static void xtimer_usleep(uint32_t microseconds);
+void xtimer_usleep(uint32_t microseconds);
 
 /**
  * @brief Stop execution of a thread for some time, 64bit version
@@ -135,7 +140,9 @@ static void xtimer_usleep(uint32_t microseconds);
  *
  * @param[in] nanoseconds   the amount of nanoseconds the thread should sleep
  */
-static void xtimer_nanosleep(uint32_t nanoseconds);
+/* 8051 implementation */
+//static void xtimer_nanosleep(uint32_t nanoseconds);
+void xtimer_nanosleep(uint32_t nanoseconds);
 
 /**
  * @brief Stop execution of a thread for some time, blocking
@@ -144,7 +151,9 @@ static void xtimer_nanosleep(uint32_t nanoseconds);
  *
  * @param[in] microseconds  the amount of microseconds the thread should spin
  */
-static inline void xtimer_spin(uint32_t microseconds);
+/* 8051 implementation */
+//static inline void xtimer_spin(uint32_t microseconds);
+extern void xtimer_spin(uint32_t microseconds);
 
 /**
  * @brief will cause the calling thread to be suspended until the absolute
@@ -181,7 +190,7 @@ void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period);
  * @param[in] msg           ptr to msg that will be sent
  * @param[in] target_pid    pid the message will be sent to
  */
-void xtimer_set_msg(xtimer_t *timer, uint32_t offset, msg_t *msg, kernel_pid_t target_pid);
+void xtimer_set_msg(xtimer_t* XDATA timer, uint32_t offset, msg_t *msg, kernel_pid_t target_pid);
 
 /**
  * @brief Set a timer that sends a message, 64bit version
@@ -214,7 +223,7 @@ void xtimer_set_msg(xtimer_t *timer, uint32_t offset, msg_t *msg, kernel_pid_t t
  * @param[in] offset        microseconds from now
  * @param[in] pid           pid of the thread that will be woken up
  */
-void xtimer_set_wakeup(xtimer_t *timer, uint32_t offset, kernel_pid_t pid);
+void xtimer_set_wakeup(xtimer_t* XDATA timer, uint32_t offset, kernel_pid_t pid);
 
 /**
  * @brief Set a timer that wakes up a thread, 64bit version
@@ -249,7 +258,7 @@ void xtimer_set_wakeup(xtimer_t *timer, uint32_t offset, kernel_pid_t pid);
  * @param[in] offset    time in microseconds from now specifying that timer's
  *                      callback's execution time
  */
-void xtimer_set(xtimer_t *timer, uint32_t offset);
+void xtimer_set(xtimer_t* XDATA timer, uint32_t offset);
 
 /**
  * @brief remove a timer
@@ -258,7 +267,7 @@ void xtimer_set(xtimer_t *timer, uint32_t offset);
  *
  * @param[in] timer ptr to timer structure that will be removed
  */
-void xtimer_remove(xtimer_t *timer);
+void xtimer_remove(xtimer_t* XDATA timer);
 
 /**
  * @brief receive a message blocking but with timeout
@@ -291,9 +300,9 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  *
  * This is supposed to be defined per-device in e.g., periph_conf.h.
  */
-#ifndef XTIMER_BACKOFF
+/*#ifndef XTIMER_BACKOFF
 #define XTIMER_BACKOFF 30
-#endif
+#endif*/
 
 /**
  * @brief xtimer overhead value
@@ -314,11 +323,11 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  *
  * This is supposed to be defined per-device in e.g., periph_conf.h.
  */
-#ifndef XTIMER_OVERHEAD
+/*#ifndef XTIMER_OVERHEAD
 #define XTIMER_OVERHEAD 20
-#endif
+#endif*/
 
-#ifndef XTIMER_ISR_BACKOFF
+//#ifndef XTIMER_ISR_BACKOFF
 /**
  * @brief   xtimer isr backoff time
  *
@@ -327,20 +336,20 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  *
  * This is supposed to be defined per-device in e.g., periph_conf.h.
  */
-#define XTIMER_ISR_BACKOFF 20
-#endif
+/*#define XTIMER_ISR_BACKOFF 20*/
+//#endif
 
-#ifndef XTIMER_PERIODIC_SPIN
+//#ifndef XTIMER_PERIODIC_SPIN
 /**
  * @brief   xtimer_periodic_wakeup spin cutoff
  *
  * If the difference between target time and now is less than this value, then
  * xtimer_periodic_wakeup will use xtimer_spin instead of setting a timer.
  */
-#define XTIMER_PERIODIC_SPIN (XTIMER_BACKOFF * 2)
-#endif
+//#define XTIMER_PERIODIC_SPIN (XTIMER_BACKOFF * 2)
+//#endif
 
-#ifndef XTIMER_PERIODIC_RELATIVE
+//#ifndef XTIMER_PERIODIC_RELATIVE
 /**
  * @brief   xtimer_periodic_wakeup relative target cutoff
  *
@@ -350,10 +359,10 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  *
  * This is done to prevent target time underflows.
  */
-#define XTIMER_PERIODIC_RELATIVE (512)
-#endif
+//#define XTIMER_PERIODIC_RELATIVE (512)
+//#endif
 
-#ifndef XTIMER_SHIFT
+//#ifndef XTIMER_SHIFT
 /**
  * @brief   xtimer prescaler value
  *
@@ -366,39 +375,39 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  *
  * For example, if the timer is running with 250khz, set XTIMER_SHIFT to 2.
  */
-#define XTIMER_SHIFT (0)
-#endif
+//#define XTIMER_SHIFT (0)
+//#endif
 
 /*
  * Default xtimer configuration
  */
-#ifndef XTIMER_DEV
+//#ifndef XTIMER_DEV
 /**
  * @brief Underlying hardware timer device to assign to xtimer
  */
-#define XTIMER_DEV TIMER_DEV(0)
+//#define XTIMER_DEV TIMER_DEV(0)
 /**
  * @brief Underlying hardware timer channel to assign to xtimer
  */
-#define XTIMER_CHAN (0)
+//#define XTIMER_CHAN (0)
 
-#if (TIMER_0_MAX_VALUE) == 0xfffffful
+/*#if (TIMER_0_MAX_VALUE) == 0xfffffful
 #define XTIMER_WIDTH (24)
 #elif (TIMER_0_MAX_VALUE) == 0xffff
 #define XTIMER_WIDTH (16)
-#endif
+#endif*/
 
-#endif
+//#endif
 
-#ifndef XTIMER_WIDTH
+//#ifndef XTIMER_WIDTH
 /**
  * @brief xtimer timer width
  *
  * This value specifies the width (in bits) of the hardware timer used by xtimer.
  * Default is 32.
  */
-#define XTIMER_WIDTH (32)
-#endif
+//#define XTIMER_WIDTH (32)
+//#endif
 
 /**
  * @brief xtimer timer mask
@@ -409,19 +418,19 @@ int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
  * For a 16bit timer, the mask would be 0xFFFF0000, for a 24bit timer, the mask
  * would be 0xFF000000.
  */
-#if XTIMER_WIDTH != 32
-#define XTIMER_MASK ((0xffffffff >> XTIMER_WIDTH) << XTIMER_WIDTH)
-#else
-#define XTIMER_MASK (0)
-#endif
+//#if XTIMER_WIDTH != 32
+//#define XTIMER_MASK ((0xffffffff >> XTIMER_WIDTH) << XTIMER_WIDTH)
+//#else
+//#define XTIMER_MASK (0)
+//#endif
 
-#define XTIMER_MASK_SHIFTED XTIMER_TICKS_TO_USEC(XTIMER_MASK)
+//#define XTIMER_MASK_SHIFTED XTIMER_TICKS_TO_USEC(XTIMER_MASK)
 
 #include "xtimer/implementation.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 /** @} */
 #endif /* XTIMER_H */

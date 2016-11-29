@@ -26,9 +26,9 @@
 #include "net/inet_csum.h"
 #include "net/ipv6/addr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Data type to represent an IPv6 packet header
@@ -101,11 +101,16 @@ typedef struct {
  *
  * @param[out] hdr  Pointer to an IPv6 header.
  */
-static inline void ipv6_hdr_set_version(ipv6_hdr_t *hdr)
+void ipv6_hdr_set_version(ipv6_hdr_t *hdr)
 {
     hdr->v_tc_fl.u8[0] &= 0x0f;
     hdr->v_tc_fl.u8[0] |= 0x60;
 }
+/*static inline void ipv6_hdr_set_version(ipv6_hdr_t *hdr)
+{
+    hdr->v_tc_fl.u8[0] &= 0x0f;
+    hdr->v_tc_fl.u8[0] |= 0x60;
+}*/
 
 /**
  * @brief   Gets the value of the version field of @p hdr
@@ -114,10 +119,14 @@ static inline void ipv6_hdr_set_version(ipv6_hdr_t *hdr)
  *
  * @return  Value of the version field of @p hdr.
  */
-static inline uint8_t ipv6_hdr_get_version(const ipv6_hdr_t *hdr)
+uint8_t ipv6_hdr_get_version(const ipv6_hdr_t *hdr)
 {
     return ((hdr->v_tc_fl.u8[0]) >> 4);
 }
+/*static inline uint8_t ipv6_hdr_get_version(const ipv6_hdr_t *hdr)
+{
+    return ((hdr->v_tc_fl.u8[0]) >> 4);
+}*/
 
 /**
  * @brief   Checks if the version field is set to 6
@@ -127,10 +136,14 @@ static inline uint8_t ipv6_hdr_get_version(const ipv6_hdr_t *hdr)
  * @return  true, if version field is 6
  * @return  false, otherwise
  */
-static inline bool ipv6_hdr_is(const ipv6_hdr_t *hdr)
+bool ipv6_hdr_is(const ipv6_hdr_t *hdr)
 {
     return (((hdr->v_tc_fl.u8[0]) & 0xf0) == 0x60);
 }
+/*static inline bool ipv6_hdr_is(const ipv6_hdr_t *hdr)
+{
+    return (((hdr->v_tc_fl.u8[0]) & 0xf0) == 0x60);
+}*/
 
 /**
  * @brief   Sets the traffic class field of @p hdr
@@ -138,13 +151,20 @@ static inline bool ipv6_hdr_is(const ipv6_hdr_t *hdr)
  * @param[out] hdr  Pointer to an IPv6 header.
  * @param[in] tc    The new value for the traffic class field.
  */
-static inline void ipv6_hdr_set_tc(ipv6_hdr_t *hdr, uint8_t tc)
+void ipv6_hdr_set_tc(ipv6_hdr_t *hdr, uint8_t tc)
 {
     hdr->v_tc_fl.u8[0] &= 0xf0;
     hdr->v_tc_fl.u8[0] |= (0x0f & (tc >> 4));
     hdr->v_tc_fl.u8[1] &= 0x0f;
     hdr->v_tc_fl.u8[1] |= (0xf0 & (tc << 4));
 }
+/*static inline void ipv6_hdr_set_tc(ipv6_hdr_t *hdr, uint8_t tc)
+{
+    hdr->v_tc_fl.u8[0] &= 0xf0;
+    hdr->v_tc_fl.u8[0] |= (0x0f & (tc >> 4));
+    hdr->v_tc_fl.u8[1] &= 0x0f;
+    hdr->v_tc_fl.u8[1] |= (0xf0 & (tc << 4));
+}*/
 
 /**
  * @brief   Sets the value of the Explicit Congestion Notification (ECN) part
@@ -308,9 +328,9 @@ static inline uint16_t ipv6_hdr_inet_csum(uint16_t sum, ipv6_hdr_t *hdr,
  */
 void ipv6_hdr_print(ipv6_hdr_t *hdr);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* IPV6_HDR_H_ */
 /** @} */

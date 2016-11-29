@@ -41,12 +41,12 @@
 
 #define _MAX_L2_ADDR_LEN    (8U)
 
-#if ENABLE_DEBUG
+/*#if ENABLE_DEBUG
 static char _stack[GNRC_IPV6_STACK_SIZE + THREAD_EXTRA_STACKSIZE_PRINTF];
 #else
 static char _stack[GNRC_IPV6_STACK_SIZE];
 #endif
-
+*/
 #ifdef MODULE_FIB
 #include "net/fib.h"
 #include "net/fib/table.h"
@@ -65,7 +65,8 @@ fib_table_t gnrc_ipv6_fib_table;
 static char addr_str[IPV6_ADDR_MAX_STR_LEN];
 #endif
 
-kernel_pid_t gnrc_ipv6_pid = KERNEL_PID_UNDEF;
+//kernel_pid_t gnrc_ipv6_pid = KERNEL_PID_UNDEF;
+kernel_pid_t gnrc_ipv6_pid = 0;
 
 /* handles GNRC_NETAPI_MSG_TYPE_RCV commands */
 static void _receive(gnrc_pktsnip_t *pkt);
@@ -81,9 +82,11 @@ static void _decapsulate(gnrc_pktsnip_t *pkt);
 
 kernel_pid_t gnrc_ipv6_init(void)
 {
-    if (gnrc_ipv6_pid == KERNEL_PID_UNDEF) {
-        gnrc_ipv6_pid = thread_create(_stack, sizeof(_stack), GNRC_IPV6_PRIO,
-                                      THREAD_CREATE_STACKTEST,
+    char _stack[128];
+    //if (gnrc_ipv6_pid == KERNEL_PID_UNDEF) {
+    if (gnrc_ipv6_pid == 0) {
+        gnrc_ipv6_pid = thread_create(_stack, sizeof(_stack), 4, //GNRC_IPV6_PRIO =4
+                                      8, //THREAD_CREATE_STACKTEST = 8
                                       _event_loop, NULL, "ipv6");
     }
 
@@ -284,7 +287,7 @@ static void *_event_loop(void *args)
             case GNRC_NETAPI_MSG_TYPE_GET:
             case GNRC_NETAPI_MSG_TYPE_SET:
                 DEBUG("ipv6: reply to unsupported get/set\n");
-                reply.content.value = -252; //enotsup = 252
+                reply.content.value = 252; //enotsup = 252
                 msg_reply(&msg, &reply);
                 break;
 
@@ -368,7 +371,7 @@ static void *_event_loop(void *args)
         }
     }
 
-    return NULL;
+    return NULL; //if everything is ok then this should be unreachable !!
 }
 /* 8051 implementation */
 static void _send_to_iface(kernel_pid_t iface, gnrc_pktsnip_t *pkt)
@@ -478,8 +481,10 @@ static int _fill_ipv6_hdr(kernel_pid_t iface, gnrc_pktsnip_t *ipv6,
     DEBUG("ipv6: set next header to %u\n", hdr->nh);
 
     if (hdr->hl == 0) {
-        if (iface == KERNEL_PID_UNDEF) {
-            hdr->hl = GNRC_IPV6_NETIF_DEFAULT_HL;
+        //if (iface == KERNEL_PID_UNDEF) {
+	if (iface == 0) {
+            //hdr->hl = GNRC_IPV6_NETIF_DEFAULT_HL; //GNRC_IPV6_NETIF_DEFAULT_HL = 64
+	    hdr->hl = 64;
         }
         else {
             hdr->hl = gnrc_ipv6_netif_get(iface)->cur_hl;
@@ -533,7 +538,8 @@ static void _send_multicast(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
     kernel_pid_t ifs[GNRC_NETIF_NUMOF];
     size_t ifnum = 0;
 
-    if (iface == KERNEL_PID_UNDEF) {
+    //if (iface == KERNEL_PID_UNDEF) {
+    if (iface == 0) {
         /* get list of interfaces */
         ifnum = gnrc_netif_get(ifs);
 
@@ -548,7 +554,8 @@ static void _send_multicast(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
 
 #if GNRC_NETIF_NUMOF > 1
     /* interface not given: send over all interfaces */
-    if (iface == KERNEL_PID_UNDEF) {
+    //if (iface == KERNEL_PID_UNDEF) {
+    if (iface == 0) { 
         /* send packet to link layer */
         gnrc_pktbuf_hold(pkt, ifnum - 1);
 
@@ -608,7 +615,8 @@ static void _send_multicast(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
     }
 #else   /* GNRC_NETIF_NUMOF */
     (void)ifnum; /* not used in this build branch */
-    if (iface == KERNEL_PID_UNDEF) {
+    //if (iface == KERNEL_PID_UNDEF) {
+    if (iface == 0){
         iface = ifs[0];
 
         /* allocate interface header */
@@ -637,7 +645,8 @@ static inline kernel_pid_t _next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len
 #if defined(MODULE_GNRC_SIXLOWPAN_ND)
     (void)pkt;
     found_iface = gnrc_sixlowpan_nd_next_hop_l2addr(l2addr, l2addr_len, iface, dst);
-    if (found_iface > KERNEL_PID_UNDEF) {
+    //if (found_iface > KERNEL_PID_UNDEF) {
+    if (found_iface == 0) {
         return found_iface;
     }
 #endif
@@ -648,7 +657,8 @@ static inline kernel_pid_t _next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len
     gnrc_ipv6_nc_t *nc = gnrc_ipv6_nc_get(iface, dst);
     found_iface = gnrc_ipv6_nc_get_l2_addr(l2addr, l2addr_len, nc);
 #elif !defined(MODULE_GNRC_SIXLOWPAN_ND)
-    found_iface = KERNEL_PID_UNDEF;
+    //found_iface = KERNEL_PID_UNDEF;
+    found_iface = 0;
     (void)l2addr;
     (void)l2addr_len;
     (void)iface;
@@ -661,7 +671,8 @@ static inline kernel_pid_t _next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len
 
 static void _send(gnrc_pktsnip_t *pkt, bool prep_hdr)
 {
-    kernel_pid_t iface = KERNEL_PID_UNDEF;
+    //kernel_pid_t iface = KERNEL_PID_UNDEF;
+    kernel_pid_t iface = 0;
     gnrc_pktsnip_t *ipv6, *payload;
     ipv6_addr_t *tmp;
     ipv6_hdr_t *hdr;
@@ -707,9 +718,12 @@ static void _send(gnrc_pktsnip_t *pkt, bool prep_hdr)
         _send_multicast(iface, pkt, ipv6, payload, prep_hdr);
     }
     else if ((ipv6_addr_is_loopback(&hdr->dst)) ||      /* dst is loopback address */
-             ((iface == KERNEL_PID_UNDEF) && /* or dst registered to any local interface */
-              ((iface = gnrc_ipv6_netif_find_by_addr(&tmp, &hdr->dst)) != KERNEL_PID_UNDEF)) ||
-             ((iface != KERNEL_PID_UNDEF) && /* or dst registered to given interface */
+             //((iface == KERNEL_PID_UNDEF) && /* or dst registered to any local interface */
+	     ((iface == 0) && 
+	     ((iface = gnrc_ipv6_netif_find_by_addr(&tmp, &hdr->dst)) != 0)) ||
+              //((iface = gnrc_ipv6_netif_find_by_addr(&tmp, &hdr->dst)) != KERNEL_PID_UNDEF)) ||
+             //((iface != KERNEL_PID_UNDEF) && /* or dst registered to given interface */
+	     ((iface != 0) &&
               (gnrc_ipv6_netif_find_addr(iface, &hdr->dst) != NULL))) {
         uint8_t *rcv_data;
         gnrc_pktsnip_t *ptr = ipv6, *rcv_pkt;
@@ -754,8 +768,9 @@ static void _send(gnrc_pktsnip_t *pkt, bool prep_hdr)
         uint8_t l2addr[GNRC_IPV6_NC_L2_ADDR_MAX];
 
         iface = _next_hop_l2addr(l2addr, &l2addr_len, iface, &hdr->dst, pkt);
-
-        if (iface == KERNEL_PID_UNDEF) {
+	/* 8051 implementation */
+        //if (iiface == KERNEL_PID_UNDEF) {
+	if (iface == 0) {
             DEBUG("ipv6: error determining next hop's link layer address\n");
             gnrc_pktbuf_release(pkt);
             return;
@@ -780,13 +795,16 @@ static inline bool _pkt_not_for_me(kernel_pid_t *iface, ipv6_hdr_t *hdr)
         return false;
     }
     else if ((!ipv6_addr_is_link_local(&hdr->dst)) ||
-             (*iface == KERNEL_PID_UNDEF)) {
+             //(*iface == KERNEL_PID_UNDEF)) {
+	     (*iface == 0)) {
         kernel_pid_t if_pid = gnrc_ipv6_netif_find_by_addr(NULL, &hdr->dst);
-        if (*iface == KERNEL_PID_UNDEF) {
+        //if (*iface == KERNEL_PID_UNDEF) {
+	if (*iface == 0) {
             *iface = if_pid;    /* Use original interface for reply if
                                  * existent */
         }
-        return (if_pid == KERNEL_PID_UNDEF);
+        //return (if_pid == KERNEL_PID_UNDEF);
+	return (if_pid == 0);
     }
     else {
         return (gnrc_ipv6_netif_find_addr(*iface, &hdr->dst) == NULL);
@@ -795,7 +813,8 @@ static inline bool _pkt_not_for_me(kernel_pid_t *iface, ipv6_hdr_t *hdr)
 
 static void _receive(gnrc_pktsnip_t *pkt)
 {
-    kernel_pid_t iface = KERNEL_PID_UNDEF;
+    //kernel_pid_t iface = KERNEL_PID_UNDEF;
+    kernel_pid_t iface = 0;
     gnrc_pktsnip_t *ipv6, *netif, *first_ext;
     ipv6_hdr_t *hdr;
 

@@ -210,7 +210,8 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     cb = (thread_t *) (stack + stacksize);    
     
 #if defined(DEVELHELP) || defined(SCHED_TEST_STACK)
-    if (flags & THREAD_CREATE_STACKTEST) {
+    //if (flags & THREAD_CREATE_STACKTEST) {
+    if (flags & 8) {
         /* assign each int of the stack the value of it's address */
         uintptr_t *stackmax = (uintptr_t *) (stack + stacksize);
         uintptr_t *stackp = (uintptr_t *) stack;
@@ -229,7 +230,8 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     state = irq_disable();
     
     //kernel_pid_t pid = KERNEL_PID_UNDEF;
-    pid = KERNEL_PID_UNDEF;
+    //pid = KERNEL_PID_UNDEF;
+    pid = 0;
     //for (kernel_pid_t i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; ++i) {
     //for (i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; ++i) {
     for (i = 1; i <= (MAXTHREADS-1); ++i) {
@@ -238,7 +240,8 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
             break;
         }
     }
-    if (pid == KERNEL_PID_UNDEF) {
+    //if (pid == KERNEL_PID_UNDEF) {
+    if (pid == 0) {
         DEBUG("thread_create(): too many threads!\n");
 
         irq_restore(state);

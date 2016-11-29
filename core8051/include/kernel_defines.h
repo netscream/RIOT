@@ -21,9 +21,9 @@
 
 #include <stddef.h>
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @def         container_of(PTR, TYPE, MEMBER)
@@ -115,9 +115,9 @@
  */
 #define ALIGN_OF(T) (offsetof(struct { char c; T t; }, t))
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* KERNEL_DEFINES_H_ */
 /** @} */

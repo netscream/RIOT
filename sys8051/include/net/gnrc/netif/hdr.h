@@ -96,7 +96,8 @@ static inline void gnrc_netif_hdr_init(gnrc_netif_hdr_t *hdr, uint8_t src_l2addr
 {
     hdr->src_l2addr_len = src_l2addr_len;
     hdr->dst_l2addr_len = dst_l2addr_len;
-    hdr->if_pid = KERNEL_PID_UNDEF;
+    //hdr->if_pid = KERNEL_PID_UNDEF;
+    hdr->if_pid = 0;
     hdr->rssi = 0;
     hdr->lqi = 0;
     hdr->flags = 0;

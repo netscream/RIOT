@@ -74,14 +74,16 @@ unsigned random_uint32(void);
  *
  * @return  a random number on [a,b)-interval
  */
+/* 8051 implementation */
+static unsigned random_uint32_range(unsigned a, unsigned b);
 /*static inline uint32_t random_uint32_range(uint32_t a, uint32_t b)
 {
     return (random_uint32() % (b - a)) + a;
 }*/
-static inline unsigned random_uint32_range(unsigned a, unsigned b)
+/*static inline unsigned random_uint32_range(unsigned a, unsigned b)
 {
     return (random_uint32() % (b - a)) + a;
-}
+}*/
 
 #if PRNG_FLOAT
 /* These real versions are due to Isaku Wada, 2002/01/09 added */

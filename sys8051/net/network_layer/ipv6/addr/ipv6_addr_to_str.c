@@ -41,7 +41,8 @@
 /* based on inet_ntop6() by Paul Vixie */
 char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len)
 {
-    char tmp[IPV6_ADDR_MAX_STR_LEN], *tp;
+    //char tmp[IPV6_ADDR_MAX_STR_LEN], *tp;
+    char tmp[40], *tp;
     uint8_t k = 0;
     int i = 0;
     struct {

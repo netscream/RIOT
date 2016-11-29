@@ -80,11 +80,11 @@ static void *idle_thread(void *arg)
     return NULL;
 }
 
-const char *main_name = "main";
-const char *idle_name = "idle";
+const char CODE *main_name = "main";
+const char CODE *idle_name = "idle";
 
-static char main_stack[THREAD_STACKSIZE_MAIN];
-static char idle_stack[THREAD_STACKSIZE_IDLE];
+static char XDATA main_stack[THREAD_STACKSIZE_MAIN];
+static char XDATA idle_stack[THREAD_STACKSIZE_IDLE];
 
 void kernel_init(void)
 {

@@ -19,7 +19,8 @@
 
 void ipv6_hdr_print(ipv6_hdr_t *hdr)
 {
-    char addr_str[IPV6_ADDR_MAX_STR_LEN];
+    //char addr_str[IPV6_ADDR_MAX_STR_LEN];
+    char addr_str[40];
 
     if (!ipv6_hdr_is(hdr)) { /* 8051 implementation */
         printf("illegal version field: %u \n", ipv6_hdr_get_version(hdr));

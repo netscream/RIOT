@@ -542,9 +542,11 @@ void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt, ipv6_hdr_t
         if_entry->cur_hl = rtr_adv->cur_hl;
     }
     /* set flags from message */
-    if_entry->flags &= ~GNRC_IPV6_NETIF_FLAGS_RTR_ADV_MASK;
-    if_entry->flags |= (rtr_adv->flags << GNRC_IPV6_NETIF_FLAGS_RTR_ADV_POS) &
-                       GNRC_IPV6_NETIF_FLAGS_RTR_ADV_MASK;
+    //if_entry->flags &= ~GNRC_IPV6_NETIF_FLAGS_RTR_ADV_MASK;
+    if_entry->flags &= ~0xc000;
+    //if_entry->flags |= (rtr_adv->flags << GNRC_IPV6_NETIF_FLAGS_RTR_ADV_POS) &
+    //                   GNRC_IPV6_NETIF_FLAGS_RTR_ADV_MASK;
+    if_entry->flags |= (rtr_adv->flags << 8u) & 0xc000;
     /* set reachable time from message if it is not the same as the random base
      * value */
     if ((rtr_adv->reach_time.u32 != 0) &&
@@ -672,7 +674,8 @@ void gnrc_ndp_retrans_nbr_sol(gnrc_ipv6_nc_t *nc_entry)
 
             nc_entry->probes_remaining--;
 	    /* 8051 implementation */
-            if (nc_entry->iface == KERNEL_PID_UNDEF) {
+            //if (nc_entry->iface == KERNEL_PID_UNDEF) {
+	    if (nc_entry-> iface == 0) {
                 size_t ifnum = 0;
                 size_t i = 0;
                 kernel_pid_t ifs[GNRC_NETIF_NUMOF];

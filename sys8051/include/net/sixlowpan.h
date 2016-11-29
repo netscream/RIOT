@@ -26,9 +26,9 @@
 
 #include "byteorder.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @name    6LoWPAN dispatch definition
@@ -37,13 +37,13 @@ extern "C" {
  *          </a>
  * @{
  */
-#define SIXLOWPAN_UNCOMP            (0x41)      /**< uncompressed 6LoWPAN frame dispatch. */
-#define SIXLOWPAN_FRAG_DISP_MASK    (0xf8)      /**< mask for fragmentation
-                                                 *   dispatch */
-#define SIXLOWPAN_FRAG_1_DISP       (0xc0)      /**< dispatch for 1st fragment */
-#define SIXLOWPAN_FRAG_N_DISP       (0xe0)      /**< dispatch for subsequent
-                                                 *   fragments */
-#define SIXLOWPAN_FRAG_MAX_LEN      (2047)      /**< Maximum datagram size @f$ (2^{11} - 1) @f$ */
+//#define SIXLOWPAN_UNCOMP            (0x41)      /**< uncompressed 6LoWPAN frame dispatch. */
+//#define SIXLOWPAN_FRAG_DISP_MASK    (0xf8)      /**< mask for fragmentation
+                                                 /*   dispatch */
+//#define SIXLOWPAN_FRAG_1_DISP       (0xc0)      /**< dispatch for 1st fragment */
+//#define SIXLOWPAN_FRAG_N_DISP       (0xe0)      /**< dispatch for subsequent
+                                                 /*   fragments */
+//#define SIXLOWPAN_FRAG_MAX_LEN      (2047)      /**< Maximum datagram size @f$ (2^{11} - 1) @f$ */
 
 /**
  * @brief   Dispatch mask for LOWPAN_IPHC.
@@ -51,7 +51,7 @@ extern "C" {
  *              RFC 6282, section 3.1
  *          </a>
  */
-#define SIXLOWPAN_IPHC1_DISP_MASK   (0xe0)
+//#define SIXLOWPAN_IPHC1_DISP_MASK   (0xe0)
 
 /**
  * @brief   Dispatch for LOWPAN_IPHC.
@@ -59,7 +59,7 @@ extern "C" {
  *              RFC 6282, section 3.1
  *          </a>
  */
-#define SIXLOWPAN_IPHC1_DISP        (0x60)
+//#define SIXLOWPAN_IPHC1_DISP        (0x60)
 
 /**
  * @brief   Checks if dispatch indicates that frame is not a 6LoWPAN (NALP) frame.
@@ -69,17 +69,21 @@ extern "C" {
  * @return  true, if frame is a NALP.
  * @return  false, if frame is not a NALP.
  */
-static inline bool sixlowpan_nalp(uint8_t disp)
+bool sixlowpan_nalp(uint8_t disp)
 {
     return ((disp & 0xc0) == 0);
 }
+/*static inline bool sixlowpan_nalp(uint8_t disp)
+{
+    return ((disp & 0xc0) == 0);
+}*/
 /** @} */
 
 /**
  * @name    6LoWPAN fragmentation header definitions
  * @{
  */
-#define SIXLOWPAN_FRAG_SIZE_MASK    (0x07ff)    /**< mask for datagram size */
+//#define SIXLOWPAN_FRAG_SIZE_MASK    (0x07ff)    /**< mask for datagram size */
 
 /**
  * @brief   General and 1st 6LoWPAN fragmentation header
@@ -92,7 +96,8 @@ static inline bool sixlowpan_nalp(uint8_t disp)
  *          RFC 4944, section 5.3
  *      </a>
  */
-typedef struct __attribute__((packed)) {
+//typedef struct __attribute__((packed)) {
+typedef struct {
     /**
      * @brief   Dispatch and datagram size.
      *
@@ -112,7 +117,8 @@ typedef struct __attribute__((packed)) {
  *
  * @extends sixlowpan_frag_t
  */
-typedef struct __attribute__((packed)) {
+//typedef struct __attribute__((packed)) {
+typedef struct {
     /**
      * @brief   Dispatch and datagram size.
      *
@@ -132,13 +138,22 @@ typedef struct __attribute__((packed)) {
  * @return  true, if given fragment is a 6LoWPAN fragment.
  * @return  false, if given fragment is not a 6LoWPAN fragment.
  */
-static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
+bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
+{
+    //return ((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
+    return ((hdr->disp_size.u8[0] & 0xf8) == 0xc0) ||
+	    ((hdr->disp_size.u8[0] & 0xf8) == 0xe0);
+            //SIXLOWPAN_FRAG_1_DISP) ||
+           //((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
+            //SIXLOWPAN_FRAG_N_DISP);
+}
+/*static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
 {
     return ((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
             SIXLOWPAN_FRAG_1_DISP) ||
            ((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
             SIXLOWPAN_FRAG_N_DISP);
-}
+}*/
 /** @} */
 
 /**
@@ -152,7 +167,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC1_TF          (0x18)
+//#define SIXLOWPAN_IPHC1_TF          (0x18)
 
 /**
  * @brief   Flag for Next Header Compression (part of first byte of
@@ -161,7 +176,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC1_NH          (0x04)
+//#define SIXLOWPAN_IPHC1_NH          (0x04)
 
 /**
  * @brief   Flag for Hop Limit elision (part of first byte of LOWPAN_IPHC).
@@ -169,7 +184,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC1_HL          (0x03)
+//#define SIXLOWPAN_IPHC1_HL          (0x03)
 
 /**
  * @brief   Flag for Context Identifier Extention (part of second byte
@@ -178,7 +193,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC2_CID_EXT     (0x80)
+//#define SIXLOWPAN_IPHC2_CID_EXT     (0x80)
 
 /**
  * @brief   Flag for Source Address Compression (part of second byte
@@ -187,7 +202,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC2_SAC         (0x40)
+//#define SIXLOWPAN_IPHC2_SAC         (0x40)
 
 /**
  * @brief   Bits for Source Address Mode (part of second byte of
@@ -196,7 +211,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC2_SAM         (0x30)
+//#define SIXLOWPAN_IPHC2_SAM         (0x30)
 
 /**
  * @brief   Flag for Destination Address Compression (part of second
@@ -205,7 +220,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC2_DAC         (0x04)
+//#define SIXLOWPAN_IPHC2_DAC         (0x04)
 
 /**
  * @brief   Bits for Destination Address Mode (part of second byte of
@@ -214,7 +229,7 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC2_DAM         (0x03)
+//#define SIXLOWPAN_IPHC2_DAM         (0x03)
 
 /**
  * @brief   Flag for Multicast Compression (part of second byte of
@@ -223,17 +238,17 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  *          RFC 6282, section 3.1.1
  *      </a>
  */
-#define SIXLOWPAN_IPHC2_M           (0x08)
+//#define SIXLOWPAN_IPHC2_M           (0x08)
 
 /**
  * @brief   6LoWPAN IPHC header length
  */
-#define SIXLOWPAN_IPHC_HDR_LEN      (2)
+//#define SIXLOWPAN_IPHC_HDR_LEN      (2)
 
 /**
  * @brief   6LoWPAN context idendifier extension header length
  */
-#define SIXLOWPAN_IPHC_CID_EXT_LEN  (1)
+//#define SIXLOWPAN_IPHC_CID_EXT_LEN  (1)
 
 /**
  * @brief   Checks if datagram is an IPHC datagram.
@@ -243,10 +258,15 @@ static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  * @return  true, if datagram is an IPHC datagram.
  * @return  false, if datagram is not an IPHC datagram.
  */
-static inline bool sixlowpan_iphc_is(uint8_t *data)
+bool sixlowpan_iphc_is(uint8_t *data)
+{
+    //return ((*data & SIXLOWPAN_IPHC1_DISP_MASK) == SIXLOWPAN_IPHC1_DISP);
+    return ((*data & 0xe0) == 0x60);
+}
+/*static inline bool sixlowpan_iphc_is(uint8_t *data)
 {
     return ((*data & SIXLOWPAN_IPHC1_DISP_MASK) == SIXLOWPAN_IPHC1_DISP);
-}
+}*/
 /** @} */
 
 /**
@@ -257,9 +277,9 @@ static inline bool sixlowpan_iphc_is(uint8_t *data)
  */
 void sixlowpan_print(uint8_t *data, size_t size);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* SIXLOWPAN_H_ */
 /** @} */

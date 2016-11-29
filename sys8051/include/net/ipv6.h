@@ -28,9 +28,9 @@
 #include "net/ipv6/ext.h"
 #include "net/ipv6/hdr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   minimum **M**aximum **T**ransition **U**nit
@@ -39,11 +39,11 @@ extern "C" {
  *          RFC 2460, section 5.3
  *      </a>
  */
-#define IPV6_MIN_MTU    (1280)
+//#define IPV6_MIN_MTU    (1280)
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 
 #endif /* IPV6_H_ */

@@ -26,7 +26,7 @@
 #include <stdio.h>
 #endif
 
-const ipv6_addr_t ipv6_addr_unspecified = IPV6_ADDR_UNSPECIFIED;
+/*const ipv6_addr_t ipv6_addr_unspecified = IPV6_ADDR_UNSPECIFIED;
 const ipv6_addr_t ipv6_addr_loopback = IPV6_ADDR_LOOPBACK;
 const ipv6_addr_t ipv6_addr_link_local_prefix = IPV6_ADDR_LINK_LOCAL_PREFIX;
 const ipv6_addr_t ipv6_addr_solicited_node_prefix = IPV6_ADDR_SOLICITED_NODE_PREFIX;
@@ -35,6 +35,16 @@ const ipv6_addr_t ipv6_addr_all_nodes_link_local = IPV6_ADDR_ALL_NODES_LINK_LOCA
 const ipv6_addr_t ipv6_addr_all_routers_if_local = IPV6_ADDR_ALL_ROUTERS_IF_LOCAL;
 const ipv6_addr_t ipv6_addr_all_routers_link_local = IPV6_ADDR_ALL_ROUTERS_LINK_LOCAL;
 const ipv6_addr_t ipv6_addr_all_routers_site_local = IPV6_ADDR_ALL_ROUTERS_SITE_LOCAL;
+*/
+const ipv6_addr_t ipv6_addr_unspecified = {{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }};
+const ipv6_addr_t ipv6_addr_loopback = {{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }};
+const ipv6_addr_t ipv6_addr_link_local_prefix = {{ 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }};
+const ipv6_addr_t ipv6_addr_solicited_node_prefix = {{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xff, 0x00, 0x00, 0x00 }};
+const ipv6_addr_t ipv6_addr_all_nodes_if_local = {{ 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }};
+const ipv6_addr_t ipv6_addr_all_nodes_link_local = {{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }};
+const ipv6_addr_t ipv6_addr_all_routers_if_local = {{ 0xff, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }};
+const ipv6_addr_t ipv6_addr_all_routers_link_local = {{ 0xff, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }};
+const ipv6_addr_t ipv6_addr_all_routers_site_local = {{ 0xff, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }};
 
 bool ipv6_addr_equal(const ipv6_addr_t *a, const ipv6_addr_t *b)
 {
@@ -115,8 +125,8 @@ void ipv6_addr_init_iid(ipv6_addr_t *out, const uint8_t *iid, uint8_t bits)
 
     unaligned_bits = bits % 8;
     bytes = bits / 8;
-    pos = (IPV6_ADDR_BIT_LEN / 8) - bytes;
-
+    //pos = (IPV6_ADDR_BIT_LEN / 8) - bytes;
+    pos = 128/8 - bytes;
     if (unaligned_bits) {
         uint8_t mask = 0xff << unaligned_bits;
         out->u8[pos - 1] &= mask;
@@ -145,7 +155,8 @@ int ipv6_addr_split(char *addr_str, char seperator, int _default)
 /* 8051 implementation */
 void ipv6_addr_print(const ipv6_addr_t *addr)
 {
-    char addr_str[IPV6_ADDR_MAX_STR_LEN];
+    //char addr_str[IPV6_ADDR_MAX_STR_LEN];
+    char addr_str[40];
     assert(addr);
     ipv6_addr_to_str(addr_str, addr, sizeof(addr_str));
 #ifdef MODULE_FMT

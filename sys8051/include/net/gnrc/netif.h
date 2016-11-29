@@ -29,9 +29,9 @@
 #include <stdbool.h>
 #include "kernel_types.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Maximum number of network interfaces
@@ -138,9 +138,9 @@ char *gnrc_netif_addr_to_str(char *out, size_t out_len, const uint8_t *addr,
  */
 size_t gnrc_netif_addr_from_str(uint8_t *out, size_t out_len, const char *str);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETIF_H_ */
 /** @} */

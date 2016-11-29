@@ -74,7 +74,8 @@ static void _nc_remove(kernel_pid_t iface, gnrc_ipv6_nc_t *entry)
     xtimer_remove(&entry->nbr_adv_timer);
 
     ipv6_addr_set_unspecified(&(entry->ipv6_addr));
-    entry->iface = KERNEL_PID_UNDEF;
+    //entry->iface = KERNEL_PID_UNDEF;
+    entry->iface = 0;
     entry->flags = 0;
 }
 
@@ -210,7 +211,8 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get(kernel_pid_t iface, const ipv6_addr_t *ipv6_add
     }
    
     for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
-        if (((ncache[i].iface == KERNEL_PID_UNDEF) || (iface == KERNEL_PID_UNDEF) ||
+        //if (((ncache[i].iface == KERNEL_PID_UNDEF) || (iface == KERNEL_PID_UNDEF) ||
+	if (((ncache[i].iface == 0) || (iface == 0) ||
              (iface == ncache[i].iface)) &&
             ipv6_addr_equal(&(ncache[i].ipv6_addr), ipv6_addr)) {
             DEBUG("ipv6_nc: Found entry for %s on interface %" PRIkernel_pid
@@ -260,7 +262,8 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get_next_router(gnrc_ipv6_nc_t *prev)
 
 gnrc_ipv6_nc_t *gnrc_ipv6_nc_still_reachable(const ipv6_addr_t *ipv6_addr)
 {
-    gnrc_ipv6_nc_t *entry = gnrc_ipv6_nc_get(KERNEL_PID_UNDEF, ipv6_addr);
+    //gnrc_ipv6_nc_t *entry = gnrc_ipv6_nc_get(KERNEL_PID_UNDEF, ipv6_addr);
+    gnrc_ipv6_nc_t *entry = gnrc_ipv6_nc_get(0, ipv6_addr);
 
     if (entry == NULL) {
         DEBUG("ipv6_nc: No entry found for %s\n",
@@ -291,7 +294,8 @@ kernel_pid_t gnrc_ipv6_nc_get_l2_addr(uint8_t *l2_addr, uint8_t *l2_addr_len,
 {
     assert((l2_addr != NULL) && (l2_addr_len != NULL));
     if ((entry == NULL) || !gnrc_ipv6_nc_is_reachable(entry)) {
-        return KERNEL_PID_UNDEF;
+        //return KERNEL_PID_UNDEF;
+	return 0;
     }
     *l2_addr_len = entry->l2_addr_len;
     memcpy(l2_addr, entry->l2_addr, entry->l2_addr_len);

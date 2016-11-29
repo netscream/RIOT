@@ -41,7 +41,7 @@
 const char CODE assert_crash_message[] = "FAILED ASSERTION.";
 
 /* flag preventing "recursive crash printing loop" */
-static int crashed = 0;
+static int XDATA crashed = 0;
 
 /* WARNING: this function NEVER returns! */
 NORETURN void core_panic(core_panic_t crash_code, const char *message)

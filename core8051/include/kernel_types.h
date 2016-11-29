@@ -60,12 +60,12 @@
 /**
  * Canonical identifier for an invalid PID.
  */
-#define KERNEL_PID_UNDEF 0
+//#define KERNEL_PID_UNDEF 0
 
 /**
  * The first valid PID (inclusive).
  */
-#define KERNEL_PID_FIRST (KERNEL_PID_UNDEF + 1)
+#define KERNEL_PID_FIRST (1)
 
 /**
  * The last valid PID (inclusive).

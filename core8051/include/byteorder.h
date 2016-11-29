@@ -125,7 +125,7 @@ typedef be_uint64_t network_uint64_t;
  * @returns        `v` converted to big endian.
  */
 /* 8051 implementation */
-static be_uint16_t *byteorder_ltobs(le_uint16_t *v);
+be_uint16_t *byteorder_ltobs(le_uint16_t *v);
 
 /**
  * @brief          Convert from little endian to big endian, 32 bit.
@@ -133,7 +133,7 @@ static be_uint16_t *byteorder_ltobs(le_uint16_t *v);
  * @returns        `v` converted to big endian.
  */
 /* 8051 implementation */
-static be_uint32_t *byteorder_ltobl(le_uint32_t *v);
+be_uint32_t *byteorder_ltobl(le_uint32_t *v);
 
 /**
  * @brief          Convert from little endian to big endian, 64 bit.
@@ -141,7 +141,7 @@ static be_uint32_t *byteorder_ltobl(le_uint32_t *v);
  * @returns        `v` converted to big endian.
  */
 /* 8051 implementation */
-static be_uint64_t *byteorder_ltobll(le_uint64_t *v);
+be_uint64_t *byteorder_ltobll(le_uint64_t *v);
 
 /**
  * @brief          Convert from big endian to little endian, 16 bit.
@@ -149,7 +149,7 @@ static be_uint64_t *byteorder_ltobll(le_uint64_t *v);
  * @returns        `v` converted to little endian.
  */
 /* 8051 implementation */
-static le_uint16_t *byteorder_btols(be_uint16_t *v);
+le_uint16_t *byteorder_btols(be_uint16_t *v);
 
 /**
  * @brief          Convert from big endian to little endian, 32 bit.
@@ -157,7 +157,7 @@ static le_uint16_t *byteorder_btols(be_uint16_t *v);
  * @returns        `v` converted to little endian.
  */
 /* 8051 implementation */
-static le_uint32_t *byteorder_btoll(be_uint32_t *v);
+le_uint32_t *byteorder_btoll(be_uint32_t *v);
 
 /**
  * @brief          Convert from big endian to little endian, 64 bit.
@@ -165,7 +165,7 @@ static le_uint32_t *byteorder_btoll(be_uint32_t *v);
  * @returns        `v` converted to little endian.
  */
 /* 8051 implementation */
-static le_uint64_t *byteorder_btolll(be_uint64_t *v);
+le_uint64_t *byteorder_btolll(be_uint64_t *v);
 
 /**
  * @brief          Convert from host byte order to network byte order, 16 bit.
@@ -173,7 +173,7 @@ static le_uint64_t *byteorder_btolll(be_uint64_t *v);
  * @returns        `v` converted to network byte order.
  */
 /* 8051 implementation */
-static network_uint16_t *byteorder_htons(uint16_t v);
+network_uint16_t *byteorder_htons(uint16_t v);
 
 /**
  * @brief          Convert from host byte order to network byte order, 32 bit.
@@ -181,7 +181,7 @@ static network_uint16_t *byteorder_htons(uint16_t v);
  * @returns        `v` converted to network byte order.
  */
 /* 8051 implementation */
-static network_uint32_t *byteorder_htonl(uint32_t v);
+network_uint32_t *byteorder_htonl(uint32_t v);
 
 /**
  * @brief          Convert from host byte order to network byte order, 64 bit.
@@ -197,7 +197,7 @@ static network_uint32_t *byteorder_htonl(uint32_t v);
  * @returns        `v` converted to host byte order.
  */
 /* 8051 implementation */
-static uint16_t byteorder_ntohs(network_uint16_t *v);
+uint16_t byteorder_ntohs(network_uint16_t *v);
 
 /**
  * @brief          Convert from network byte order to host byte order, 32 bit.
@@ -205,7 +205,7 @@ static uint16_t byteorder_ntohs(network_uint16_t *v);
  * @returns        `v` converted to host byte order.
  */
 /* 8051 implementation */
-static uint32_t byteorder_ntohl(network_uint32_t *v);
+uint32_t byteorder_ntohl(network_uint32_t *v);
 
 /**
  * @brief          Convert from network byte order to host byte order, 64 bit.
@@ -221,7 +221,7 @@ static uint32_t byteorder_ntohl(network_uint32_t *v);
  * @returns        The swapped integer.
  */
 /* 8051 implementation */
-static uint16_t byteorder_swaps(uint16_t v);
+uint16_t byteorder_swaps(uint16_t v);
 
 /**
  * @brief          Swap byte order, 32 bit.
@@ -229,7 +229,7 @@ static uint16_t byteorder_swaps(uint16_t v);
  * @returns        The swapped integer.
  */
 /* 8051 implementation */
-static uint32_t byteorder_swapl(uint32_t v);
+uint32_t byteorder_swapl(uint32_t v);
 
 /**
  * @brief          Swap byte order, 64 bit.
@@ -246,7 +246,7 @@ static uint32_t byteorder_swapl(uint32_t v);
  * @returns        Converted integer.
  */
 /* 8051 implementation */
-static uint16_t HTONS(uint16_t v);
+uint16_t HTONS(uint16_t v);
 
 /**
  * @brief          Convert from host byte order to network byte order, 32 bit.
@@ -254,7 +254,7 @@ static uint16_t HTONS(uint16_t v);
  * @param[in]      v   The integer to convert.
  * @returns        Converted integer.
  */
-static uint32_t HTONL(uint32_t v);
+uint32_t HTONL(uint32_t v);
 
 /**
  * @brief          Convert from host byte order to network byte order, 64 bit.
@@ -272,7 +272,7 @@ static uint32_t HTONL(uint32_t v);
  * @returns        Converted integer.
  */
 /* 8051 implementation */
-static uint16_t NTOHS(uint16_t v);
+uint16_t NTOHS(uint16_t v);
 
 /**
  * @brief          Convert from network byte order to host byte order, 32 bit.
@@ -281,7 +281,7 @@ static uint16_t NTOHS(uint16_t v);
  * @returns        Converted integer.
  */
 /* 8051 implementation */
-static uint32_t NTOHL(uint32_t v);
+uint32_t NTOHL(uint32_t v);
 
 /**
  * @brief          Convert from network byte order to host byte order, 64 bit.

@@ -33,31 +33,32 @@
 #include "net/netstats.h"
 #include "xtimer.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @def GNRC_IPV6_NETIF_ADDR_NUMOF
  *
  * @brief   Number of IPv6 addresses per interface.
  */
-#ifdef MODULE_GNRC_RPL
+//#ifdef MODULE_GNRC_RPL
 /* RPL needs all-RPL-nodes multicast address */
-#   define  GNRC_IPV6_NETIF_RPL_ADDR    (1)
+/*#   define  GNRC_IPV6_NETIF_RPL_ADDR    (1)
 #else
 #   define  GNRC_IPV6_NETIF_RPL_ADDR    (0)
 #endif
 #ifdef MODULE_GNRC_IPV6_ROUTER
+*/
 /* routers need all-routers multicast address */
-#   define GNRC_IPV6_NETIF_RTR_ADDR     (1)
+/*#   define GNRC_IPV6_NETIF_RTR_ADDR     (1)
 #else
 #   define GNRC_IPV6_NETIF_RTR_ADDR     (0)
 #endif
 #ifndef GNRC_IPV6_NETIF_ADDR_NUMOF
 #define GNRC_IPV6_NETIF_ADDR_NUMOF  (6 + GNRC_IPV6_NETIF_RPL_ADDR + GNRC_IPV6_NETIF_RTR_ADDR)
 #endif
-
+*/
 /**
  * @brief   Default MTU
  *
@@ -71,9 +72,9 @@ extern "C" {
  *          @ref net_gnrc_sixlowpan_frag) and memory usage (e.g. because @ref GNRC_PKTBUF_SIZE
  *          can be much smaller).
  */
-#ifndef GNRC_IPV6_NETIF_DEFAULT_MTU
-#define GNRC_IPV6_NETIF_DEFAULT_MTU             (IPV6_MIN_MTU)
-#endif
+//#ifndef GNRC_IPV6_NETIF_DEFAULT_MTU
+//#define GNRC_IPV6_NETIF_DEFAULT_MTU             (IPV6_MIN_MTU)
+//#endif
 
 /**
  * @brief   Default hop limit
@@ -85,8 +86,8 @@ extern "C" {
  *          IANA, IP TIME TO LIVE PARAMETER
  *      </a>
  */
-#define GNRC_IPV6_NETIF_DEFAULT_HL              (64)
-
+//#define GNRC_IPV6_NETIF_DEFAULT_HL              (64)
+	
 /**
  * @name    Default values for router configuration
  * @{
@@ -97,17 +98,17 @@ extern "C" {
 /**
  * @brief   Maximum time in seconds between sending unsolicited multicast router advertisements.
  */
-#define GNRC_IPV6_NETIF_DEFAULT_MAX_ADV_INT     (600U)
+//#define GNRC_IPV6_NETIF_DEFAULT_MAX_ADV_INT     (600U)
 
 /**
  * @brief   Minimum time in seconds between sending unsolicited multicast router advertisements.
  */
-#define GNRC_IPV6_NETIF_DEFAULT_MIN_ADV_INT     (200U)
+//#define GNRC_IPV6_NETIF_DEFAULT_MIN_ADV_INT     (200U)
 
 /**
  * @brief   The router lifetime to propagate in router advertisements.
  */
-#define GNRC_IPV6_NETIF_DEFAULT_ROUTER_LTIME    (1800U)
+//#define GNRC_IPV6_NETIF_DEFAULT_ROUTER_LTIME    (1800U)
 /** @} */
 
 /**
@@ -119,8 +120,8 @@ extern "C" {
  *          RFC 4291, section 2.6
  *      </a>
  */
-#define GNRC_IPV6_NETIF_ADDR_FLAGS_UNICAST      (0x00)  /**< unicast address */
-#define GNRC_IPV6_NETIF_ADDR_FLAGS_NON_UNICAST  (0x01)  /**< non-unicast address */
+//#define GNRC_IPV6_NETIF_ADDR_FLAGS_UNICAST      (0x00)  /**< unicast address */
+//#define GNRC_IPV6_NETIF_ADDR_FLAGS_NON_UNICAST  (0x01)  /**< non-unicast address */
 
 /**
  * @brief   A prefix information option that propagates the prefix of this
@@ -129,7 +130,7 @@ extern "C" {
  *              RFC 4861, section 6.2.1
  *          </a>
  */
-#define GNRC_IPV6_NETIF_ADDR_FLAGS_NDP_AUTO     (0x40)
+//#define GNRC_IPV6_NETIF_ADDR_FLAGS_NDP_AUTO     (0x40)
 
 /**
  * @brief   A prefix information option that propagates the prefix of this
@@ -138,7 +139,7 @@ extern "C" {
  *              RFC 4861, section 6.2.1
  *          </a>
  */
-#define GNRC_IPV6_NETIF_ADDR_FLAGS_NDP_ON_LINK  (0x80)
+//#define GNRC_IPV6_NETIF_ADDR_FLAGS_NDP_ON_LINK  (0x80)
 /**
  * @}
  */
@@ -161,71 +162,71 @@ extern "C" {
 /**
  * @brief   Interface is 6LoWPAN interface.
  */
-#define GNRC_IPV6_NETIF_FLAGS_SIXLOWPAN         (0x0001)
+//#define GNRC_IPV6_NETIF_FLAGS_SIXLOWPAN         (0x0001)
 
 /**
  * @brief   Flag to indicate that routing is enabled on the interface.
  */
-#define GNRC_IPV6_NETIF_FLAGS_ROUTER            (0x0002)
+//#define GNRC_IPV6_NETIF_FLAGS_ROUTER            (0x0002)
 
 /**
  * @brief   Flag to indicate that the interface sends periodic router
  *          advertisements and in response to router solicitations.
  */
-#define GNRC_IPV6_NETIF_FLAGS_RTR_ADV           (0x0004)
+//#define GNRC_IPV6_NETIF_FLAGS_RTR_ADV           (0x0004)
 
 /**
  * @brief   Flag to indicate that gnrc_ipv6_netif_t::mtu shall be propagated
  *          with the MTU options in router advertisements.
  */
-#define GNRC_IPV6_NETIF_FLAGS_ADV_MTU           (0x0008)
+//#define GNRC_IPV6_NETIF_FLAGS_ADV_MTU           (0x0008)
 
 /**
  * @brief   Flag to indicate that gnrc_ipv6_netif_t::cur_hl shall be propagated
  *          in router advertisements.
  */
-#define GNRC_IPV6_NETIF_FLAGS_ADV_CUR_HL        (0x0010)
+//#define GNRC_IPV6_NETIF_FLAGS_ADV_CUR_HL        (0x0010)
 
 /**
  * @brief   Flag to indicate that gnrc_ipv6_netif_t::reach_time shall be propagated
  *          in router advertisements.
  */
-#define GNRC_IPV6_NETIF_FLAGS_ADV_REACH_TIME    (0x0020)
+//#define GNRC_IPV6_NETIF_FLAGS_ADV_REACH_TIME    (0x0020)
 
 /**
  * @brief   Flag to indicate that ng_ipv6_netif_t::retrans_timer shall be propagated
  *          in router advertisements.
  */
-#define GNRC_IPV6_NETIF_FLAGS_ADV_RETRANS_TIMER (0x0040)
+//#define GNRC_IPV6_NETIF_FLAGS_ADV_RETRANS_TIMER (0x0040)
 
 /**
  * @brief   Flag to indicate if the interface is operating over a wired link
  */
-#define GNRC_IPV6_NETIF_FLAGS_IS_WIRED          (0x0080)
+//#define GNRC_IPV6_NETIF_FLAGS_IS_WIRED          (0x0080)
 
 /**
  * @brief   Offset of the router advertisement flags compared to the position in router
  *          advertisements.
  */
-#define GNRC_IPV6_NETIF_FLAGS_RTR_ADV_POS       (8U)
+//#define GNRC_IPV6_NETIF_FLAGS_RTR_ADV_POS       (8U)
 
 /**
  * @brief   Mask for flags intended for router advertisements.
  * @note    Please expand if more router advertisement flags are introduced.
  */
-#define GNRC_IPV6_NETIF_FLAGS_RTR_ADV_MASK      (0xc000)
+//#define GNRC_IPV6_NETIF_FLAGS_RTR_ADV_MASK      (0xc000)
 
 /**
  * @brief   Flag to indicate that the interface has other address
  *          configuration.
  */
-#define GNRC_IPV6_NETIF_FLAGS_OTHER_CONF        (0x4000)
+//#define GNRC_IPV6_NETIF_FLAGS_OTHER_CONF        (0x4000)
 
 /**
  * @brief   Flag to indicate that the interface has managed address
  *          configuration (e.g. via DHCPv6).
  */
-#define GNRC_IPV6_NETIF_FLAGS_MANAGED           (0x8000)
+//#define GNRC_IPV6_NETIF_FLAGS_MANAGED           (0x8000)
 /**
  * @}
  */
@@ -273,7 +274,8 @@ typedef struct {
     /**
      * @brief addresses registered to the interface
      */
-    gnrc_ipv6_netif_addr_t addrs[GNRC_IPV6_NETIF_ADDR_NUMOF];
+    //gnrc_ipv6_netif_addr_t addrs[GNRC_IPV6_NETIF_ADDR_NUMOF];
+    gnrc_ipv6_netif_addr_t addrs[8]; /* 8051 implementation */
     mutex_t mutex;          /**< mutex for the interface */
     kernel_pid_t pid;       /**< PID of the interface */
     uint16_t flags;         /**< flags for 6LoWPAN and Neighbor Discovery */
@@ -551,10 +553,17 @@ ipv6_addr_t *gnrc_ipv6_netif_find_best_src_addr(kernel_pid_t pid, const ipv6_add
  *
  * @return  Interface specific meta-information on @p addr
  */
-static inline gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr)
+/* 8051 impelementation */
+gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr)
+{
+    //return container_of(addr, gnrc_ipv6_netif_addr_t, addr); 
+    return ((gnrc_ipv6_netif_addr_t*) ((char*) (addr) - offsetof(gnrc_ipv6_netif_addr_t, addr)));
+}
+ 
+/*static inline gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr)
 {
     return container_of(addr, gnrc_ipv6_netif_addr_t, addr);
-}
+}*/
 
 /**
  * @brief   Checks if an address is non-unicast.
@@ -576,12 +585,13 @@ static inline gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t
  * @return true, if address is anycast or multicast.
  * @return false, if address is unicast.
  */
-static inline bool gnrc_ipv6_netif_addr_is_non_unicast(const ipv6_addr_t *addr)
-{
-    return (bool)(container_of(addr, gnrc_ipv6_netif_addr_t, addr)->flags &
-                  GNRC_IPV6_NETIF_ADDR_FLAGS_NON_UNICAST);
-
-}
+/* 8051 implementation */
+bool gnrc_ipv6_netif_addr_is_non_unicast(const ipv6_addr_t *addr);
+/*{
+    //return (bool)(container_of(addr, gnrc_ipv6_netif_addr_t, addr)->flags &
+                  //GNRC_IPV6_NETIF_ADDR_FLAGS_NON_UNICAST);
+    return (bool)(gnrc_ipv6_netif_addr_get(addr)->flags & 0x01);
+}*/
 
 /**
  * @brief   Initializes an interface with device-dependent values.
@@ -603,9 +613,9 @@ void gnrc_ipv6_netif_init_by_dev(void);
  */
 netstats_t *gnrc_ipv6_netif_get_stats(kernel_pid_t pid);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* NETIF_H_ */
 /**

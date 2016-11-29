@@ -84,7 +84,8 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
 
     if (next_hop_ip == NULL) {            /* no route to host */
         if (!dst_link_local) {
-            if (iface == KERNEL_PID_UNDEF) {
+            //if (iface == KERNEL_PID_UNDEF) {
+	    if (iface == 0) {
                 /* gnrc_ipv6_netif_t doubles as prefix list */
                 iface = gnrc_ipv6_netif_find_by_prefix(&prefix, dst);
             }
@@ -96,7 +97,8 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
 
         if (dst_link_local || ((prefix != NULL) &&
                                (gnrc_ipv6_netif_addr_get(prefix)->flags & /* prefix is on-link */
-                                GNRC_IPV6_NETIF_ADDR_FLAGS_NDP_ON_LINK))) {
+			       0x80))) {
+                                //GNRC_IPV6_NETIF_ADDR_FLAGS_NDP_ON_LINK))) {
             next_hop_ip = dst;
         }
     }
@@ -135,7 +137,8 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
 
         if (nc_entry == NULL) {
             DEBUG("ndp node: could not create neighbor cache entry\n");
-            return KERNEL_PID_UNDEF;
+            //return KERNEL_PID_UNDEF;
+	    return 0;
         }
 
         pkt_node = _alloc_pkt_node(pkt);
@@ -152,7 +155,8 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
         /* address resolution */
         ipv6_addr_set_solicited_nodes(&dst_sol, next_hop_ip);
 
-        if (iface == KERNEL_PID_UNDEF) { /* 8051 implementation */
+        //if (iface == KERNEL_PID_UNDEF) { /* 8051 implementation */
+	if (iface == 0) {
             kernel_pid_t ifs[GNRC_NETIF_NUMOF];
             size_t ifnum = gnrc_netif_get(ifs);
             size_t i = 0;
@@ -175,7 +179,8 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
         }
     }
 
-    return KERNEL_PID_UNDEF;
+    //return KERNEL_PID_UNDEF;
+    return 0;
 }
 
 

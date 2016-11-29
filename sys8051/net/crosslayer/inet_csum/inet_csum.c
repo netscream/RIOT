@@ -14,25 +14,26 @@
 
 #include <inttypes.h>
 #include <stdio.h>
-#include "od.h"
+#include "od.h" //no need for this as we are not able to print out data dumps, to small device 
 #include "net/inet_csum.h"
 
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 /* 8051 implementation */
+//uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t accum_len)
 uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t accum_len)
 {
     uint32_t csum = sum;
     int i = 0;
-    DEBUG("inet_sum: sum = 0x%04" PRIx16 ", len = %" PRIu16, sum, len);
-#if ENABLE_DEBUG
-#ifdef MODULE_OD
-    DEBUG(", buf:\n");
-    od_hex_dump(buf, len, OD_WIDTH_DEFAULT);
-#else
-    DEBUG(", buf output only with od module\n");
-#endif
-#endif
+//    DEBUG("inet_sum: sum = 0x%04" PRIx16 ", len = %" PRIu16, sum, len);
+//#if ENABLE_DEBUG
+//#ifdef MODULE_OD
+//    DEBUG(", buf:\n");
+    //od_hex_dump(buf, len, OD_WIDTH_DEFAULT);
+//#else
+//    DEBUG(", buf output only with od module\n");
+//#endif
+//#endif
 
     if (len == 0)
         return csum;
@@ -57,9 +58,13 @@ uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t 
         csum = (csum & 0xffff) + carry;
     }
 
-    DEBUG("inet_sum: new sum = 0x%04" PRIx32 "\n", csum);
+    //DEBUG("inet_sum: new sum = 0x%04" PRIx32 "\n", csum);
 
     return csum;
+}
+
+uint16_t inet_csum(uint16_t sum, const uint8_t *buf, uint16_t len) {
+    return inet_csum_slice(sum, buf, len, 0);
 }
 
 /** @} */

@@ -25,54 +25,63 @@
 
 #include "periph/timer.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #if XTIMER_MASK
-extern volatile uint32_t _xtimer_high_cnt;
+//extern volatile uint32_t _xtimer_high_cnt;
+extern uint32_t XDATA _xtimer_high_cnt;
 #endif
 
-#if (XTIMER_SHIFT < 0)
-#define XTIMER_USEC_TO_TICKS(value) ( (value) << -XTIMER_SHIFT )
-#define XTIMER_TICKS_TO_USEC(value) ( (value) >> -XTIMER_SHIFT )
+/*#if (XTIMER_SHIFT < 0)
+//#define XTIMER_USEC_TO_TICKS(value) ( (value) << -XTIMER_SHIFT )
+//#define XTIMER_TICKS_TO_USEC(value) ( (value) >> -XTIMER_SHIFT )
 #else
-#define XTIMER_USEC_TO_TICKS(value) ( (value) >> XTIMER_SHIFT )
-#define XTIMER_TICKS_TO_USEC(value) ( (value) << XTIMER_SHIFT )
-#endif
+//#define XTIMER_USEC_TO_TICKS(value) ( (value) >> XTIMER_SHIFT )
+//#define XTIMER_TICKS_TO_USEC(value) ( (value) << XTIMER_SHIFT )
+#endif*/
 
 /**
  * @brief IPC message type for xtimer msg callback
  */
-#define MSG_XTIMER 12345
+//#define MSG_XTIMER 12345
 
 /**
  * @brief returns the (masked) low-level timer counter value.
  */
-static inline uint32_t _xtimer_lltimer_now(void)
-{
+/* 8051 implementation */
+//static inline uint32_t _xtimer_lltimer_now(void)
+uint32_t _xtimer_lltimer_now(void);
+
+/*{
 #if XTIMER_SHIFT
-    return XTIMER_TICKS_TO_USEC((uint32_t)timer_read(XTIMER_DEV));
+    //return XTIMER_TICKS_TO_USEC((uint32_t)timer_read(XTIMER_DEV));
+    return (uint32_t)timer_read(0) >> -0;
 #else
-    return timer_read(XTIMER_DEV);
+    //return timer_read(XTIMER_DEV);
+    return timer_read(TIMER_DEV(0));
 #endif
-}
+}*/
 
 /**
  * @brief drop bits of a value that don't fit into the low-level timer.
  */
-static inline uint32_t _xtimer_lltimer_mask(uint32_t val)
-{
-    return val & ~XTIMER_MASK_SHIFTED;
-}
+/* 8051 implementation */ 
+//static inline uint32_t _xtimer_lltimer_mask(uint32_t val)
+uint32_t _xtimer_lltimer_mask(uint32_t val);
+/*{
+    //return val & ~XTIMER_MASK_SHIFTED;
+    return val & ~(0 << -0);
+}*/
 
 /**
  * @{
  * @brief xtimer internal stuff
  * @internal
  */
-int _xtimer_set_absolute(xtimer_t *timer, uint32_t target);
-void _xtimer_set64(xtimer_t *timer, uint32_t offset, uint32_t long_offset);
+int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t target);
+void _xtimer_set64(xtimer_t* XDATA timer, uint32_t offset, uint32_t long_offset);
 void _xtimer_sleep(uint32_t offset, uint32_t long_offset);
 /** @} */
 
@@ -85,16 +94,17 @@ void _xtimer_sleep(uint32_t offset, uint32_t long_offset);
 
 #ifndef DOXYGEN
 /* Doxygen warns that these are undocumented, but the documentation can be found in xtimer.h */
-
-static inline uint32_t xtimer_now(void)
-{
+/* 8051 implementation */
+//static inline uint32_t xtimer_now(void)
+uint32_t xtimer_now(void);
+/*{
 #if XTIMER_MASK
     uint32_t latched_high_cnt, now;
-
+*/
     /* _high_cnt can change at any time, so check the value before
      * and after reading the low-level timer. If it hasn't changed,
      * then it can be safely applied to the timer count. */
-
+/*
     do {
         latched_high_cnt = _xtimer_high_cnt;
         now = _xtimer_lltimer_now();
@@ -104,9 +114,10 @@ static inline uint32_t xtimer_now(void)
 #else
     return _xtimer_lltimer_now();
 #endif
-}
-
-static inline void xtimer_spin(uint32_t offset) {
+}*/
+/* 8051 implemetntation */
+//static inline void xtimer_spin(uint32_t offset) {
+void xtimer_spin(uint32_t offset);/* {
     uint32_t start = _xtimer_lltimer_now();
 #if XTIMER_MASK
     offset = _xtimer_lltimer_mask(offset);
@@ -114,12 +125,13 @@ static inline void xtimer_spin(uint32_t offset) {
 #else
     while ((_xtimer_lltimer_now() - start) < offset);
 #endif
-}
-
-static inline void xtimer_usleep(uint32_t microseconds)
-{
+}*/
+/* 8051 implementation */
+//static inline void xtimer_usleep(uint32_t microseconds)
+void xtimer_usleep(uint32_t microseconds);
+/*{
     _xtimer_sleep(microseconds, 0);
-}
+}*/
 
 /* 8051 implementation */
 /*static inline void xtimer_usleep64(uint64_t microseconds)
@@ -128,20 +140,22 @@ static inline void xtimer_usleep(uint32_t microseconds)
 }*/
 
 /* 8051 implementation */
-static inline void xtimer_sleep(uint32_t seconds);
+//static inline void xtimer_sleep(uint32_t seconds);
+void xtimer_sleep(uint32_t seconds);
 /*{
     xtimer_usleep64((uint64_t)seconds * SEC_IN_USEC);
 }*/
-
-static inline void xtimer_nanosleep(uint32_t nanoseconds)
-{
+/* 8051 implementation */
+//static inline void xtimer_nanosleep(uint32_t nanoseconds)
+void xtimer_nanosleep(uint32_t nanoseconds);
+/*{
     _xtimer_sleep(nanoseconds / USEC_IN_NS, 0);
-}
+}*/
 
 #endif /* !defined(DOXYGEN) */
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif

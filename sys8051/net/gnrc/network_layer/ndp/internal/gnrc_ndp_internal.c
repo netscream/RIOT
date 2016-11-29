@@ -156,13 +156,15 @@ void gnrc_ndp_internal_send_nbr_adv(kernel_pid_t iface, ipv6_addr_t *tgt, ipv6_a
     DEBUG("dst: %s, supply_tl2a: %d)\n",
           ipv6_addr_to_str(addr_str, dst, sizeof(addr_str)), supply_tl2a);
 
-    if ((gnrc_ipv6_netif_get(iface)->flags & GNRC_IPV6_NETIF_FLAGS_ROUTER) &&
-        (gnrc_ipv6_netif_get(iface)->flags & GNRC_IPV6_NETIF_FLAGS_RTR_ADV)) {
+    //if ((gnrc_ipv6_netif_get(iface)->flags & GNRC_IPV6_NETIF_FLAGS_ROUTER) &&
+    //    (gnrc_ipv6_netif_get(iface)->flags & GNRC_IPV6_NETIF_FLAGS_RTR_ADV)) {
+    if ((gnrc_ipv6_netif_get(iface)->flags & 0x0002) && (gnrc_ipv6_netif_get(iface)->flags & 0x0004)) { 
         adv_flags |= NDP_NBR_ADV_FLAGS_R;
     }
 
     if (ipv6_addr_is_unspecified(dst)) {
-        ipv6_addr_set_all_nodes_multicast(dst, IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
+        //ipv6_addr_set_all_nodes_multicast(dst, IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
+	ipv6_addr_set_all_nodes_multicast(dst, 0x2);
     }
     else {
         adv_flags |= NDP_NBR_ADV_FLAGS_S;
@@ -758,7 +760,8 @@ bool gnrc_ndp_internal_pi_opt_handle(kernel_pid_t iface, uint8_t icmpv6_type,
     if (((prefix == NULL) ||
          (gnrc_ipv6_netif_addr_get(prefix)->prefix_len != pi_opt->prefix_len)) &&
         (pi_opt->valid_ltime.u32 != 0)) {
-        ipv6_addr_t pref_addr = IPV6_ADDR_UNSPECIFIED;
+        //ipv6_addr_t pref_addr = IPV6_ADDR_UNSPECIFIED;
+        ipv6_addr_t pref_addr = {{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }};
 
         if (pi_opt->flags & NDP_OPT_PI_FLAGS_A) {
             /*if ((gnrc_netapi_get(iface, NETOPT_IPV6_IID, 0, &pref_addr.u64[1],

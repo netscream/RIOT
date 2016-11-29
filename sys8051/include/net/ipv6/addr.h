@@ -33,26 +33,26 @@
 #include "byteorder.h"
 #include "net/ipv4/addr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Length of an IPv6 address in bit.
  */
-#define IPV6_ADDR_BIT_LEN           (128)
+//#define IPV6_ADDR_BIT_LEN           (128)
 
-#ifdef MODULE_IPV4_ADDR
+//#ifdef MODULE_IPV4_ADDR
 /**
  * @brief   Maximum length of an IPv6 address as string.
  */
-#define IPV6_ADDR_MAX_STR_LEN       (sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"))
-#else
+//#define IPV6_ADDR_MAX_STR_LEN       (sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")) = 48
+//#else
 /**
  * @brief   Maximum length of an IPv6 address as string.
  */
-#define IPV6_ADDR_MAX_STR_LEN       (sizeof("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"))
-#endif
+//#define IPV6_ADDR_MAX_STR_LEN       (sizeof("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")) = 40
+//#endif
 
 
 /**
@@ -66,7 +66,7 @@ extern "C" {
  *       href="http://tools.ietf.org/html/rfc3879">SLDEP</a>. They are only
  *       defined here for the distinction of global unicast addresses.
  */
-#define IPV6_ADDR_SITE_LOCAL_PREFIX (0xfec0)
+//#define IPV6_ADDR_SITE_LOCAL_PREFIX (0xfec0)
 
 /**
  * @brief Data type to represent an IPv6 address.
@@ -86,11 +86,11 @@ typedef union {
  *          RFC 4291, section 2.5.2
  *      </a>
  */
-#define IPV6_ADDR_UNSPECIFIED               {{ 0x00, 0x00, 0x00, 0x00, \
+/*#define IPV6_ADDR_UNSPECIFIED               {{ 0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00 }}
-
+*/
 /**
  * @brief   Static initializer for the loopback IPv6 address (::1)
  *
@@ -98,10 +98,10 @@ typedef union {
  *          RFC 4291, section 2.5.3
  *      </a>
  */
-#define IPV6_ADDR_LOOPBACK                  {{ 0x00, 0x00, 0x00, 0x00, \
+/*#define IPV6_ADDR_LOOPBACK                  {{ 0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
-                                               0x00, 0x00, 0x00, 0x01 }}
+                                               0x00, 0x00, 0x00, 0x01 }}*/
 /**
  * @brief   Static initalizer for the link-local prefix (fe80::/64)
  *
@@ -109,10 +109,10 @@ typedef union {
  *          RFC 4291, section 2.5.6
  *      </a>
  */
-#define IPV6_ADDR_LINK_LOCAL_PREFIX         {{ 0xfe, 0x80, 0x00, 0x00, \
+/*#define IPV6_ADDR_LINK_LOCAL_PREFIX         {{ 0xfe, 0x80, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
-                                               0x00, 0x00, 0x00, 0x00 }}
+                                               0x00, 0x00, 0x00, 0x00 }}*/
 
 /**
  * @brief   Static initializer for the interface-local all nodes multicast IPv6
@@ -122,10 +122,10 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_ALL_NODES_IF_LOCAL        {{ 0xff, 0x01, 0x00, 0x00, \
+/*#define IPV6_ADDR_ALL_NODES_IF_LOCAL        {{ 0xff, 0x01, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
-                                               0x00, 0x00, 0x00, 0x01 }}
+                                               0x00, 0x00, 0x00, 0x01 }}*/
 
 /**
  * @brief   Static initializer for the link-local all nodes multicast IPv6
@@ -135,11 +135,11 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_ALL_NODES_LINK_LOCAL      {{ 0xff, 0x02, 0x00, 0x00, \
+/*#define IPV6_ADDR_ALL_NODES_LINK_LOCAL      {{ 0xff, 0x02, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x01 }}
-
+*/
 /**
  * @brief   Static initializer for the interface-local all routers multicast IPv6
  *          address (ff01::2)
@@ -148,11 +148,11 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_ALL_ROUTERS_IF_LOCAL      {{ 0xff, 0x01, 0x00, 0x00, \
+/*#define IPV6_ADDR_ALL_ROUTERS_IF_LOCAL      {{ 0xff, 0x01, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x02 }}
-
+*/
 /**
  * @brief   Static initializer for the link-local all routers multicast IPv6
  *          address (ff02::2)
@@ -161,11 +161,11 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_ALL_ROUTERS_LINK_LOCAL    {{ 0xff, 0x02, 0x00, 0x00, \
+/*#define IPV6_ADDR_ALL_ROUTERS_LINK_LOCAL    {{ 0xff, 0x02, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x02 }}
-
+*/
 
 /**
  * @brief   Static initializer for the site-local all routers multicast IPv6
@@ -175,11 +175,11 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_ALL_ROUTERS_SITE_LOCAL    {{ 0xff, 0x05, 0x00, 0x00, \
+/*#define IPV6_ADDR_ALL_ROUTERS_SITE_LOCAL    {{ 0xff, 0x05, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x02 }}
-
+*/
 /**
  * @brief   Static initializer for the solicited node multicast prefix
  *          (ff02:0:0:0:0:1:ff00::/104)
@@ -188,11 +188,11 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_SOLICITED_NODE_PREFIX     {{ 0xff, 0x02, 0x00, 0x00, \
+/*#define IPV6_ADDR_SOLICITED_NODE_PREFIX     {{ 0xff, 0x02, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x00, \
                                                0x00, 0x00, 0x00, 0x01, \
                                                0xff, 0x00, 0x00, 0x00 }}
-
+*/
 /**
  * @name    Multicast address flags
  * @brief   Values for the flag field in multicast addresses.
@@ -206,7 +206,7 @@ typedef union {
  * @brief   The address is transient, i.e. not well-known, permanantly
  *          assigned address by IANA.
  */
-#define IPV6_ADDR_MCAST_FLAG_TRANSIENT      (0x01)
+//#define IPV6_ADDR_MCAST_FLAG_TRANSIENT      (0x01)
 
 /**
  * @brief   The address is based on a network prefix
@@ -215,7 +215,7 @@ typedef union {
  *          RFC 3306, section 4
  *      </a>
  */
-#define IPV6_ADDR_MCAST_FLAG_PREFIX_BASED   (0x02)
+//#define IPV6_ADDR_MCAST_FLAG_PREFIX_BASED   (0x02)
 
 /**
  * @brief   The address embeds the address on the rendezvous point
@@ -224,7 +224,7 @@ typedef union {
  *          RFC 3956, section 3
  *      </a>
  */
-#define IPV6_ADDR_MCAST_FLAG_EMBED_ON_RP    (0x04)
+//#define IPV6_ADDR_MCAST_FLAG_EMBED_ON_RP    (0x04)
 /** @} */
 
 /**
@@ -236,8 +236,8 @@ typedef union {
  *          RFC 4291, section 2.7
  *      </a>
  */
-#define IPV6_ADDR_MCAST_SCP_IF_LOCAL        (0x1)   /**< interface-local scope */
-#define IPV6_ADDR_MCAST_SCP_LINK_LOCAL      (0x2)   /**< link-local scope */
+//#define IPV6_ADDR_MCAST_SCP_IF_LOCAL        (0x1)   /**< interface-local scope */
+//#define IPV6_ADDR_MCAST_SCP_LINK_LOCAL      (0x2)   /**< link-local scope */
 
 /**
  * @brief realm-local scope
@@ -249,11 +249,11 @@ typedef union {
  *          RFC 7346, section 5
  *      </a> and
  */
-#define IPV6_ADDR_MCAST_SCP_REALM_LOCAL (0x3)
-#define IPV6_ADDR_MCAST_SCP_ADMIN_LOCAL (0x4)      /**< admin-local scope */
-#define IPV6_ADDR_MCAST_SCP_SITE_LOCAL  (0x5)      /**< site-local scope */
-#define IPV6_ADDR_MCAST_SCP_ORG_LOCAL   (0x8)      /**< organization-local scope */
-#define IPV6_ADDR_MCAST_SCP_GLOBAL      (0xe)      /**< global scope */
+//#define IPV6_ADDR_MCAST_SCP_REALM_LOCAL (0x3)
+//#define IPV6_ADDR_MCAST_SCP_ADMIN_LOCAL (0x4)      /**< admin-local scope */
+//#define IPV6_ADDR_MCAST_SCP_SITE_LOCAL  (0x5)      /**< site-local scope */
+//#define IPV6_ADDR_MCAST_SCP_ORG_LOCAL   (0x8)      /**< organization-local scope */
+//#define IPV6_ADDR_MCAST_SCP_GLOBAL      (0xe)      /**< global scope */
 /** @} */
 
 /**
@@ -321,10 +321,15 @@ extern const ipv6_addr_t ipv6_addr_solicited_node_prefix;
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr)
+uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr);
+/*uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr)
 {
     return (memcmp(addr, &ipv6_addr_unspecified, sizeof(ipv6_addr_t)) == 0);
-}
+}*/
+/*static inline uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_unspecified, sizeof(ipv6_addr_t)) == 0);
+}*/
 
 /**
  * @brief   Checks if @p addr is a loopback address.
@@ -339,10 +344,14 @@ static inline uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_loopback(const ipv6_addr_t *addr)
+bool ipv6_addr_is_loopback(const ipv6_addr_t *addr);
+/*{
+   return (memcmp(addr, &ipv6_addr_loopback, sizeof(ipv6_addr_t)) == 0);
+}*/
+/*static inline bool ipv6_addr_is_loopback(const ipv6_addr_t *addr)
 {
     return (memcmp(addr, &ipv6_addr_loopback, sizeof(ipv6_addr_t)) == 0);
-}
+}*/
 
 /**
  * @brief   Checks if @p addr is a IPv4-compatible IPv6 address.
@@ -357,11 +366,16 @@ static inline bool ipv6_addr_is_loopback(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_ipv4_compat(const ipv6_addr_t *addr)
+bool ipv6_addr_is_ipv4(const ipv6_addr_t *addr);
+/*{
+    return (memcmp(addr, &ipv6_addr_unspecified,
+                   sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t)) == 0);
+}*/
+/*static inline bool ipv6_addr_is_ipv4_compat(const ipv6_addr_t *addr)
 {
     return (memcmp(addr, &ipv6_addr_unspecified,
                    sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t)) == 0);
-}
+}*/
 
 /**
  * @brief   Checks if @p addr is a IPv4-mapped IPv6 address.
@@ -376,12 +390,18 @@ static inline bool ipv6_addr_is_ipv4_compat(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implemenation */
-static inline bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr)
+bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr);
+/*{
+    return ((memcmp(addr, &ipv6_addr_unspecified,
+                    sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t) - 2) == 0) &&
+            (addr->u16[5].u16 == 0xffff));
+}*/
+/*static inline bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr)
 {
     return ((memcmp(addr, &ipv6_addr_unspecified,
                     sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t) - 2) == 0) &&
             (addr->u16[5].u16 == 0xffff));
-}
+}*/
 
 /**
  * @brief   Check if @p addr is a multicast address.
@@ -396,10 +416,14 @@ static inline bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_multicast(const ipv6_addr_t *addr)
+bool ipv6_addr_is_multicast(const ipv6_addr_t *addr);
+/*{
+    return (addr->u8[0] == 0xff);
+}*/
+/*static inline bool ipv6_addr_is_multicast(const ipv6_addr_t *addr)
 {
     return (addr->u8[0] == 0xff);
-}
+}*/
 
 /**
  * @brief   Check if @p addr is a link-local address.
@@ -417,12 +441,20 @@ static inline bool ipv6_addr_is_multicast(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_link_local(const ipv6_addr_t *addr)
+bool ipv6_addr_is_link_local(const ipv6_addr_t *addr);
+/*{
+    return (memcmp(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u32)) == 0) ||
+           (ipv6_addr_is_multicast(addr) &&
+            //(addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
+              (addr->u8[1] & 0x0f) == 0x2);
+}*/
+/*static inline bool ipv6_addr_is_link_local(const ipv6_addr_t *addr)
 {
     return (memcmp(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u32)) == 0) ||
            (ipv6_addr_is_multicast(addr) &&
-            (addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
-}
+            //(addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
+	      (addr->u8[1] & 0x0f) == 0x2);
+}*/
 
 /**
  * @brief   Checks if @p addr is a site-local address.
@@ -441,15 +473,24 @@ static inline bool ipv6_addr_is_link_local(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implemenation */
-static inline bool ipv6_addr_is_site_local(const ipv6_addr_t *addr)
+bool ipv6_addr_is_site_local(const ipv6_addr_t *addr);
+/*{
+    network_uint16_t tmp = { addr->u16[0].u16 };
+    //return ((byteorder_ntohs(&tmp) & 0xffc0) == (uint16_t)IPV6_ADDR_SITE_LOCAL_PREFIX);
+    return (((byteorder_ntohs(&tmp) & 0xffc0) ==
+             //IPV6_ADDR_SITE_LOCAL_PREFIX) ||
+            (ipv6_addr_is_multicast(addr) && (addr->u8[1] & 0x0f) == 0x2))); 
+             //(addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_SITE_LOCAL));
+}*/
+/*static inline bool ipv6_addr_is_site_local(const ipv6_addr_t *addr)
 {
     network_uint16_t tmp = { addr->u16[0].u16 };
     //return ((byteorder_ntohs(&tmp) & 0xffc0) == (uint16_t)IPV6_ADDR_SITE_LOCAL_PREFIX);
     return (((byteorder_ntohs(&tmp) & 0xffc0) ==
-             IPV6_ADDR_SITE_LOCAL_PREFIX) ||
-            (ipv6_addr_is_multicast(addr) &&
-             (addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_SITE_LOCAL));
-}
+             //IPV6_ADDR_SITE_LOCAL_PREFIX) ||
+            (ipv6_addr_is_multicast(addr) && (addr->u8[1] & 0x0f) == 0x2))); 
+             //(addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_SITE_LOCAL));
+}*/
 
 /**
  * @brief   Check if @p addr is unique local unicast address.
@@ -464,10 +505,14 @@ static inline bool ipv6_addr_is_site_local(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr)
+bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr);
+/*{
+    return ((addr->u8[0] == 0xfc) || (addr->u8[0] == 0xfd));
+}*/
+/*static inline bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr)
 {
     return ((addr->u8[0] == 0xfc) || (addr->u8[0] == 0xfd));
-}
+}*/
 
 /**
  * @brief   Check if @p addr is global unicast address.
@@ -482,18 +527,33 @@ static inline bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_global(const ipv6_addr_t *addr)
-{
+bool ipv6_addr_is_global(const ipv6_addr_t *addr);
+//{
     /* first check for multicast with global scope */
-    if (ipv6_addr_is_multicast(addr)) {
-        return ((addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_GLOBAL);
+    /*if (ipv6_addr_is_multicast(addr)) {
+        //return ((addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_GLOBAL);
+        return ((addr->u8[1] & 0x0f) == 0xe);
     }
     else {
         return !(ipv6_addr_is_link_local(addr) ||
                  ipv6_addr_is_unspecified(addr) ||
                  ipv6_addr_is_loopback(addr));
     }
-}
+}*/
+
+/* static inline bool ipv6_addr_is_global(const ipv6_addr_t *addr)
+{*/
+    /* first check for multicast with global scope */
+    /*if (ipv6_addr_is_multicast(addr)) {
+        //return ((addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_GLOBAL);
+	return ((addr->u8[1] & 0x0f) == 0xe);
+    }
+    else {
+        return !(ipv6_addr_is_link_local(addr) ||
+                 ipv6_addr_is_unspecified(addr) ||
+                 ipv6_addr_is_loopback(addr));
+    }
+}*/
 
 
 /**
@@ -509,11 +569,17 @@ static inline bool ipv6_addr_is_global(const ipv6_addr_t *addr)
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-static inline bool ipv6_addr_is_solicited_node(const ipv6_addr_t *addr)
+bool ipv6_addr_is_solicited_node(const ipv6_addr_t *addr);
+/*{
+    return (memcmp(addr, &ipv6_addr_solicited_node_prefix,
+                   sizeof(ipv6_addr_t) - 3) == 0);
+}*/
+
+/*static inline bool ipv6_addr_is_solicited_node(const ipv6_addr_t *addr)
 {
     return (memcmp(addr, &ipv6_addr_solicited_node_prefix,
                    sizeof(ipv6_addr_t) - 3) == 0);
-}
+}*/
 
 
 /**
@@ -570,10 +636,14 @@ void ipv6_addr_init_iid(ipv6_addr_t *out, const uint8_t *iid, uint8_t bits);
  * @param[in,out] addr  The address to set.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_unspecified(ipv6_addr_t *addr)
+void ipv6_addr_set_unspecified(ipv6_addr_t *addr);
+/*{
+    memset(addr, 0, sizeof(ipv6_addr_t));
+}*/
+/*static inline void ipv6_addr_set_unspecified(ipv6_addr_t *addr)
 {
     memset(addr, 0, sizeof(ipv6_addr_t));
-}
+}*/
 
 /**
  * @brief   Sets @p addr dynamically to the loopback IPv6 address (::1).
@@ -585,11 +655,16 @@ static inline void ipv6_addr_set_unspecified(ipv6_addr_t *addr)
  * @param[in,out] addr  The address to set.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_loopback(ipv6_addr_t *addr)
+void ipv6_addr_set_loopback(ipv6_addr_t *addr);
+/*{
+    memset(addr, 0, sizeof(ipv6_addr_t));
+    addr->u8[15] = 1;
+}*/
+/*static inline void ipv6_addr_set_loopback(ipv6_addr_t *addr)
 {
     memset(addr, 0, sizeof(ipv6_addr_t));
     addr->u8[15] = 1;
-}
+}*/
 
 /**
  * @brief   Sets the first 64 bit of @p addr to link local prefix (fe08::/64).
@@ -601,7 +676,12 @@ static inline void ipv6_addr_set_loopback(ipv6_addr_t *addr)
  * @param[in,out] addr  The address to set.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_link_local_prefix(ipv6_addr_t *addr);
+void ipv6_addr_set_link_local_prefix(ipv6_addr_t *addr);
+/*{
+    memcpy(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u64[0]));
+}*/
+
+//static inline void ipv6_addr_set_link_local_prefix(ipv6_addr_t *addr);
 /*{
     memcpy(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u64[0]));
 }*/
@@ -635,8 +715,9 @@ static inline void ipv6_addr_set_link_local_prefix(ipv6_addr_t *addr);
  * @param[in] iid       The interface ID as array of at least length 8 to set.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_aiid(ipv6_addr_t *addr, uint8_t *iid);
-/*{
+void ipv6_addr_set_aiid(ipv6_addr_t *addr, uint8_t *iid);
+/*static inline void ipv6_addr_set_aiid(ipv6_addr_t *addr, uint8_t *iid);
+{
     memcpy(&addr->u64[1], iid, sizeof(addr->u64[1]));
 }*/
 
@@ -652,9 +733,14 @@ static inline void ipv6_addr_set_aiid(ipv6_addr_t *addr, uint8_t *iid);
  * @param[in] scope     The multicast address' scope.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_multicast(ipv6_addr_t *addr, unsigned int flags,
-                                           unsigned int scope);
+void ipv6_addr_set_multicast(ipv6_addr_t *addr, unsigned int flags, unsigned int scope);
 /*{
+    addr->u8[0] = 0xff;
+    addr->u8[1] = (((uint8_t)flags) << 4) | (((uint8_t) scope) & 0x0f);
+}*/
+/*static inline void ipv6_addr_set_multicast(ipv6_addr_t *addr, unsigned int flags,
+                                           unsigned int scope);
+{
     addr->u8[0] = 0xff;
     addr->u8[1] = (((uint8_t)flags) << 4) | (((uint8_t) scope) & 0x0f);
 }*/
@@ -671,8 +757,13 @@ static inline void ipv6_addr_set_multicast(ipv6_addr_t *addr, unsigned int flags
  * @param[in] scope     The multicast address' scope.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_all_nodes_multicast(ipv6_addr_t *addr, unsigned int scope);
+void ipv6_addr_set_all_nodes_multicast(ipv6_addr_t *addr, unsigned int scope);
 /*{
+    memcpy(addr, &ipv6_addr_all_nodes_if_local, sizeof(ipv6_addr_t));
+    addr->u8[1] = (uint8_t)scope;
+}*/
+/*static inline void ipv6_addr_set_all_nodes_multicast(ipv6_addr_t *addr, unsigned int scope);
+{
     memcpy(addr, &ipv6_addr_all_nodes_if_local, sizeof(ipv6_addr_t));
     addr->u8[1] = (uint8_t)scope;
 }*/
@@ -689,8 +780,13 @@ static inline void ipv6_addr_set_all_nodes_multicast(ipv6_addr_t *addr, unsigned
  * @param[in] scope     The multicast address' scope.
  */
 /* 8051 implementation */
-static inline void ipv6_addr_set_all_routers_multicast(ipv6_addr_t *addr, unsigned int scope);
+void ipv6_addr_set_all_routers_multicast(ipv6_addr_t *addr, unsigned int scope);
 /*{
+    memcpy(addr, &ipv6_addr_all_routers_if_local, sizeof(ipv6_addr_t));
+    addr->u8[1] = (uint8_t)scope;
+}*/
+/*static inline void ipv6_addr_set_all_routers_multicast(ipv6_addr_t *addr, unsigned int scope);
+{
     memcpy(addr, &ipv6_addr_all_routers_if_local, sizeof(ipv6_addr_t));
     addr->u8[1] = (uint8_t)scope;
 }*/
@@ -774,8 +870,12 @@ int ipv6_addr_split(char *addr_str, char seperator, int _default);
  * @return          prefix length or 128 if none specified
  */
 /* 8051 implementation */
-static inline int ipv6_addr_split_prefix(char *addr_str);
+int ipv6_addr_split_prefix(char *addr_str);
 /*{
+    return ipv6_addr_split(addr_str, '/', 128);
+}*/
+/*static inline int ipv6_addr_split_prefix(char *addr_str);
+{
     return ipv6_addr_split(addr_str, '/', 128);
 }*/
 
@@ -788,8 +888,12 @@ static inline int ipv6_addr_split_prefix(char *addr_str);
  * @return          interface number or -1 if none specified
  */
 /* 8051 implementation */
-static inline int ipv6_addr_split_iface(char *addr_str);
+int ipv6_addr_split_iface(char *addr_str);
 /*{
+    return ipv6_addr_split(addr_str, '%', -1);
+}*/
+/*static inline int ipv6_addr_split_iface(char *addr_str);
+{
     return ipv6_addr_split(addr_str, '%', -1);
 }*/
 
@@ -800,9 +904,9 @@ static inline int ipv6_addr_split_iface(char *addr_str);
  */
 void ipv6_addr_print(const ipv6_addr_t *addr);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* IPV6_ADDR_H_ */
 /**

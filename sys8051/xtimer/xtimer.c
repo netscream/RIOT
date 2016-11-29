@@ -31,8 +31,9 @@
 
 #define ENABLE_DEBUG 0
 #include "debug.h"
-
-static void _callback_unlock_mutex(void* arg)
+/* 8051 implementation */
+//static void _callback_unlock_mutex(void* arg)
+void _callback_unlock_mutex(void* arg)
 {
     mutex_t *mutex = (mutex_t *) arg;
     mutex_unlock(mutex);
@@ -108,11 +109,13 @@ void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period) {
      */
     offset = target - now;
     DEBUG("xps, now: %9" PRIu32 ", tgt: %9" PRIu32 ", off: %9" PRIu32 "\n", now, target, offset);
-    if (offset < XTIMER_PERIODIC_SPIN) {
+    //if (offset < XTIMER_PERIODIC_SPIN) {
+    if (offset < 60) {
         xtimer_spin(offset);
     }
     else {
-        if (offset < XTIMER_PERIODIC_RELATIVE) {
+        //if (offset < XTIMER_PERIODIC_RELATIVE) {
+	if (offset < 512) {
             /* NB: This will overshoot the target by the amount of time it took
              * to get here from the beginning of xtimer_periodic_wakeup()
              *
@@ -129,14 +132,16 @@ void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period) {
 out:
     *last_wakeup = target;
 }
-
-static void _callback_msg(void* arg)
+/* 8051 implementation */
+//static void _callback_msg(void* arg)
+void _callback_msg(void* arg)
 {
     msg_t *msg = (msg_t*)arg;
     msg_send_int(msg, msg->sender_pid);
 }
-
-static inline void _setup_msg(xtimer_t *timer, msg_t *msg, kernel_pid_t target_pid)
+/* 8051 implementation */
+//static inline void _setup_msg(xtimer_t *timer, msg_t *msg, kernel_pid_t target_pid)
+void _setup_msg(xtimer_t *timer, msg_t *msg, kernel_pid_t target_pid)
 {
     timer->callback = _callback_msg;
     timer->arg = (void*) msg;
@@ -145,7 +150,7 @@ static inline void _setup_msg(xtimer_t *timer, msg_t *msg, kernel_pid_t target_p
     msg->sender_pid = target_pid;
 }
 
-void xtimer_set_msg(xtimer_t *timer, uint32_t offset, msg_t *msg, kernel_pid_t target_pid)
+void xtimer_set_msg(xtimer_t* XDATA timer, uint32_t offset, msg_t *msg, kernel_pid_t target_pid)
 {
     _setup_msg(timer, msg, target_pid);
     xtimer_set(timer, offset);
@@ -156,18 +161,19 @@ void xtimer_set_msg(xtimer_t *timer, uint32_t offset, msg_t *msg, kernel_pid_t t
     _setup_msg(timer, msg, target_pid);
     _xtimer_set64(timer, offset, offset >> 32);
 }*/
-
-static void _callback_wakeup(void* arg)
+/* 8051 implementation */
+//static void _callback_wakeup(void* arg)
+void _callback_wakeup(void* arg)
 {
     thread_wakeup((kernel_pid_t)((intptr_t)arg));
 }
 
-void xtimer_set_wakeup(xtimer_t *timer, uint32_t offset, kernel_pid_t pid)
+void xtimer_set_wakeup(xtimer_t* XDATA timer, uint32_t offset, kernel_pid_t pid)
 {
     timer->callback = _callback_wakeup;
-    //timer->arg = (void*) ((intptr_t)pid);
+    timer->arg = (void*) ((intptr_t)pid);
 
-    //xtimer_set(timer, offset);
+    xtimer_set(timer, offset);
 }
 
 /*void xtimer_set_wakeup64(xtimer_t *timer, uint64_t offset, kernel_pid_t pid)
@@ -189,19 +195,25 @@ void xtimer_set_wakeup(xtimer_t *timer, uint32_t offset, kernel_pid_t pid)
 /* Prepares the message to trigger the timeout.
  * Additionally, the xtimer_t struct gets initialized.
  */
-static void _setup_timer_msg(msg_t *m, xtimer_t *t)
+/* 8051 implementation */ 
+//static void _setup_timer_msg(msg_t *m, xtimer_t *t)
+void _setup_timer_msg(msg_t *m, xtimer_t *t)
 {
-    m->type = MSG_XTIMER;
+    //m->type = MSG_XTIMER;
+    m->type = 12345;
     m->content.ptr = m;
 
     t->target = t->long_target = 0;
 }
 
 /* Waits for incoming message or timeout. */
-static int _msg_wait(msg_t *m, msg_t *tmsg, xtimer_t *t)
+/* 8051 implementation */
+//static int _msg_wait(msg_t *m, msg_t *tmsg, xtimer_t *t)
+int _msg_wait(msg_t *m, msg_t *tmsg, xtimer_t *t)
 {
     msg_receive(m);
-    if (m->type == MSG_XTIMER && m->content.ptr == tmsg) {
+    //if (m->type == MSG_XTIMER && m->content.ptr == tmsg) {
+    if (m->type == 12345 && m->content.ptr  == tmsg) {
         /* we hit the timeout */
         return -1;
     }

@@ -24,9 +24,9 @@
 
 #include "kernel_defines.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Default shell buffer size (maximum line length shell can handle)
@@ -74,9 +74,9 @@ typedef struct shell_command_t {
  */
 void shell_run(const shell_command_t *commands, char *line_buf, int len) NORETURN;
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* __SHELL_H */
 /** @} */

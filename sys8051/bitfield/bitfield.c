@@ -22,6 +22,26 @@
 #include "bitfield.h"
 #include "irq.h"
 /* 8051 implementation */
+static void bf_set(uint8_t field[], size_t idx)
+{
+    field[idx / 8] |= (1u << (idx % 8));
+}
+
+static void bf_unset(uint8_t field[], size_t idx)
+{
+    field[idx / 8] &= ~(1u << (idx % 8));
+}
+
+static void bf_toggle(uint8_t field[], size_t idx)
+{
+    field[idx / 8] ^= (1u << (idx % 8));
+}
+
+static bool bf_isset(uint8_t field[], size_t idx)
+{
+    return (field[idx / 8] & (1u << (idx % 8)));
+}
+
 int bf_get_unset(uint8_t field[], int size)
 {
     int result = -1;

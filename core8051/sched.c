@@ -47,7 +47,7 @@ unsigned int XDATA sched_context_switch_request;
 thread_t* XDATA sched_threads[KERNEL_PID_LAST + 1];
 thread_t* XDATA sched_active_thread;
 
-kernel_pid_t XDATA sched_active_pid = KERNEL_PID_UNDEF;
+kernel_pid_t XDATA sched_active_pid = 0; //KERNEL_PID_UNDEF
 
 clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
 static uint32_t XDATA runqueue_bitcache = 0;
@@ -73,7 +73,8 @@ int sched_run(void)
     //*next_thread = container_of(sched_runqueues[nextrq].next->next, thread_t, rq_entry);
     next_thread = ((thread_t *) sched_runqueues[nextrq].next->next) - offsetof(thread_t, rq_entry);
     DEBUG("sched_run: active thread: %" PRIkernel_pid ", next thread: %" PRIkernel_pid "\n",
-          (active_thread == NULL) ? KERNEL_PID_UNDEF : active_thread->pid,
+          //(active_thread == NULL) ? KERNEL_PID_UNDEF : active_thread->pid,
+	  (active_thread == NULL) ? 0 : active_thread->pid,
           next_thread->pid);
 
     if (active_thread == next_thread) {

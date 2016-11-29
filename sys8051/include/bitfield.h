@@ -47,10 +47,13 @@ extern "C" {
  * @param[in,out] field The bitfield
  * @param[in]     idx   The number of the bit to set
  */
-static inline void bf_set(uint8_t field[], size_t idx)
+/* 8051 implementation */
+static void bf_set(uint8_t field[], size_t idx);
+
+/*static inline void bf_set(uint8_t field[], size_t idx)
 {
     field[idx / 8] |= (1u << (idx % 8));
-}
+}*/
 
 /**
  * @brief   Clear the bit
@@ -58,10 +61,12 @@ static inline void bf_set(uint8_t field[], size_t idx)
  * @param[in,out] field The bitfield
  * @param[in]     idx   The number of the bit to clear
  */
-static inline void bf_unset(uint8_t field[], size_t idx)
+/* 8051 implementation */
+static void bf_unset(uint8_t field[], size_t idx);
+/*static inline void bf_unset(uint8_t field[], size_t idx)
 {
     field[idx / 8] &= ~(1u << (idx % 8));
-}
+}*/
 
 /**
  * @brief   Toggle the bit
@@ -69,10 +74,12 @@ static inline void bf_unset(uint8_t field[], size_t idx)
  * @param[in,out] field The bitfield
  * @param[in]     idx   The number of the bit to toggle
  */
-static inline void bf_toggle(uint8_t field[], size_t idx)
+/* 8051 implementation */
+static void bf_toggle(uint8_t field[], size_t idx);
+/*static inline void bf_toggle(uint8_t field[], size_t idx)
 {
     field[idx / 8] ^= (1u << (idx % 8));
-}
+}*/
 
 /**
  * @brief  Check if the bet is set
@@ -80,10 +87,12 @@ static inline void bf_toggle(uint8_t field[], size_t idx)
  * @param[in,out] field The bitfield
  * @param[in]     idx   The number of the bit to check
  */
-static inline bool bf_isset(uint8_t field[], size_t idx)
+/* 8051 implementation */
+static bool bf_isset(uint8_t field[], size_t idx);
+/*static inline bool bf_isset(uint8_t field[], size_t idx)
 {
     return (field[idx / 8] & (1u << (idx % 8)));
-}
+}*/
 
 /**
  * @brief  Atomically get the number of an unset bit and set it

@@ -28,14 +28,16 @@
 #define ENABLE_DEBUG 0
 #include "debug.h"
 
-static volatile int _in_handler = 0;
-
-static volatile uint32_t _long_cnt = 0;
+//static volatile int _in_handler = 0;
+int XDATA _in_handler = 0;
+//static volatile uint32_t _long_cnt = 0;
+uint32_t XDATA _long_cnt = 0;
 #if XTIMER_MASK
-volatile uint32_t _xtimer_high_cnt = 0;
+//volatile uint32_t _xtimer_high_cnt = 0;
+uint32_t XDATA _xtimer_high_cnt = 0;
 #endif
 
-static inline void xtimer_spin_until(uint32_t value);
+/*static inline void xtimer_spin_until(uint32_t value);
 
 static xtimer_t *timer_list_head = NULL;
 static xtimer_t *overflow_list_head = NULL;
@@ -51,14 +53,34 @@ static uint32_t _time_left(uint32_t target, uint32_t reference);
 static void _timer_callback(void);
 static void _periph_timer_callback(void *arg, int chan);
 
-static inline int _this_high_period(uint32_t target);
+static inline int _this_high_period(uint32_t target);*/
+void xtimer_spin_until(uint32_t value);
 
-static inline int _is_set(xtimer_t *timer)
+xtimer_t* XDATA timer_list_head = NULL;
+xtimer_t* XDATA overflow_list_head = NULL;
+xtimer_t* XDATA long_list_head = NULL;
+
+void _add_timer_to_list(xtimer_t **list_head, xtimer_t* XDATA timer);
+void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t* XDATA timer);
+void _shoot(xtimer_t* XDATA timer);
+void _remove(xtimer_t* XDATA timer);
+inline void _lltimer_set(uint32_t target);
+uint32_t _time_left(uint32_t target, uint32_t reference);
+
+void _timer_callback(void);
+void _periph_timer_callback(void *arg, int chan);
+
+int _this_high_period(uint32_t target);*
+
+/* 8051 implementation */
+//static inline int _is_set(xtimer_t *timer)
+int _is_set(xtimer_t* XDATA timer)
 {
     return (timer->target || timer->long_target);
 }
-
-static inline void xtimer_spin_until(uint32_t target) {
+/* 8051 implementation */
+//static inline void xtimer_spin_until(uint32_t target) {
+void xtimer_spin_until(uint32_t target) {
 #if XTIMER_MASK
     target = _xtimer_lltimer_mask(target);
 #endif
@@ -66,16 +88,18 @@ static inline void xtimer_spin_until(uint32_t target) {
     while (_xtimer_lltimer_now() < target);
 }
 
+/* 8051 implementation */
 void xtimer_init(void)
 {
     /* initialize low-level timer */
-    timer_init(XTIMER_DEV, XTIMER_USEC_TO_TICKS(1000000ul), _periph_timer_callback, NULL);
+    //timer_init(XTIMER_DEV, XTIMER_USEC_TO_TICKS(1000000ul), _periph_timer_callback, NULL);
+    timer_init(0, 1000000ul >> 0, _periph_timer_callback, NULL);
 
     /* register initial overflow tick */
     _lltimer_set(0xFFFFFFFF);
 }
 
-static void _xtimer_now64(uint32_t *short_term, uint32_t *long_term)
+void _xtimer_now64(uint32_t *short_term, uint32_t *long_term)
 {
     uint32_t before, after, long_value;
 
@@ -100,7 +124,7 @@ static void _xtimer_now64(uint32_t *short_term, uint32_t *long_term)
     return ((uint64_t)long_term<<32) + short_term;
 }*/
 
-void _xtimer_set64(xtimer_t *timer, uint32_t offset, uint32_t long_offset)
+void _xtimer_set64(xtimer_t* XDATA timer, uint32_t offset, uint32_t long_offset)
 {
     DEBUG(" _xtimer_set64() offset=%" PRIu32 " long_offset=%" PRIu32 "\n", offset, long_offset);
     if (!long_offset) {
@@ -127,7 +151,7 @@ void _xtimer_set64(xtimer_t *timer, uint32_t offset, uint32_t long_offset)
     }
 }
 
-void xtimer_set(xtimer_t *timer, uint32_t offset)
+void xtimer_set(xtimer_t* XDATA timer, uint32_t offset)
 {
     DEBUG("timer_set(): offset=%" PRIu32 " now=%" PRIu32 " (%" PRIu32 ")\n", offset, xtimer_now(), _xtimer_lltimer_now());
     if (!timer->callback) {
@@ -137,7 +161,8 @@ void xtimer_set(xtimer_t *timer, uint32_t offset)
 
     xtimer_remove(timer);
 
-    if (offset < XTIMER_BACKOFF) {
+    //if (offset < XTIMER_BACKOFF) {
+    if (offset < 30) {
         xtimer_spin(offset);
         _shoot(timer);
     }
@@ -147,19 +172,23 @@ void xtimer_set(xtimer_t *timer, uint32_t offset)
     }
 }
 
-static void _periph_timer_callback(void *arg, int chan)
+/* 8051 implementation */
+//static void _periph_timer_callback(void *arg, int chan)
+void _periph_timer_callback(void *arg, int chan)
 {
     (void)arg;
     (void)chan;
     _timer_callback();
 }
-
-static void _shoot(xtimer_t *timer)
+/* 8051 implementation */
+//static void _shoot(xtimer_t *timer)
+void _shoot(xtimer_t* XDATA timer)
 {
     timer->callback(timer->arg);
 }
 /* 8051 implementation */
-static inline void _lltimer_set(uint32_t target)
+//static inline void _lltimer_set(uint32_t target)
+void _lltimer_set(uint32_t target)
 {
     if (_in_handler) {
         return;
@@ -171,10 +200,11 @@ static inline void _lltimer_set(uint32_t target)
         target++;
     }
 #endif
-    timer_set_absolute(XTIMER_DEV, XTIMER_CHAN, _xtimer_lltimer_mask(target));
+    //timer_set_absolute(XTIMER_DEV, XTIMER_CHAN, _xtimer_lltimer_mask(target));
+    timer_set_absolute(0, 0, _xtimer_lltimer_mask(target));
 }
 /* 8051 implementation */
-int _xtimer_set_absolute(xtimer_t *timer, uint32_t target)
+int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t target)
 {
     uint32_t now = xtimer_now();
     int res = 0;
@@ -183,9 +213,11 @@ int _xtimer_set_absolute(xtimer_t *timer, uint32_t target)
     DEBUG("timer_set_absolute(): now=%u target=%u \n", now, target);
 
     timer->next = NULL;
-    if ((target >= now) && ((target - XTIMER_BACKOFF) < now)) {
+    //if ((target >= now) && ((target - XTIMER_BACKOFF) < now)) {
+    if((target >= now) && ((target - 30) < now)) {
         /* backoff */
-        xtimer_spin_until(target + XTIMER_BACKOFF);
+        //xtimer_spin_until(target + XTIMER_BACKOFF);
+	xtimer_spin_until(target + 30);
         _shoot(timer);
         return 0;
     }
@@ -216,7 +248,8 @@ int _xtimer_set_absolute(xtimer_t *timer, uint32_t target)
 
             if (timer_list_head == timer) {
                 DEBUG("timer_set_absolute(): timer is new list head. updating lltimer.\n");
-                _lltimer_set(target - XTIMER_OVERHEAD);
+                //_lltimer_set(target - XTIMER_OVERHEAD);
+		_lltimer_set(target - 20);
             }
         }
     }
@@ -226,7 +259,9 @@ int _xtimer_set_absolute(xtimer_t *timer, uint32_t target)
     return res;
 }
 
-static void _add_timer_to_list(xtimer_t **list_head, xtimer_t *timer)
+/* 8051 implementation */
+//static void _add_timer_to_list(xtimer_t **list_head, xtimer_t *timer)
+void _add_timer_to_list(xtimer_t **list_head, xtimer_t* XDATA timer)
 {
     while (*list_head && (*list_head)->target <= timer->target) {
         list_head = &((*list_head)->next);
@@ -235,8 +270,9 @@ static void _add_timer_to_list(xtimer_t **list_head, xtimer_t *timer)
     timer->next = *list_head;
     *list_head = timer;
 }
-
-static void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t *timer)
+/* 8051 implementation */
+//static void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t *timer)
+void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t* XDATA timer)
 {
     while (*list_head
         && (((*list_head)->long_target < timer->long_target)
@@ -248,7 +284,9 @@ static void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t *timer)
     *list_head = timer;
 }
 
-static int _remove_timer_from_list(xtimer_t **list_head, xtimer_t *timer)
+/* 8051 implementation */
+//static int _remove_timer_from_list(xtimer_t **list_head, xtimer_t *timer)
+int _remove_timer_from_list(xtimer_t **list_head, xtimer_t* XDATA timer)
 {
     while (*list_head) {
         if (*list_head == timer) {
@@ -261,14 +299,17 @@ static int _remove_timer_from_list(xtimer_t **list_head, xtimer_t *timer)
     return 0;
 }
 
-static void _remove(xtimer_t *timer)
+/* 8051 implementation */ 
+//static void _remove(xtimer_t *timer)
+void _remove(xtimer_t* XDATA timer)
 {
     if (timer_list_head == timer) {
         uint32_t next;
         timer_list_head = timer->next;
         if (timer_list_head) {
             /* schedule callback on next timer target time */
-            next = timer_list_head->target - XTIMER_OVERHEAD;
+            //next = timer_list_head->target - XTIMER_OVERHEAD;
+	    next = timer_list_head->target - 20;
         }
         else {
             next = _xtimer_lltimer_mask(0xFFFFFFFF);
@@ -284,7 +325,7 @@ static void _remove(xtimer_t *timer)
     }
 }
 
-void xtimer_remove(xtimer_t *timer)
+void xtimer_remove(xtimer_t* XDATA timer)
 {
     int state = irq_disable();
     if (_is_set(timer)) {
@@ -292,8 +333,9 @@ void xtimer_remove(xtimer_t *timer)
     }
     irq_restore(state);
 }
-
-static uint32_t _time_left(uint32_t target, uint32_t reference)
+/* 8051 implementation */
+//static uint32_t _time_left(uint32_t target, uint32_t reference)
+uint32_t _time_left(uint32_t target, uint32_t reference)
 {
     uint32_t now = _xtimer_lltimer_now();
 
@@ -308,8 +350,9 @@ static uint32_t _time_left(uint32_t target, uint32_t reference)
         return 0;
     }
 }
-
-static inline int _this_high_period(uint32_t target) {
+/* 8051 implementation */
+//static inline int _this_high_period(uint32_t target) {
+int _this_high_period(uint32_t target) {
 #if XTIMER_MASK
     return (target & XTIMER_MASK_SHIFTED) == _xtimer_high_cnt;
 #else
@@ -324,7 +367,9 @@ static inline int _this_high_period(uint32_t target) {
  * if either is NULL, return the other.
  * if both are NULL, return NULL.
  */
-static inline xtimer_t *_compare(xtimer_t *a, xtimer_t *b)
+/* 8051 implementation */
+//static inline xtimer_t *_compare(xtimer_t *a, xtimer_t *b)
+xtimer_t *_compare(xtimer_t* XDATA a, xtimer_t* XDATA b)
 {
     if (a && b) {
         return ((a->target <= b->target) ? a : b);
@@ -337,7 +382,9 @@ static inline xtimer_t *_compare(xtimer_t *a, xtimer_t *b)
 /**
  * @brief merge two timer lists, return head of new list
  */
-static xtimer_t *_merge_lists(xtimer_t *head_a, xtimer_t *head_b)
+/* 8051 implementation */
+//static xtimer_t *_merge_lists(xtimer_t *head_a, xtimer_t *head_b)
+xtimer_t *_merge_lists(xtimer_t* XDATA head_a, xtimer_t* XDATA head_b)
 {
     xtimer_t *result_head = _compare(head_a, head_b);
     xtimer_t *pos = result_head;
@@ -365,7 +412,9 @@ static xtimer_t *_merge_lists(xtimer_t *head_a, xtimer_t *head_b)
  * @brief parse long timers list and copy those that will expire in the current
  *        short timer period
  */
-static void _select_long_timers(void)
+/* 8051 implementation */
+//static void _select_long_timers(void)
+void _select_long_timers(void)
 {
     xtimer_t *select_list_start = long_list_head;
     xtimer_t *select_list_last = NULL;
@@ -411,7 +460,9 @@ static void _select_long_timers(void)
 /**
  * @brief handle low-level timer overflow, advance to next short timer period
  */
-static void _next_period(void)
+/* 8051 implementation */
+//static void _next_period(void)
+void _next_period(void)
 {
 #if XTIMER_MASK
     /* advance <32bit mask register */
@@ -435,7 +486,9 @@ static void _next_period(void)
 /**
  * @brief main xtimer callback function
  */
-static void _timer_callback(void)
+/* 8051 implementation */
+//static void _timer_callback(void)
+void _timer_callback(void)
 {
     uint32_t next_target;
     uint32_t reference;
@@ -470,7 +523,8 @@ static void _timer_callback(void)
 
 overflow: /* 8051 implementation */
     /* check if next timers are close to expiring */
-    while (timer_list_head && (_time_left(_xtimer_lltimer_mask(timer_list_head->target), reference) < XTIMER_ISR_BACKOFF)) {
+   // while (timer_list_head && (_time_left(_xtimer_lltimer_mask(timer_list_head->target), reference) < XTIMER_ISR_BACKOFF)) {
+    while (timer_list_head && (_time_left(_xtimer_lltimer_mask(timer_list_head->target), reference) < 20)) {
         xtimer_t *timer = NULL;
         /* make sure we don't fire too early */
         while (_time_left(_xtimer_lltimer_mask(timer_list_head->target), reference));
@@ -502,10 +556,12 @@ overflow: /* 8051 implementation */
 
     if (timer_list_head) {
         /* schedule callback on next timer target time */
-        next_target = timer_list_head->target - XTIMER_OVERHEAD;
+        //next_target = timer_list_head->target - XTIMER_OVERHEAD;
+	next_target = timer_list_head->target - 20;
 
         /* make sure we're not setting a time in the past */
-        if (next_target < (_xtimer_lltimer_now() + XTIMER_ISR_BACKOFF)) {
+        //if (next_target < (_xtimer_lltimer_now() + XTIMER_ISR_BACKOFF)) {
+	if (next_target < (_xtimer_lltimer_now() + 20)){
             goto overflow;
         }
     }
@@ -524,7 +580,8 @@ overflow: /* 8051 implementation */
         }
         else {
             /* check if the end of this period is very soon */
-            if (_xtimer_lltimer_mask(now + XTIMER_ISR_BACKOFF) < now) {
+            //if (_xtimer_lltimer_mask(now + XTIMER_ISR_BACKOFF) < now) {
+	    if (_xtimer_lltimer_mask(now + 20) < now) {
                 /* spin until next period, then advance */
                 while (_xtimer_lltimer_now() >= now);
                 _next_period();

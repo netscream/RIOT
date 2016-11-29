@@ -23,9 +23,9 @@
 #include <inttypes.h>
 #include <stddef.h>
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Calculates the unnormalized Internet Checksum of @p buf, where the
@@ -69,13 +69,14 @@ uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t 
  *
  * @return  The unnormalized Internet Checksum of @p buf.
  */
-static inline uint16_t inet_csum(uint16_t sum, const uint8_t *buf, uint16_t len) {
+uint16_t inet_csum(uint16_t sum, const uint8_t *buf, uint16_t len); 
+/*static inline uint16_t inet_csum(uint16_t sum, const uint8_t *buf, uint16_t len) {
     return inet_csum_slice(sum, buf, len, 0);
-}
+}*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* INET_CSUM_H_ */
 /** @} */

@@ -32,17 +32,17 @@
 #include "shell.h"
 #include "shell_commands.h"
 
-#ifndef SHELL_NO_ECHO
-#ifdef MODULE_NEWLIB
+//#ifndef SHELL_NO_ECHO
+//#ifdef MODULE_NEWLIB
 /* use local copy of putchar, as it seems to be inlined,
  * enlarging code by 50% */
 static void _putchar(int c) {
     putchar(c);
 }
-#else
-#define _putchar putchar
-#endif
-#endif
+//#else
+//#define _putchar putchar
+//#endif
+//#endif
 
 static shell_command_handler_t find_handler(const shell_command_t *command_list, char *command)
 {
@@ -54,9 +54,9 @@ static shell_command_handler_t find_handler(const shell_command_t *command_list,
     };
 
     const shell_command_t *entry;
-
+    int i = 0;
     /* iterating over command_lists */
-    for (unsigned int i = 0; i < sizeof(command_lists) / sizeof(entry); i++) {
+    for (i = 0; i < sizeof(command_lists) / sizeof(entry); i++) {
         if ((entry = command_lists[i])) {
             /* iterating over commands in command_lists entry */
             while (entry->name != NULL) {
@@ -75,20 +75,22 @@ static shell_command_handler_t find_handler(const shell_command_t *command_list,
 
 static void print_help(const shell_command_t *command_list)
 {
+    shell_command_t* command_lists[] = {NULL};
+    shell_command_t* entry = NULL;
+ 
+    unsigned i = 0;
     printf("%-20s %s\n", "Command", "Description");
     puts("---------------------------------------");
 
-    const shell_command_t *command_lists[] = {
+    /*command_lists = {
         command_list,
 #ifdef MODULE_SHELL_COMMANDS
         _shell_command_list,
 #endif
-    };
-
-    const shell_command_t *entry;
-
+    };*/
+ 
     /* iterating over command_lists */
-    for (unsigned int i = 0; i < sizeof(command_lists) / sizeof(entry); i++) {
+    for (i = 0; i < sizeof(command_lists) / sizeof(entry); i++) {
         if ((entry = command_lists[i])) {
             /* iterating over commands in command_lists entry */
             while (entry->name != NULL) {
@@ -107,6 +109,12 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
     unsigned argc = 0;
     char *pos = line;
     int contains_esc_seq = 0;
+    char *argv = NULL;
+    char **arg = NULL;
+    char *c = NULL;
+    char *d = NULL;
+    unsigned i = 0;
+    shell_command_handler_t *handler;  
     while (1) {
         if ((unsigned char) *pos > ' ') {
             /* found an argument */
@@ -173,27 +181,27 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
     }
 
     /* then we fill the argv array */
-    char *argv[argc + 1];
-    argv[argc] = NULL;
+    argv[argc + 1];
+    //argv[argc] = NULL;
     pos = line;
-    for (unsigned i = 0; i < argc; ++i) {
+    for (i = 0; i < argc; ++i) {
         while (!*pos) {
             ++pos;
         }
         if (*pos == '"' || *pos == '\'') {
             ++pos;
         }
-        argv[i] = pos;
+        argv[i] = *pos;
         while (*pos) {
             ++pos;
         }
     }
-    for (char **arg = argv; contains_esc_seq && *arg; ++arg) {
-        for (char *c = *arg; *c; ++c) {
+    for (**arg = *argv; contains_esc_seq && *arg; ++arg) {
+        for (*c = **arg; *c; ++c) {
             if (*c != '\\') {
                 continue;
             }
-            for (char *d = c; *d; ++d) {
+            for (*d = *c; *d; ++d) {
                 *d = d[1];
             }
             if (--contains_esc_seq == 0) {
@@ -203,9 +211,9 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
     }
 
     /* then we call the appropriate handler */
-    shell_command_handler_t handler = find_handler(command_list, argv[0]);
+    handler = find_handler(command_list, argv[0]);
     if (handler != NULL) {
-        handler(argc, argv);
+        //handler(argc, argv);
     }
     else {
         if (strcmp("help", argv[0]) == 0) {
@@ -220,13 +228,13 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
 static int readline(char *buf, size_t size)
 {
     char *line_buf_ptr = buf;
-
+    int c = 0;
     while (1) {
         if ((line_buf_ptr - buf) >= ((int) size) - 1) {
             return -1;
         }
 
-        int c = getchar();
+        c = getchar();
         if (c < 0) {
             return 1;
         }
