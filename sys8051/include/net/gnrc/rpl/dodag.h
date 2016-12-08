@@ -23,9 +23,9 @@
 #ifndef GNRC_RPL_DODAG_H_
 #define GNRC_RPL_DODAG_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #include "net/ipv6/addr.h"
 #include "trickle.h"
@@ -35,26 +35,26 @@ extern "C" {
 /**
  * @brief   Number of RPL instances
  */
-#ifndef GNRC_RPL_INSTANCES_NUMOF
+/*#ifndef GNRC_RPL_INSTANCES_NUMOF
 #define GNRC_RPL_INSTANCES_NUMOF (1)
-#endif
+#endif*/
 
 /**
  * @brief   Number of RPL parents
  */
-#ifndef GNRC_RPL_PARENTS_NUMOF
+/*#ifndef GNRC_RPL_PARENTS_NUMOF
 #define GNRC_RPL_PARENTS_NUMOF (3)
-#endif
+#endif*/
 
 /**
  * @brief   RPL instance table
  */
-extern gnrc_rpl_instance_t gnrc_rpl_instances[GNRC_RPL_INSTANCES_NUMOF];
+extern gnrc_rpl_instance_t XDATA gnrc_rpl_instances[GNRC_RPL_INSTANCES_NUMOF];
 
 /**
  * @brief   RPL parent table
  */
-extern gnrc_rpl_parent_t gnrc_rpl_parents[GNRC_RPL_PARENTS_NUMOF];
+extern gnrc_rpl_parent_t XDATA gnrc_rpl_parents[GNRC_RPL_PARENTS_NUMOF];
 
 /**
  * @brief   Add a new RPL instance with the id @p instance_id.
@@ -169,9 +169,9 @@ void gnrc_rpl_leaf_operation(gnrc_rpl_dodag_t *dodag);
  * @param[in] dodag     Pointer to the DODAG
  */
 void gnrc_rpl_router_operation(gnrc_rpl_dodag_t *dodag);
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_RPL_DODAG_H_ */
 /**

@@ -23,7 +23,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "kernel_defines.h"
 #include "kernel_types.h"
@@ -554,11 +554,11 @@ ipv6_addr_t *gnrc_ipv6_netif_find_best_src_addr(kernel_pid_t pid, const ipv6_add
  * @return  Interface specific meta-information on @p addr
  */
 /* 8051 impelementation */
-gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr)
-{
+gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr);
+/*{
     //return container_of(addr, gnrc_ipv6_netif_addr_t, addr); 
     return ((gnrc_ipv6_netif_addr_t*) ((char*) (addr) - offsetof(gnrc_ipv6_netif_addr_t, addr)));
-}
+}*/
  
 /*static inline gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr)
 {

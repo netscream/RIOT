@@ -11,18 +11,18 @@
  *
  * @file
  */
-
+#include <stdio.h> //for NULL
 #include "net/gnrc/netif.h"
 
-static inline char _half_byte_to_char(uint8_t half_byte)
+char _half_byte_to_char(uint8_t half_byte)
 {
     return (half_byte < 10) ? ('0' + half_byte) : ('a' + (half_byte - 10));
 }
 
-char *gnrc_netif_addr_to_str(char *out, size_t out_len, const uint8_t *addr,
-                             size_t addr_len)
+char *gnrc_netif_addr_to_str(char *out, uint32_t out_len, const uint8_t *addr,
+                             uint32_t addr_len)
 {
-    size_t i;
+    uint32_t i;
 
     if (out_len < (3 * addr_len)) { /* 2 for every byte, 1 for ':' or '\0' */
         return NULL;

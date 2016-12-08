@@ -44,24 +44,24 @@ void* MUTEX_LOCKED()
 }
 
 /* 8051 implementation */
-static void mutex_init(mutex_t *mutex)
+void mutex_init(mutex_t* XDATA mutex)
 {
 	mutex->queue.next = NULL;
 }
 
 /* 8051 implementation */
-static int mutex_trylock(mutex_t *mutex)
+int mutex_trylock(mutex_t* XDATA mutex)
 {
     return _mutex_lock(mutex, 0);
 }
 
 /* 8051 implementation */
-static void mutex_lock(mutex_t *mutex)
+void mutex_lock(mutex_t* XDATA mutex)
 {
 	_mutex_lock(mutex, 1);
 }
 
-int _mutex_lock(mutex_t *mutex, int blocking)
+int _mutex_lock(mutex_t* XDATA mutex, int XDATA blocking)
 {
     unsigned irqstate = irq_disable();
 
@@ -101,7 +101,7 @@ int _mutex_lock(mutex_t *mutex, int blocking)
     }
 }
 //8051 implementation
-void mutex_unlock(mutex_t *mutex)
+void mutex_unlock(mutex_t* XDATA mutex)
 {
     list_node_t *next = NULL;
     thread_t *process = NULL;   
@@ -145,7 +145,7 @@ void mutex_unlock(mutex_t *mutex)
     sched_switch(process_priority);
 }
 //8051 implementation
-void mutex_unlock_and_sleep(mutex_t *mutex)
+void mutex_unlock_and_sleep(mutex_t* XDATA mutex)
 {
     list_node_t *next = NULL;
     thread_t *process = NULL;

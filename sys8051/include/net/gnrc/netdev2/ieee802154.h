@@ -22,9 +22,9 @@
 #include "net/netdev2/ieee802154.h"
 #include "net/gnrc/netdev2.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Initialize gnrc handler for netdev2 IEEE 802.15.4 device
@@ -38,9 +38,9 @@ extern "C" {
 int gnrc_netdev2_ieee802154_init(gnrc_netdev2_t *gnrc_netdev2,
                                  netdev2_ieee802154_t *dev);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IEEE802154_H_ */
 /** @} */

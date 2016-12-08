@@ -37,13 +37,13 @@
  *
  * @return              the value from the received ACK message
  */
-static inline int _get_set(kernel_pid_t pid, uint16_t type,
-                           netopt_t opt, uint16_t context,
-                           void *data, size_t data_len)
+int _get_set(kernel_pid_t XDATA pid, uint16_t XDATA type,
+                           netopt_t XDATA opt, uint16_t XDATA context,
+                           void* XDATA data, uint32_t XDATA data_len)
 {
-    msg_t cmd;
-    msg_t ack;
-    gnrc_netapi_opt_t o;
+    msg_t XDATA cmd;
+    msg_t XDATA ack;
+    gnrc_netapi_opt_t XDATA o;
     /* set ńetapi's option struct */
     o.opt = opt;
     o.context = context;
@@ -54,30 +54,31 @@ static inline int _get_set(kernel_pid_t pid, uint16_t type,
     cmd.content.ptr = (void *)&o;
     /* trigger the netapi */
     msg_send_receive(&cmd, &ack, pid);
-    assert(ack.type == GNRC_NETAPI_MSG_TYPE_ACK);
+    //assert(ack.type == GNRC_NETAPI_MSG_TYPE_ACK);
+    assert(ack.type == 0x0205);
     /* return the ACK message's value */
     return (int)ack.content.value;
 }
 
 /* 8051 implementation */
-static inline int _snd_rcv(kernel_pid_t pid, uint16_t type, gnrc_pktsnip_t *pkt)
+int _snd_rcv(kernel_pid_t XDATA pid, uint16_t XDATA type, gnrc_pktsnip_t* XDATA pkt)
 {
-    int ret = 0;
-    msg_t msg;
+    int XDATA ret = 0;
+    msg_t XDATA msg;
     /* set the outgoing message's fields */
     msg.type = type;
     msg.content.ptr = (void *)pkt;
     /* send message */
     ret = msg_try_send(&msg, pid);
     if (ret < 1) {
-        DEBUG("gnrc_netapi: dropped message to %" PRIkernel_pid " (%s)\n", pid,
-              (ret == 0) ? "receiver queue is full" : "invalid receiver");
+        //DEBUG("gnrc_netapi: dropped message to %" PRIkernel_pid " (%s)\n", pid,
+        //      (ret == 0) ? "receiver queue is full" : "invalid receiver");
     }
     return ret;
 }
 
-int gnrc_netapi_dispatch(gnrc_nettype_t type, uint32_t demux_ctx,
-                         uint16_t cmd, gnrc_pktsnip_t *pkt)
+int gnrc_netapi_dispatch(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx,
+                         uint16_t XDATA cmd, gnrc_pktsnip_t* XDATA pkt)
 {
     int numof = gnrc_netreg_num(type, demux_ctx);
 
@@ -98,26 +99,43 @@ int gnrc_netapi_dispatch(gnrc_nettype_t type, uint32_t demux_ctx,
     return numof;
 }
 
-int gnrc_netapi_send(kernel_pid_t pid, gnrc_pktsnip_t *pkt)
+int gnrc_netapi_send(kernel_pid_t XDATA pid, gnrc_pktsnip_t* XDATA pkt)
 {
-    return _snd_rcv(pid, GNRC_NETAPI_MSG_TYPE_SND, pkt);
+    //return _snd_rcv(pid, GNRC_NETAPI_MSG_TYPE_SND, pkt);
+    return _snd_rcv(pid, 0x0202, pkt);
 }
 
-int gnrc_netapi_receive(kernel_pid_t pid, gnrc_pktsnip_t *pkt)
+int gnrc_netapi_receive(kernel_pid_t XDATA pid, gnrc_pktsnip_t* XDATA pkt)
 {
-    return _snd_rcv(pid, GNRC_NETAPI_MSG_TYPE_RCV, pkt);
+    //return _snd_rcv(pid, GNRC_NETAPI_MSG_TYPE_RCV, pkt);
+    return _snd_rcv(pid, 0x0201, pkt);
 }
 
-int gnrc_netapi_get(kernel_pid_t pid, netopt_t opt, uint16_t context,
-                    void *data, size_t data_len)
+int gnrc_netapi_get(kernel_pid_t XDATA pid, netopt_t XDATA opt, uint16_t XDATA context,
+                    void* XDATA data, uint32_t XDATA data_len)
 {
-    return _get_set(pid, GNRC_NETAPI_MSG_TYPE_GET, opt, context,
-                    data, data_len);
+    //return _get_set(pid, GNRC_NETAPI_MSG_TYPE_GET, opt, context, data, data_len);
+    return _get_set(pid, 0x0204, opt, context, data, data_len);
 }
 
-int gnrc_netapi_set(kernel_pid_t pid, netopt_t opt, uint16_t context,
-                    void *data, size_t data_len)
+int gnrc_netapi_set(kernel_pid_t XDATA pid, netopt_t XDATA opt, uint16_t XDATA context,
+                    void* XDATA data, uint32_t XDATA data_len)
 {
-    return _get_set(pid, GNRC_NETAPI_MSG_TYPE_SET, opt, context,
-                    data, data_len);
+    //return _get_set(pid, GNRC_NETAPI_MSG_TYPE_SET, opt, context, data, data_len);
+    return _get_set(pid, 0x0203, opt, context, data, data_len);
 }
+
+int gnrc_netapi_dispatch_send(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx,
+                                            gnrc_pktsnip_t* XDATA pkt)
+{
+        //return gnrc_netapi_dispatch(type, demux_ctx, GNRC_NETAPI_MSG_TYPE_SND, pkt);
+        return gnrc_netapi_dispatch(type, demux_ctx, 0x0202, pkt);
+}
+
+int gnrc_netapi_dispatch_receive(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx,
+                                               gnrc_pktsnip_t* XDATA pkt)
+{
+    //return gnrc_netapi_dispatch(type, demux_ctx, GNRC_NETAPI_MSG_TYPE_RCV, pkt);
+    return gnrc_netapi_dispatch(type, demux_ctx, 0x0201, pkt);
+}
+

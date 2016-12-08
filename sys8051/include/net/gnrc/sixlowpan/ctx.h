@@ -31,20 +31,19 @@
 
 #include "net/ipv6/addr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
-#define GNRC_SIXLOWPAN_CTX_SIZE (16)    /**< maximum number of entries in
-                                         *   context buffer */
+//#define GNRC_SIXLOWPAN_CTX_SIZE (16)    /**< maximum number of entries in context buffer */
 
 /**
  * @{
  * @name    Context flags.
  * @brief   Flags to set in gnrc_sixlowpan_ctx_t::flags_id.
  */
-#define GNRC_SIXLOWPAN_CTX_FLAGS_CID_MASK   (0x0f)  /**< mask for the Context ID. */
-#define GNRC_SIXLOWPAN_CTX_FLAGS_COMP       (0x10)  /**< Use context for compression */
+//#define GNRC_SIXLOWPAN_CTX_FLAGS_CID_MASK   (0x0f)  /**< mask for the Context ID. */
+//#define GNRC_SIXLOWPAN_CTX_FLAGS_COMP       (0x10)  /**< Use context for compression */
 /**
  * @}
  */
@@ -119,7 +118,7 @@ gnrc_sixlowpan_ctx_t *gnrc_sixlowpan_ctx_update(uint8_t id, const ipv6_addr_t *p
  *
  * @param[in] id    A context ID.
  */
-static inline void gnrc_sixlowpan_ctx_remove(uint8_t id)
+void gnrc_sixlowpan_ctx_remove(uint8_t id)
 {
     gnrc_sixlowpan_ctx_lookup_id(id)->prefix_len = 0;
 }
@@ -132,9 +131,9 @@ static inline void gnrc_sixlowpan_ctx_remove(uint8_t id)
 void gnrc_sixlowpan_ctx_reset(void);
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_SIXLOWPAN_CTX_H_ */
 /** @} */

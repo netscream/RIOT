@@ -17,7 +17,7 @@
 
 #include <errno.h>
 #include <inttypes.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "byteorder.h"
 #include "kernel_types.h"
@@ -139,7 +139,7 @@ void gnrc_icmpv6_demux(kernel_pid_t iface, gnrc_pktsnip_t *pkt)
 }
 
 gnrc_pktsnip_t *gnrc_icmpv6_build(gnrc_pktsnip_t *next, uint8_t type, uint8_t code,
-                                  size_t size)
+                                  uint32_t size)
 {
     gnrc_pktsnip_t *pkt;
     icmpv6_hdr_t *icmpv6;

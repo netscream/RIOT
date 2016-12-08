@@ -22,14 +22,14 @@
 #define GNRC_PKTQUEUE_H_
 
 #include <stdint.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "net/gnrc/pkt.h"
 #include "utlist.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   data type for packet queue nodes
@@ -50,11 +50,11 @@ typedef struct gnrc_pktqueue {
  * @param[in,out]   queue   the queue, may not be NULL
  * @param[in]       node    the node to add.
  */
-static inline void gnrc_pktqueue_add(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *node)
-{
+void gnrc_pktqueue_add(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *node);
+/*{
      gnrc_pktqueue_t *tmp = *queue;
      LL_APPEND(tmp, node);
-}
+}*/
 
 /**
  * @brief       remove @p node from @p queue
@@ -64,8 +64,8 @@ static inline void gnrc_pktqueue_add(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *n
  *
  * @return  @p node.
  */
-static inline gnrc_pktqueue_t *gnrc_pktqueue_remove(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *node)
-{
+gnrc_pktqueue_t *gnrc_pktqueue_remove(gnrc_pktqueue_t **queue, gnrc_pktqueue_t *node);
+/*{
     if (node) {
 	gnrc_pktqueue_t *tmp = *queue;
         LL_DELETE(tmp, node);
@@ -73,7 +73,7 @@ static inline gnrc_pktqueue_t *gnrc_pktqueue_remove(gnrc_pktqueue_t **queue, gnr
     }
 
     return node;
-}
+}*/
 
 /**
  * @brief remove the packet queue's head
@@ -82,14 +82,14 @@ static inline gnrc_pktqueue_t *gnrc_pktqueue_remove(gnrc_pktqueue_t **queue, gnr
  *
  * @return              the old head
  */
-static inline gnrc_pktqueue_t *gnrc_pktqueue_remove_head(gnrc_pktqueue_t **queue)
-{
+gnrc_pktqueue_t *gnrc_pktqueue_remove_head(gnrc_pktqueue_t **queue);
+/*{
     return gnrc_pktqueue_remove(queue, *queue);
-}
+}*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_PKTQUEUE_H_ */
 /**

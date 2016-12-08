@@ -20,8 +20,8 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 /* 8051 implementation */
-//uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t accum_len)
-uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t accum_len)
+//uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, uint32_t accum_len)
+uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, uint32_t accum_len)
 {
     uint32_t csum = sum;
     int i = 0;

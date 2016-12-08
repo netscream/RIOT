@@ -50,28 +50,29 @@ const char *state_names[] = {
 void ps(void)
 {
     const char queued_name[] = {'_', 'Q'};
-#ifdef DEVELHELP
+    kernel_pid_t i = 0;
+/*#ifdef DEVELHELP
     int overall_stacksz = 0, overall_used = 0;
-#endif
+#endif*/
 
     printf("\tpid | "
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
             "%-21s| "
-#endif
+#endif*/
             "%-9sQ | pri "
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
            "| stack ( used) | base       | current    "
-#endif
+#endif*/
 #ifdef MODULE_SCHEDSTATISTICS
            "| runtime | switches"
 #endif
            "\n",
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
            "name",
-#endif
+#endif*/
            "state");
 
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
     int isr_usage = thread_arch_isr_stack_usage();
     void *isr_start = thread_arch_isr_stack_start();
     void *isr_sp = thread_arch_isr_stack_pointer();
@@ -81,45 +82,46 @@ void ps(void)
     if (isr_usage > 0) {
         overall_used += isr_usage;
     }
-#endif
+#endif*/
 
-    for (kernel_pid_t i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; i++) {
+    for (i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; i++) {
         thread_t *p = (thread_t *)sched_threads[i];
 
         if (p != NULL) {
             int state = p->status;                                                 /* copy state */
             const char *sname = state_names[state];                                /* get state name */
             const char *queued = &queued_name[(int)(state >= STATUS_ON_RUNQUEUE)]; /* get queued flag */
-#ifdef DEVELHELP
-            int stacksz = p->stack_size;                                           /* get stack size */
+/*#ifdef DEVELHELP
+            int stacksz = p->stack_size;                                          
             overall_stacksz += stacksz;
             stacksz -= thread_measure_stack_free(p->stack_start);
             overall_used += stacksz;
-#endif
+#endif*/
 #ifdef MODULE_SCHEDSTATISTICS
             double runtime_ticks =  sched_pidlist[i].runtime_ticks / (double) xtimer_now() * 100;
             int switches = sched_pidlist[i].schedules;
 #endif
-            printf("\t%3" PRIkernel_pid
-#ifdef DEVELHELP
+            //printf("\t%3" PRIkernel_pid
+	    printf("\t%3"
+/*#ifdef DEVELHELP
                    " | %-20s"
-#endif
+#endif*/
                    " | %-8s %.1s | %3i"
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
                    " | %5i (%5i) | %10p | %10p "
-#endif
+#endif*/
 #ifdef MODULE_SCHEDSTATISTICS
                    " | %6.3f%% |  %8d"
 #endif
                    "\n",
                    p->pid,
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
                    p->name,
-#endif
+#endif*/
                    sname, queued, p->priority
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
                    , p->stack_size, stacksz, (void *)p->stack_start, (void *)p->sp
-#endif
+#endif*/
 #ifdef MODULE_SCHEDSTATISTICS
                    , runtime_ticks, switches
 #endif

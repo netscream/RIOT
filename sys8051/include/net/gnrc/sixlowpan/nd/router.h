@@ -81,11 +81,13 @@ typedef struct {
  *
  * @param[in] nc_entry  A neighbor cache entry.
  */
-static inline void gnrc_sixlowpan_nd_router_gc_nc(gnrc_ipv6_nc_t *nc_entry)
+void gnrc_sixlowpan_nd_router_gc_nc(gnrc_ipv6_nc_t *nc_entry)
 {
     switch (gnrc_ipv6_nc_get_type(nc_entry)) {
-        case GNRC_IPV6_NC_TYPE_TENTATIVE:
-        case GNRC_IPV6_NC_TYPE_REGISTERED:
+        //case GNRC_IPV6_NC_TYPE_TENTATIVE:
+        //case GNRC_IPV6_NC_TYPE_REGISTERED:
+	case 0x20:
+	case 0x30:
             gnrc_ipv6_nc_remove(nc_entry->iface, &nc_entry->ipv6_addr);
             break;
         default:
@@ -104,7 +106,7 @@ static inline void gnrc_sixlowpan_nd_router_gc_nc(gnrc_ipv6_nc_t *nc_entry)
  * @param[in] enable    Status for the GNRC_IPV6_NETIF_FLAGS_ROUTER flag.
  */
 /* 8051 implementation */
-static inline void gnrc_sixlowpan_nd_router_set_router(gnrc_ipv6_netif_t *netif, bool enable)
+void gnrc_sixlowpan_nd_router_set_router(gnrc_ipv6_netif_t *netif, bool enable)
 {
     if (enable) {
         //netif->flags |= GNRC_IPV6_NETIF_FLAGS_ROUTER;
@@ -216,8 +218,8 @@ int gnrc_sixlowpan_nd_router_abr_add_ctx(gnrc_sixlowpan_nd_router_abr_t *abr, ui
  * @param[in] ctx       The context to be remove.
  */
 void gnrc_sixlowpan_nd_router_abr_rem_ctx(gnrc_sixlowpan_nd_router_abr_t *abr, uint8_t cid);
-#else
-#define gnrc_sixlowpan_nd_router_abr_create(addr, ltime)    (NULL)
+//#else
+//#define gnrc_sixlowpan_nd_router_abr_create(addr, ltime)    (NULL)
 #endif
 
 /*#ifdef __cplusplus

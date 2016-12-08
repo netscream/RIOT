@@ -30,9 +30,9 @@
 #include "periph/uart.h"
 #include "ringbuffer.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   UART buffer size used for TX and RX buffers
@@ -40,9 +40,9 @@ extern "C" {
  * Reduce this value if your expected traffic does not include full IPv6 MTU
  * sized packets
  */
-#ifndef GNRC_SLIP_BUFSIZE
+/*#ifndef GNRC_SLIP_BUFSIZE
 #define GNRC_SLIP_BUFSIZE       (1500U)
-#endif
+#endif*/
 
 /**
  * @brief   Device descriptor for SLIP devices
@@ -84,9 +84,9 @@ typedef struct xbee_params {
 kernel_pid_t gnrc_slip_init(gnrc_slip_dev_t *dev, uart_t uart, uint32_t baudrate,
                             char *stack, size_t stack_size, char priority);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* __SLIP_H_ */
 /** @} */

@@ -28,19 +28,19 @@
 #include "net/gnrc/pkt.h"
 #include "thread.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   @ref core_msg type for reporting an error.
  */
-#define GNRC_NETERR_MSG_TYPE        (0x0206)
+//#define GNRC_NETERR_MSG_TYPE        (0x0206)
 
 /**
  * @brief   Error code to signalise success (no error occured) to an gnrc_neterr subscriber.
  */
-#define GNRC_NETERR_SUCCESS         (0)
+//#define GNRC_NETERR_SUCCESS         (0)
 
 /**
  * @brief   Reports an error to all subscribers of errors to @p pkt.
@@ -49,7 +49,7 @@ extern "C" {
  * @param[in] err   The error code for the packet.
  */
 #ifdef MODULE_GNRC_NETERR
-static inline void gnrc_neterr_report(gnrc_pktsnip_t *pkt, uint32_t err)
+void gnrc_neterr_report(gnrc_pktsnip_t *pkt, uint32_t err)
 {
     if (pkt->err_sub != KERNEL_PID_UNDEF) {
         msg_t msg;
@@ -60,8 +60,8 @@ static inline void gnrc_neterr_report(gnrc_pktsnip_t *pkt, uint32_t err)
         msg_send(&msg, pkt->err_sub);
     }
 }
-#else
-#define gnrc_neterr_report(pkt, err)  (void)pkt; (void)err
+//#else
+//#define gnrc_neterr_report(pkt, err)  (void)pkt; (void)err
 #endif
 
 /**
@@ -73,7 +73,7 @@ static inline void gnrc_neterr_report(gnrc_pktsnip_t *pkt, uint32_t err)
  * @return  EALREADY, if there already someone registered to errors on @p pkt.
  */
 #ifdef MODULE_GNRC_NETERR
-static inline int gnrc_neterr_reg(gnrc_pktsnip_t *pkt)
+int gnrc_neterr_reg(gnrc_pktsnip_t *pkt)
 {
     if (pkt->err_sub != KERNEL_PID_UNDEF) {
         return EALREADY;
@@ -81,13 +81,13 @@ static inline int gnrc_neterr_reg(gnrc_pktsnip_t *pkt)
     pkt->err_sub = sched_active_pid;
     return 0;
 }
-#else
-#define gnrc_neterr_reg(pkt)  (0)
+//#else
+//#define gnrc_neterr_reg(pkt)  (0)
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETERR_H_ */
 /** @} */

@@ -75,8 +75,8 @@
 /**
  * Macro for printing formatter
  */
-#define PRIkernel_pid PRIi16
-
+//#define PRIkernel_pid PRIi16
+//#define PRIkernel_pid kernel_pid_t
 /**
  * Unique process identifier
  */

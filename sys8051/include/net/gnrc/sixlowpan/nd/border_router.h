@@ -20,9 +20,9 @@
 #ifndef GNRC_SIXLOWPAN_BORDER_ROUTER_H_
 #define GNRC_SIXLOWPAN_BORDER_ROUTER_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Default lifetime in minutes for 6LoWPAN border router information.
@@ -31,13 +31,13 @@ extern "C" {
  *          RFC 6775, section 4.3
  *      </a>
  */
-#ifndef GNRC_SIXLOWPAN_ND_BORDER_ROUTER_DEFAULT_LTIME
-#define GNRC_SIXLOWPAN_ND_BORDER_ROUTER_DEFAULT_LTIME   (10000U)
-#endif
+//#ifndef GNRC_SIXLOWPAN_ND_BORDER_ROUTER_DEFAULT_LTIME
+//#define GNRC_SIXLOWPAN_ND_BORDER_ROUTER_DEFAULT_LTIME   (10000U)
+//#endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_SIXLOWPAN_BORDER_ROUTER_H_ */
 /** @} */

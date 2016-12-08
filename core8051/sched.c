@@ -50,7 +50,7 @@ thread_t* XDATA sched_active_thread;
 kernel_pid_t XDATA sched_active_pid = 0; //KERNEL_PID_UNDEF
 
 clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
-static uint32_t XDATA runqueue_bitcache = 0;
+uint32_t XDATA runqueue_bitcache = 0;
 
 /*#ifdef MODULE_SCHEDSTATISTICS
 static void (*sched_cb) (uint32_t timestamp, uint32_t value) = NULL;
@@ -130,20 +130,20 @@ void sched_register_cb(void (*callback)(uint32_t, uint32_t))
 }
 #endif
 
-void sched_set_status(thread_t *process, unsigned int status)
+void sched_set_status(thread_t* XDATA process, unsigned int XDATA status)
 {
     if (status >= STATUS_ON_RUNQUEUE) {
         if (!(process->status >= STATUS_ON_RUNQUEUE)) {
-            DEBUG("sched_set_status: adding thread %" PRIkernel_pid " to runqueue %" PRIu16 ".\n",
-                  process->pid, process->priority);
+            //DEBUG("sched_set_status: adding thread %" PRIkernel_pid " to runqueue %" PRIu16 ".\n",
+            //      process->pid, process->priority);
             clist_rpush(&sched_runqueues[process->priority], &(process->rq_entry));
             runqueue_bitcache |= 1 << process->priority;
         }
     }
     else {
         if (process->status >= STATUS_ON_RUNQUEUE) {
-            DEBUG("sched_set_status: removing thread %" PRIkernel_pid " to runqueue %" PRIu16 ".\n",
-                  process->pid, process->priority);
+            //DEBUG("sched_set_status: removing thread %" PRIkernel_pid " to runqueue %" PRIu16 ".\n",
+            //      process->pid, process->priority);
             clist_lpop(&sched_runqueues[process->priority]);
 
             if (!sched_runqueues[process->priority].next) {
@@ -155,7 +155,7 @@ void sched_set_status(thread_t *process, unsigned int status)
     process->status = status;
 }
 
-void sched_switch(uint16_t other_prio)
+void sched_switch(uint16_t XDATA other_prio)
 {
     thread_t *active_thread = (thread_t *) sched_active_thread;
     uint16_t current_prio = active_thread->priority;

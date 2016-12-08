@@ -26,9 +26,9 @@
 #include "net/ipv6/hdr.h"
 #include "net/ipv6/addr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Type for source routing header.
@@ -66,9 +66,9 @@ typedef struct __attribute__((packed)) {
  */
 int gnrc_rpl_srh_process(ipv6_hdr_t *ipv6, gnrc_rpl_srh_t *rh);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_RPL_SRH_H_ */
 /** @} */

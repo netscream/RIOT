@@ -24,9 +24,9 @@
 
 #include "net/ipv6/ext/rh.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #define IPV6_EXT_LEN_UNIT   (8U)    /**< Unit in byte for the extension header's
                                      *   length field */
@@ -51,15 +51,15 @@ typedef struct {
  *
  * @return  The next extension header.
  */
-static inline ipv6_ext_t *ipv6_ext_get_next(ipv6_ext_t *ext)
-{
+ipv6_ext_t *ipv6_ext_get_next(ipv6_ext_t* XDATA ext);
+/*{
     return (ipv6_ext_t *)((uint8_t *)(ext) + (ext->len * IPV6_EXT_LEN_UNIT) +
                           IPV6_EXT_LEN_UNIT);
-}
+}*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* IPV6_EXT_H_ */
 /** @} */

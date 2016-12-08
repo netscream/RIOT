@@ -98,7 +98,7 @@ typedef struct {
  * @internal
  */
 void rbuf_add(gnrc_netif_hdr_t *netif_hdr, gnrc_pktsnip_t *frag,
-              size_t frag_size, size_t offset);
+              uint32_t frag_size, uint32_t offset);
 
 #ifdef __cplusplus
 }

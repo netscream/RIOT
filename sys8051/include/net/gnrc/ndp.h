@@ -22,7 +22,7 @@
 #define GNRC_NDP_H_
 
 #include <inttypes.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "byteorder.h"
 #include "net/ndp.h"
@@ -37,28 +37,28 @@
 #include "net/gnrc/ndp/router.h"
 #include "net/gnrc/ndp/node.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /** Message type for router timeouts */
-#define GNRC_NDP_MSG_RTR_TIMEOUT                (0x0210)
+//#define GNRC_NDP_MSG_RTR_TIMEOUT                (0x0210)
 /** Message type for address timeouts */
-#define GNRC_NDP_MSG_ADDR_TIMEOUT               (0x0211)
+//#define GNRC_NDP_MSG_ADDR_TIMEOUT               (0x0211)
 /** Message type for multicast neighbor solicitation retransmissions */
-#define GNRC_NDP_MSG_NBR_SOL_RETRANS            (0x0212)
+//#define GNRC_NDP_MSG_NBR_SOL_RETRANS            (0x0212)
 /** Message type for periodic router advertisements */
-#define GNRC_NDP_MSG_RTR_ADV_RETRANS            (0x0213)
+//#define GNRC_NDP_MSG_RTR_ADV_RETRANS            (0x0213)
 /** Message type for delayed router advertisements */
-#define GNRC_NDP_MSG_RTR_ADV_DELAY              (0x0214)
+//#define GNRC_NDP_MSG_RTR_ADV_DELAY              (0x0214)
 /** Message type for delayed router advertisements in a 6LoWPAN
  * 6LoWPAN needs a special handling, because router advertisements are only
  * sent after a short randomized delay, but not periodically. */
-#define GNRC_NDP_MSG_RTR_ADV_SIXLOWPAN_DELAY    (0x0215)
+//#define GNRC_NDP_MSG_RTR_ADV_SIXLOWPAN_DELAY    (0x0215)
 /** Message type for periodic router solicitations */
-#define GNRC_NDP_MSG_RTR_SOL_RETRANS            (0x0216)
+//#define GNRC_NDP_MSG_RTR_SOL_RETRANS            (0x0216)
 /** Message type for neighbor cache state timeouts */
-#define GNRC_NDP_MSG_NC_STATE_TIMEOUT           (0x0217)
+//#define GNRC_NDP_MSG_NC_STATE_TIMEOUT           (0x0217)
 
 /**
  * @name    Host constants
@@ -71,18 +71,18 @@ extern "C" {
  * @brief   Upper bound for randomised delay in seconds for initial
  *          router solicitation transmissions
  */
-#define GNRC_NDP_MAX_RTR_SOL_DELAY      (1U)
+//#define GNRC_NDP_MAX_RTR_SOL_DELAY      (1U)
 
 /**
  * @brief   Interval in seconds between initial router solicitation
  *          transmissions
  */
-#define GNRC_NDP_MAX_RTR_SOL_INT        (4U)
+//#define GNRC_NDP_MAX_RTR_SOL_INT        (4U)
 
 /**
  * @brief   Maximum number of  initial router solicitation transmissions
  */
-#define GNRC_NDP_MAX_RTR_SOL_NUMOF      (3U)
+//#define GNRC_NDP_MAX_RTR_SOL_NUMOF      (3U)
 /** @} */
 
 /**
@@ -96,54 +96,54 @@ extern "C" {
  * @brief   Maximum number of unanswered multicast neighbor solicitations
  *          before address resolution is considered failed.
  */
-#define GNRC_NDP_MAX_MC_NBR_SOL_NUMOF   (3U)
+//#define GNRC_NDP_MAX_MC_NBR_SOL_NUMOF   (3U)
 
 /**
  * @brief   Maximum number of unanswered unicast neighbor solicitations before
  *          an address is considered unreachable.
  */
-#define GNRC_NDP_MAX_UC_NBR_SOL_NUMOF   (3U)
+//#define GNRC_NDP_MAX_UC_NBR_SOL_NUMOF   (3U)
 
 /**
  * @brief   Upper bound of randomized delay in seconds for a solicited
  *          neighbor advertisement transmission for an anycast target.
  */
-#define GNRC_NDP_MAX_AC_TGT_DELAY       (1U)
+//#define GNRC_NDP_MAX_AC_TGT_DELAY       (1U)
 
 /**
  * @brief   Maximum number of unsolicited neighbor advertisements before on
  *          link-layer address change.
  */
-#define GNRC_NDP_MAX_NBR_ADV_NUMOF      (3U)
+//#define GNRC_NDP_MAX_NBR_ADV_NUMOF      (3U)
 
 /**
  * @brief   Base value in mircoseconds for computing randomised
  *          reachable time.
  */
-#define GNRC_NDP_REACH_TIME             (30U * SEC_IN_USEC)
+//#define GNRC_NDP_REACH_TIME             (30U * SEC_IN_USEC)
 
 /**
  * @brief   Time in mircoseconds between retransmissions of neighbor
  *          solicitations to a neighbor.
  */
-#define GNRC_NDP_RETRANS_TIMER          (1U * SEC_IN_USEC)
+//#define GNRC_NDP_RETRANS_TIMER          (1U * SEC_IN_USEC)
 
 /**
  * @brief   Delay in seconds for neighbor cache entry between entering
  *          DELAY state and entering PROBE state if no reachability
  *          confirmation has been received.
  */
-#define GNRC_NDP_FIRST_PROBE_DELAY      (5U)
+//#define GNRC_NDP_FIRST_PROBE_DELAY      (5U)
 
 /**
  * @brief   Lower bound for randomised reachable time calculation.
  */
-#define GNRC_NDP_MIN_RAND               (5U)
+//#define GNRC_NDP_MIN_RAND               (5U)
 
 /**
  * @brief   Upper bound for randomised reachable time calculation.
  */
-#define GNRC_NDP_MAX_RAND               (15U)
+//#define GNRC_NDP_MAX_RAND               (15U)
 /** @} */
 
 /**
@@ -156,30 +156,30 @@ extern "C" {
 /**
  * @brief   Initial router advertisement interval in seconds
  */
-#define GNRC_NDP_MAX_INIT_RTR_ADV_INT   (16U)
+//#define GNRC_NDP_MAX_INIT_RTR_ADV_INT   (16U)
 
 /**
  * @brief   Maximum number of initial router advertisement transmissions
  */
-#define GNRC_NDP_MAX_INIT_RTR_ADV_NUMOF (3U)
+//#define GNRC_NDP_MAX_INIT_RTR_ADV_NUMOF (3U)
 
 /**
  * @brief   Maximum number of final router advertisement transmissions
  */
-#define GNRC_NDP_MAX_FIN_RTR_ADV_NUMOF  (3U)
+//#define GNRC_NDP_MAX_FIN_RTR_ADV_NUMOF  (3U)
 
 /**
  * @brief   Minimum delay in seconds between router advertisement
  *          transmissions
  */
-#define GNRC_NDP_MIN_RTR_ADV_DELAY      (3U)
+//#define GNRC_NDP_MIN_RTR_ADV_DELAY      (3U)
 
 /**
  * @brief   Upper bound for randomised delay in microseconds between router
  *          solicitation reception and responding router advertisement
  *          transmission.
  */
-#define GNRC_NDP_MAX_RTR_ADV_DELAY      (500U * MS_IN_USEC)
+//#define GNRC_NDP_MAX_RTR_ADV_DELAY      (500U * MS_IN_USEC)
 /** @} */
 
 /**
@@ -193,7 +193,7 @@ extern "C" {
  */
 void gnrc_ndp_nbr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_nbr_sol_t *nbr_sol,
-                             size_t icmpv6_size);
+                             uint32_t icmpv6_size);
 
 /**
  * @brief   Handles received neighbor advertisements.
@@ -206,7 +206,7 @@ void gnrc_ndp_nbr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
  */
 void gnrc_ndp_nbr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_nbr_adv_t *nbr_adv,
-                             size_t icmpv6_size);
+                             uint32_t icmpv6_size);
 
 #if (defined(MODULE_GNRC_NDP_ROUTER) || defined(MODULE_GNRC_SIXLOWPAN_ND_ROUTER))
 /**
@@ -220,7 +220,7 @@ void gnrc_ndp_nbr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
  */
 void gnrc_ndp_rtr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_rtr_sol_t *rtr_sol,
-                             size_t icmpv6_size);
+                             uint32_t icmpv6_size);
 #else
 /**
  * @brief   A host *must* silently discard all received router solicitations.
@@ -247,7 +247,7 @@ void gnrc_ndp_rtr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
  */
 void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_rtr_adv_t *rtr_adv,
-                             size_t icmpv6_size);
+                             uint32_t icmpv6_size);
 
 /**
  * @brief   Retransmits a multicast neighbor solicitation for an incomplete or
@@ -410,7 +410,7 @@ gnrc_pktsnip_t *gnrc_ndp_rtr_sol_build(gnrc_pktsnip_t *options);
 gnrc_pktsnip_t *gnrc_ndp_rtr_adv_build(uint8_t cur_hl, uint8_t flags, uint16_t ltime,
                                        uint32_t reach_time, uint32_t retrans_timer,
                                        gnrc_pktsnip_t *options);
-#else
+//#else
 /**
  * @brief   A host *must not* send router advertisements at any time (so why build them?)
  * @see     <a href="https://tools.ietf.org/html/rfc4861#section-6.3.4">
@@ -420,7 +420,7 @@ gnrc_pktsnip_t *gnrc_ndp_rtr_adv_build(uint8_t cur_hl, uint8_t flags, uint16_t l
  * This macro is primarily an optimization to not go into the function defined
  * above.
  */
-#define gnrc_ndp_rtr_adv_build(cur_hl, flags, ltime, reach_time, retrans_timer, options) (NULL)
+//#define gnrc_ndp_rtr_adv_build(cur_hl, flags, ltime, reach_time, retrans_timer, options) (NULL)
 #endif
 
 /**
@@ -434,7 +434,7 @@ gnrc_pktsnip_t *gnrc_ndp_rtr_adv_build(uint8_t cur_hl, uint8_t flags, uint16_t l
  * @return  The packet snip list of options, on success
  * @return  NULL, if packet buffer is full
  */
-gnrc_pktsnip_t *gnrc_ndp_opt_build(uint8_t type, size_t size, gnrc_pktsnip_t *next);
+gnrc_pktsnip_t *gnrc_ndp_opt_build(uint8_t type, uint32_t size, gnrc_pktsnip_t *next);
 
 /**
  * @brief   Builds the source link-layer address option.
@@ -529,7 +529,7 @@ gnrc_pktsnip_t *gnrc_ndp_opt_pi_build(uint8_t prefix_len, uint8_t flags,
  * @return  NULL, if packet buffer is full
  */
 gnrc_pktsnip_t *gnrc_ndp_opt_mtu_build(uint32_t mtu, gnrc_pktsnip_t *next);
-#else
+//#else
 /**
  * @brief   A host *must not* send router advertisements at any time (so why build their options?)
  * @see     <a href="https://tools.ietf.org/html/rfc4861#section-6.3.4">
@@ -539,7 +539,7 @@ gnrc_pktsnip_t *gnrc_ndp_opt_mtu_build(uint32_t mtu, gnrc_pktsnip_t *next);
  * This macro is primarily an optimization to not go into the function defined
  * above.
  */
-#define gnrc_ndp_opt_pi_build(prefix_len, flags, valid_ltime, pref_ltime, prefix, next) (NULL)
+//#define gnrc_ndp_opt_pi_build(prefix_len, flags, valid_ltime, pref_ltime, prefix, next) (NULL)
 
 /**
  * @brief   A host *must not* send router advertisements at any time (so why build their options?)
@@ -550,12 +550,12 @@ gnrc_pktsnip_t *gnrc_ndp_opt_mtu_build(uint32_t mtu, gnrc_pktsnip_t *next);
  * This macro is primarily an optimization to not go into the function defined
  * above.
  */
-#define gnrc_ndp_opt_mtu_build(mtu, next)   (NULL)
+//#define gnrc_ndp_opt_mtu_build(mtu, next)   (NULL)
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NDP_H_ */
 /**

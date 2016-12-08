@@ -24,9 +24,9 @@
 
 #include "net/ipv6/addr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * Maximum size of the whitelist.
@@ -69,9 +69,9 @@ bool gnrc_ipv6_whitelisted(const ipv6_addr_t *addr);
  */
 void gnrc_ipv6_whitelist_print(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IPV6_WHITELIST_H_ */
 /** @} */

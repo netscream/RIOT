@@ -28,9 +28,9 @@
 #include "net/ipv6/hdr.h"
 #include "net/ndp.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Get best match from default router list.
@@ -116,14 +116,14 @@ void gnrc_ndp_internal_send_rtr_sol(kernel_pid_t iface, ipv6_addr_t *dst);
  */
 void gnrc_ndp_internal_send_rtr_adv(kernel_pid_t iface, ipv6_addr_t *src,
                                     ipv6_addr_t *dst, bool fin);
-#else
+//#else
 /**
  * @brief   A host *must not* send router advertisements at any time.
  *
  * This macro is primarily an optimization to not go into the function defined
  * above.
  */
-#define gnrc_ndp_internal_send_rtr_adv(iface, src, dst, fin)
+//#define gnrc_ndp_internal_send_rtr_adv(iface, src, dst, fin)
 #endif
 
 /**
@@ -199,7 +199,7 @@ bool gnrc_ndp_internal_pi_opt_handle(kernel_pid_t iface, uint8_t icmpv6_type,
  * @param[in] type          The msg_t::type for the timer.
  * @param[in] pid           The pid of the receiver thread of the msg_t
  */
-static inline void gnrc_ndp_internal_reset_nbr_sol_timer(gnrc_ipv6_nc_t *nc_entry, uint32_t delay,
+void gnrc_ndp_internal_reset_nbr_sol_timer(gnrc_ipv6_nc_t *nc_entry, uint32_t delay,
                                                          uint16_t type, kernel_pid_t pid)
 {
     xtimer_remove(&nc_entry->nbr_sol_timer);
@@ -207,9 +207,9 @@ static inline void gnrc_ndp_internal_reset_nbr_sol_timer(gnrc_ipv6_nc_t *nc_entr
     xtimer_set_msg(&nc_entry->nbr_sol_timer, delay, &nc_entry->nbr_sol_msg, pid);
 }
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NDP_INTERNAL_H_ */
 /** @} */

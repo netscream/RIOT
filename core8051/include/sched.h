@@ -117,7 +117,7 @@ int sched_run(void);
  *                          targeted process
  * @param[in]   status      The new status of this thread
  */
-void sched_set_status(thread_t *process, unsigned int status);
+void sched_set_status(thread_t* XDATA process, unsigned int XDATA status);
 
 /**
  * @brief       Yield if approriate.
@@ -131,7 +131,7 @@ void sched_set_status(thread_t *process, unsigned int status);
  *
  * @param[in]   other_prio      The priority of the target thread.
  */
-void sched_switch(uint16_t other_prio);
+void sched_switch(uint16_t XDATA other_prio);
 
 /**
  * @brief   Call context switching at thread exit

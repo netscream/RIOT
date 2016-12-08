@@ -63,7 +63,7 @@ enum {
  * @param[in]   queue_size  number of msg_t objects in queue
  */
 /* 8051 implementation */
-static void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size);
+void mbox_init(mbox_t* XDATA mbox, msg_t* XDATA queue, unsigned int XDATA queue_size);
 /*static inline void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size)
 {
     mbox->msg_array->sender_pid = queue->sender_pid;
@@ -86,7 +86,7 @@ static void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size);
  * @return  1   if msg could be delivered
  * @return  0   otherwise
  */
-int _mbox_put(mbox_t *mbox, msg_t *msg, int blocking);
+int _mbox_put(mbox_t* XDATA mbox, msg_t* XDATA msg, int XDATA blocking);
 
 /**
  * @brief Get message from mailbox
@@ -102,7 +102,7 @@ int _mbox_put(mbox_t *mbox, msg_t *msg, int blocking);
  * @return  1   if msg could be retrieved
  * @return  0   otherwise
  */
-int _mbox_get(mbox_t *mbox, msg_t *msg, int blocking);
+int _mbox_get(mbox_t* XDATA mbox, msg_t* XDATA msg, int XDATA blocking);
 
 /**
  * @brief Add message to mailbox
@@ -114,7 +114,7 @@ int _mbox_get(mbox_t *mbox, msg_t *msg, int blocking);
  * @param[in] msg   ptr to message that will be copied into mailbox
  */
 /* 8051 implementation */
-static void mbox_put(mbox_t *mbox, msg_t *msg);
+void mbox_put(mbox_t* XDATA mbox, msg_t* XDATA msg);
 /*static inline void mbox_put(mbox_t *mbox, msg_t *msg)
 {
     _mbox_put(mbox, msg, BLOCKING);
@@ -132,7 +132,7 @@ static void mbox_put(mbox_t *mbox, msg_t *msg);
  * @return  0   otherwise
  */
 /* 8051 implementation */
-static int mbox_try_put(mbox_t *mbox, msg_t *msg);
+int mbox_try_put(mbox_t* XDATA mbox, msg_t* XDATA msg);
 /*static inline int mbox_try_put(mbox_t *mbox, msg_t *msg)
 {
     return _mbox_put(mbox, msg, NON_BLOCKING);
@@ -148,7 +148,7 @@ static int mbox_try_put(mbox_t *mbox, msg_t *msg);
  * @param[in] msg   ptr to storage for retrieved message
  */
 /* 8051 implementation */
-static void mbox_get(mbox_t *mbox, msg_t *msg);
+void mbox_get(mbox_t* XDATA mbox, msg_t* XDATA msg);
 /*static inline void mbox_get(mbox_t *mbox, msg_t *msg)
 {
     _mbox_get(mbox, msg, BLOCKING);
@@ -166,7 +166,7 @@ static void mbox_get(mbox_t *mbox, msg_t *msg);
  * @return  0   otherwise
  */
 /* 8051 implementation */
-static int mbox_try_get(mbox_t *mbox, msg_t *msg);
+int mbox_try_get(mbox_t* XDATA mbox, msg_t* XDATA msg);
 /*static inline int mbox_try_get(mbox_t *mbox, msg_t *msg)
 {
     return _mbox_get(mbox, msg, NON_BLOCKING);

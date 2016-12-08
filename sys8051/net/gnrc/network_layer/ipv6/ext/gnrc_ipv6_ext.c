@@ -35,7 +35,7 @@ static enum gnrc_ipv6_ext_demux_status _handle_rh(gnrc_pktsnip_t *current, gnrc_
 {
     gnrc_pktsnip_t *ipv6;
     ipv6_ext_t *ext = (ipv6_ext_t *) current->data;
-    size_t current_offset;
+    uint32_t current_offset;
     ipv6_hdr_t *hdr;
 
     /* check seg_left early to avoid duplicating the packet */
@@ -102,7 +102,7 @@ static gnrc_pktsnip_t *_mark_extension_header(gnrc_pktsnip_t *current,
 {
     gnrc_pktsnip_t *tmp, *next;
     ipv6_ext_t *ext = (ipv6_ext_t *) current->data;
-    size_t offset = ((ext->len * IPV6_EXT_LEN_UNIT) + IPV6_EXT_LEN_UNIT);
+    uint32_t offset = ((ext->len * IPV6_EXT_LEN_UNIT) + IPV6_EXT_LEN_UNIT);
 
     if (current == *pkt) {
         gnrc_pktsnip_t *ext_snip;
@@ -255,7 +255,7 @@ void gnrc_ipv6_ext_demux(kernel_pid_t iface,
 }
 
 gnrc_pktsnip_t *gnrc_ipv6_ext_build(gnrc_pktsnip_t *ipv6, gnrc_pktsnip_t *next,
-                                    uint8_t nh, size_t size)
+                                    uint8_t nh, uint32_t size)
 {
     gnrc_pktsnip_t *prev = NULL, *snip;
     ipv6_ext_t *ext;

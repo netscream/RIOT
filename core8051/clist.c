@@ -8,7 +8,7 @@
  */
 #include "clist.h"
 /* 8051 implementation */
-void clist_rpush(clist_node_t *list, clist_node_t *new_node)
+void clist_rpush(clist_node_t* list, clist_node_t* new_node)
 {
     if (list->next) {
         new_node->next = list->next->next;
@@ -20,7 +20,7 @@ void clist_rpush(clist_node_t *list, clist_node_t *new_node)
     list->next = new_node;
 }
 
-void clist_lpush(clist_node_t *list, clist_node_t *new_node)
+void clist_lpush(clist_node_t* list, clist_node_t* new_node)
 {
     if (list->next) {
         new_node->next = list->next->next;
@@ -32,7 +32,7 @@ void clist_lpush(clist_node_t *list, clist_node_t *new_node)
     }
 }
 
-clist_node_t *clist_lpop(clist_node_t *list)
+clist_node_t *clist_lpop(clist_node_t* list)
 {
     if (list->next) {
         clist_node_t *first = list->next->next;
@@ -49,14 +49,14 @@ clist_node_t *clist_lpop(clist_node_t *list)
     }
 }
 
-void clist_lpoprpush(clist_node_t *list)
+void clist_lpoprpush(clist_node_t* list)
 {
     if (list->next) {
         list->next = list->next->next;
     }
 }
 
-clist_node_t *clist_lpeek(const clist_node_t *list)
+clist_node_t *clist_lpeek(const clist_node_t* list)
 {
     if (list->next) {
         return list->next->next;
@@ -64,12 +64,12 @@ clist_node_t *clist_lpeek(const clist_node_t *list)
     return NULL;
 }
 
-clist_node_t *clist_rpeek(const clist_node_t *list)
+clist_node_t *clist_rpeek(const clist_node_t* list)
 {
     return list->next;
 }
 
-clist_node_t *clist_rpop(clist_node_t *list)
+clist_node_t *clist_rpop(clist_node_t* list)
 {
     if (list->next) {
         list_node_t *last = list->next;
@@ -83,7 +83,7 @@ clist_node_t *clist_rpop(clist_node_t *list)
     }
 }
 
-clist_node_t *clist_find_before(const clist_node_t *list, const clist_node_t *node)
+clist_node_t *clist_find_before(const clist_node_t* list, const clist_node_t* node)
 {
     clist_node_t *pos = list->next;
     if (!pos) {
@@ -99,7 +99,7 @@ clist_node_t *clist_find_before(const clist_node_t *list, const clist_node_t *no
     return NULL;
 }
 
-clist_node_t *clist_find(const clist_node_t *list, const clist_node_t *node)
+clist_node_t *clist_find(const clist_node_t* list, const clist_node_t* node)
 {
     clist_node_t *tmp = clist_find_before(list, node);
     if (tmp) {
@@ -110,7 +110,7 @@ clist_node_t *clist_find(const clist_node_t *list, const clist_node_t *node)
     }
 }
 
-clist_node_t *clist_remove(clist_node_t *list, clist_node_t *node)
+clist_node_t *clist_remove(clist_node_t* list, clist_node_t* node)
 {
     if (list->next) {
         if (list->next->next == node) {
@@ -131,7 +131,7 @@ clist_node_t *clist_remove(clist_node_t *list, clist_node_t *node)
     return NULL;
 }
 
-void clist_foreach(clist_node_t *list, int(*func)(clist_node_t *))
+void clist_foreach(clist_node_t* list, int(*func)(clist_node_t *))
 {
     clist_node_t *node = list->next;
     if (! node) {

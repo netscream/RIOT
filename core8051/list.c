@@ -19,13 +19,13 @@
  */
 #include "list.h"
 /* 8051 implementation */
-static void list_add(list_node_t *node, list_node_t *new_node) 
+void list_add(list_node_t* node, list_node_t* new_node) 
 {
     new_node->next = node->next;
     node->next = new_node;
 }
 
-static list_node_t* list_remove_head(list_node_t *list) {
+list_node_t* list_remove_head(list_node_t* list) {
     list_node_t* head = list->next;
     if (head) {
         list->next = head->next;

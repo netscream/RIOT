@@ -21,23 +21,23 @@
 #ifndef GNRC_RPL_P2P_DODAG_H_
 #define GNRC_RPL_P2P_DODAG_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #include "net/gnrc/rpl/p2p_structs.h"
 
 /**
  * @brief   Number of P2P RPL DODAG extensions
  */
-#ifndef GNRC_RPL_P2P_EXTS_NUMOF
+/*#ifndef GNRC_RPL_P2P_EXTS_NUMOF
 #define GNRC_RPL_P2P_EXTS_NUMOF (1)
-#endif
+#endif*/
 
 /**
  * @brief   P2P-RPL DODAG extensions table
  */
-extern gnrc_rpl_p2p_ext_t gnrc_rpl_p2p_exts[GNRC_RPL_P2P_EXTS_NUMOF];
+extern gnrc_rpl_p2p_ext_t XDATA gnrc_rpl_p2p_exts[GNRC_RPL_P2P_EXTS_NUMOF];
 
 /**
  * @brief   Allocate a free P2P-RPL DODAG extension
@@ -64,9 +64,9 @@ void gnrc_rpl_p2p_ext_remove(gnrc_rpl_dodag_t *dodag);
  */
 gnrc_rpl_p2p_ext_t *gnrc_rpl_p2p_ext_get(gnrc_rpl_dodag_t *dodag);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_RPL_P2P_DODAG_H_ */
 /**

@@ -20,9 +20,9 @@
 #ifndef GNRC_NDP_NODE_H_
 #define GNRC_NDP_NODE_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Get link-layer address and interface for next hop to destination
@@ -45,9 +45,9 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
                                            kernel_pid_t iface, ipv6_addr_t *dst,
                                            gnrc_pktsnip_t *pkt);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NDP_NODE_H_ */
 /** @} */

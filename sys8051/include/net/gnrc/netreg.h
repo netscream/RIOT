@@ -27,16 +27,16 @@
 #include "net/gnrc/nettype.h"
 #include "net/gnrc/pkt.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Demux context value to get all packets of a certain type.
  *
  * @see gnrc_netreg_entry_t::demux_ctx
  */
-#define GNRC_NETREG_DEMUX_CTX_ALL   (0xffff0000)
+//#define GNRC_NETREG_DEMUX_CTX_ALL   (0xffff0000)
 
 /**
  * @brief   Entry to the @ref net_gnrc_netreg
@@ -84,7 +84,7 @@ void gnrc_netreg_init(void);
  * @return  0 on success
  * @return  -EINVAL if @p type was < GNRC_NETTYPE_UNDEF or >= GNRC_NETTYPE_NUMOF
  */
-int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t *entry);
+int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t* XDATA entry);
 
 /**
  * @brief   Removes a thread from the registry.
@@ -92,7 +92,7 @@ int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t *entry);
  * @param[in] type      Type of the protocol.
  * @param[in] entry     An entry you want to remove from the registry.
  */
-void gnrc_netreg_unregister(gnrc_nettype_t type, gnrc_netreg_entry_t *entry);
+void gnrc_netreg_unregister(gnrc_nettype_t type, gnrc_netreg_entry_t* XDATA entry);
 
 /**
  * @brief   Searches for entries with given parameters in the registry and
@@ -105,7 +105,7 @@ void gnrc_netreg_unregister(gnrc_nettype_t type, gnrc_netreg_entry_t *entry);
  * @return  The first entry fitting the given parameters on success
  * @return  NULL if no entry can be found.
  */
-gnrc_netreg_entry_t *gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t demux_ctx);
+gnrc_netreg_entry_t *gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t XDATA demux_ctx);
 
 /**
  * @brief   Returns number of entries with the same gnrc_netreg_entry_t::type and
@@ -118,7 +118,7 @@ gnrc_netreg_entry_t *gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t demux_ctx)
  * @return  Number of entries with the same gnrc_netreg_entry_t::type and
  *          gnrc_netreg_entry_t::demux_ctx as the given parameters.
  */
-int gnrc_netreg_num(gnrc_nettype_t type, uint32_t demux_ctx);
+int gnrc_netreg_num(gnrc_nettype_t type, uint32_t XDATA demux_ctx);
 
 /**
  * @brief   Returns the next entry after @p entry with the same
@@ -131,7 +131,7 @@ int gnrc_netreg_num(gnrc_nettype_t type, uint32_t demux_ctx);
  * @return  The next entry after @p entry fitting the given parameters on success
  * @return  NULL if no entry new entry can be found.
  */
-gnrc_netreg_entry_t *gnrc_netreg_getnext(gnrc_netreg_entry_t *entry);
+gnrc_netreg_entry_t* gnrc_netreg_getnext(gnrc_netreg_entry_t* XDATA entry);
 
 /**
  * @brief   Calculates the checksum for a header.
@@ -147,11 +147,11 @@ gnrc_netreg_entry_t *gnrc_netreg_getnext(gnrc_netreg_entry_t *entry);
  *          for gnrc_pktsnip_t::type of @p hdr.
  */
 
-int gnrc_netreg_calc_csum(gnrc_pktsnip_t *hdr, gnrc_pktsnip_t *pseudo_hdr);
+int gnrc_netreg_calc_csum(gnrc_pktsnip_t* XDATA hdr, gnrc_pktsnip_t* XDATA pseudo_hdr);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* NETREG_H_ */
 /** @} */

@@ -46,9 +46,9 @@
 #include "net/af.h"
 #include "sys/bytes.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Maximum data length for a socket address.
@@ -159,8 +159,8 @@ struct sockaddr_storage {
  *          file descriptor of the accepted socket. Otherwise, -1 shall be
  *          returned and errno set to indicate the error.
  */
-int accept(int socket, struct sockaddr *__restrict address,
-           socklen_t *__restrict address_len);
+int accept(int socket, struct sockaddr* address,
+           socklen_t* address_len);
 
 /**
  * @brief   Bind a name to a socket.
@@ -241,8 +241,8 @@ int connect(int socket, const struct sockaddr *address, socklen_t address_len);
  * @return  Upon successful completion, getpeername() shall return 0; otherwise,
  *          -1 shall be returned and errno set to indicate the error.
  */
-int getpeername(int socket, struct sockaddr *__restrict address,
-                socklen_t *__restrict address_len);
+int getpeername(int socket, struct sockaddr* address,
+                socklen_t* address_len);
 
 /**
  * @brief   Get the socket name.
@@ -267,8 +267,8 @@ int getpeername(int socket, struct sockaddr *__restrict address,
  * @return  Upon successful completion, getsockname() shall return 0; otherwise,
  *          -1 shall be returned and errno set to indicate the error.
  */
-int getsockname(int socket, struct sockaddr *__restrict address,
-                socklen_t *__restrict address_len);
+int getsockname(int socket, struct sockaddr* address,
+                socklen_t* address_len);
 
 /**
  * @brief   Listen for socket connections and limit the queue of incoming
@@ -316,8 +316,8 @@ int listen(int socket, int backlog);
  *          the peer has performed an orderly shutdown, recv() shall return 0.
  *          Otherwise, -1 shall be returned and errno set to indicate the error.
  */
-ssize_t recv(int socket, void *buffer, size_t length, int flags);
-
+//ssize_t recv(int socket, void *buffer, size_t length, int flags);
+uint32_t recb(int socket, void *buffer, size_t length, int flags);
 /**
  * @brief   Receive a message from a socket.
  * @details The recvfrom() function shall receive a message from a
@@ -352,10 +352,12 @@ ssize_t recv(int socket, void *buffer, size_t length, int flags);
  *          return 0. Otherwise, the function shall return -1 and set errno to
  *          indicate the error.
  */
-ssize_t recvfrom(int socket, void *__restrict buffer, size_t length, int flags,
-                 struct sockaddr *__restrict address,
-                 socklen_t *__restrict address_len);
-
+/*ssize_t recvfrom(int socket, void* buffer, size_t length, int flags,
+                 struct sockaddr* address,
+                 socklen_t* address_len);*/
+uint32_t recvfrom(int socket, void* buffer, size_t length, int flags,
+                 struct sockaddr* address,
+                 socklen_t* address_len);
 /**
  * @brief   Send a message on a socket.
  * @details Shall initiate transmission of a message from the specified socket
@@ -377,7 +379,8 @@ ssize_t recvfrom(int socket, void *__restrict buffer, size_t length, int flags,
  *          sent. Otherwise, -1 shall be returned and errno set to indicate the
  *          error.
  */
-ssize_t send(int socket, const void *buffer, size_t length, int flags);
+//ssize_t send(int socket, const void *buffer, size_t length, int flags);
+uint32_t send(int socket, const void *buffer, size_t length, int flags);
 
 /**
  * @brief   Send a message on a socket.
@@ -420,7 +423,9 @@ ssize_t send(int socket, const void *buffer, size_t length, int flags);
  *          sent. Otherwise, -1 shall be returned and errno set to indicate the
  *          error.
  */
-ssize_t sendto(int socket, const void *buffer, size_t length, int flags,
+//ssize_t sendto(int socket, const void *buffer, size_t length, int flags,
+//               const struct sockaddr *address, socklen_t address_len);
+uint32_t sendto(int socket, const void *buffer, size_t length, int flags,
                const struct sockaddr *address, socklen_t address_len);
 
 /**
@@ -474,9 +479,9 @@ static inline int setsockopt(int socket, int level, int option_name, const void 
 
 /** @} */
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 /**
  * @}

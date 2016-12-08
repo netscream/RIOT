@@ -29,9 +29,9 @@
 #include "net/gnrc/ipv6/nc.h"
 #include "timex.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Set @p iface to router mode.
@@ -80,9 +80,9 @@ void gnrc_ndp_router_retrans_rtr_adv(gnrc_ipv6_netif_t *iface);
  */
 void gnrc_ndp_router_send_rtr_adv(gnrc_ipv6_nc_t *neighbor);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NDP_ROUTER_H_ */
 /** @} */

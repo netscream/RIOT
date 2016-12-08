@@ -42,44 +42,44 @@
 #include "net/ipv6/addr.h"
 #include "net/gnrc/nettype.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief The maximum allowed length of the transfer filename
  */
-#ifndef GNRC_TFTP_MAX_FILENAME_LEN
+/*#ifndef GNRC_TFTP_MAX_FILENAME_LEN
 #define GNRC_TFTP_MAX_FILENAME_LEN          (64)
-#endif
+#endif*/
 
 /**
  * @brief The base source port to be used by TFTP
  */
-#ifndef GNRC_TFTP_DEFAULT_SRC_PORT
+/*#ifndef GNRC_TFTP_DEFAULT_SRC_PORT
 #define GNRC_TFTP_DEFAULT_SRC_PORT          (10690)
-#endif
+#endif*/
 
 /**
  * @brief The default destination port of the TFTP server
  */
-#ifndef GNRC_TFTP_DEFAULT_DST_PORT
+/*#ifndef GNRC_TFTP_DEFAULT_DST_PORT
 #define GNRC_TFTP_DEFAULT_DST_PORT          (69)
-#endif
+#endif*/
 
 /**
  * @brief The maximum allowed data bytes in the data packet
  */
-#ifndef GNRC_TFTP_MAX_TRANSFER_UNIT
+/*#ifndef GNRC_TFTP_MAX_TRANSFER_UNIT
 #define GNRC_TFTP_MAX_TRANSFER_UNIT         (512)
-#endif
+#endif*/
 
 /**
  * @brief The number of retries that must be made before stopping a transfer
  */
-#ifndef GNRC_TFTP_MAX_RETRIES
+/*#ifndef GNRC_TFTP_MAX_RETRIES
 #define GNRC_TFTP_MAX_RETRIES               (5)
-#endif
+#endif*/
 
 /**
  * @brief The default timeout of a data packet
@@ -101,7 +101,7 @@ typedef enum {
  */
 typedef enum {
     TTM_ASCII,
-    TTM_OCTET,
+    ,
     TTM_MAIL
 } tftp_mode_t;
 

@@ -30,9 +30,9 @@
 #include "net/ipv6/addr.h"
 #include "sys/bytes.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #define INET_ADDRSTRLEN     (16)    /**< Length of the string form for IPv4. */
 #define INET6_ADDRSTRLEN    (46)    /**< Length of the string form for IPv6. */
@@ -264,9 +264,9 @@ extern const struct in6_addr in6addr_any;
  */
 extern const struct in6_addr in6addr_loopback;
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 /**
  * @}

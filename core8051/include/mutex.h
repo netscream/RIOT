@@ -55,7 +55,7 @@ typedef struct {
  *          Only use the function call for dynamically allocated mutexes.
  * @param[out] mutex    pre-allocated mutex structure, must not be NULL.
  */
-static void mutex_init(mutex_t *mutex);
+void mutex_init(mutex_t* XDATA mutex);
 /*static inline void mutex_init(mutex_t *mutex)
 {
     mutex->queue.next = NULL;
@@ -74,7 +74,7 @@ static void mutex_init(mutex_t *mutex);
  * @return 1 if mutex was unlocked, now it is locked.
  * @return 0 if the mutex was locked.
  */
-int _mutex_lock(mutex_t *mutex, int blocking);
+int _mutex_lock(mutex_t* XDATA mutex, int XDATA blocking);
 
 /**
  * @brief Tries to get a mutex, non-blocking.
@@ -85,7 +85,7 @@ int _mutex_lock(mutex_t *mutex, int blocking);
  * @return 1 if mutex was unlocked, now it is locked.
  * @return 0 if the mutex was locked.
  */
-static int mutex_trylock(mutex_t *mutex);
+int mutex_trylock(mutex_t* XDATA mutex);
 /*static inline int mutex_trylock(mutex_t *mutex)
 {
     return _mutex_lock(mutex, 0);
@@ -96,7 +96,7 @@ static int mutex_trylock(mutex_t *mutex);
  *
  * @param[in] mutex Mutex object to lock. Has to be initialized first. Must not be NULL.
  */
-static void mutex_lock(mutex_t *mutex);
+void mutex_lock(mutex_t* XDATA mutex);
 /*static inline void mutex_lock(mutex_t *mutex)
 {
     _mutex_lock(mutex, 1);
@@ -107,14 +107,14 @@ static void mutex_lock(mutex_t *mutex);
  *
  * @param[in] mutex Mutex object to unlock, must not be NULL.
  */
-void mutex_unlock(mutex_t *mutex);
+void mutex_unlock(mutex_t* XDATA mutex);
 
 /**
  * @brief Unlocks the mutex and sends the current thread to sleep
  *
  * @param[in] mutex Mutex object to unlock, must not be NULL.
  */
-void mutex_unlock_and_sleep(mutex_t *mutex);
+void mutex_unlock_and_sleep(mutex_t* XDATA mutex);
 
 #ifdef __cplusplus
 }

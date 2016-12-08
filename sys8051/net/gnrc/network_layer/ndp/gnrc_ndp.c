@@ -92,7 +92,7 @@ static void _stale_nc(kernel_pid_t iface, ipv6_addr_t *ipaddr, uint8_t *l2addr,
 
 void gnrc_ndp_nbr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_nbr_sol_t *nbr_sol,
-                             size_t icmpv6_size)
+                             uint32_t icmpv6_size)
 {
     uint16_t opt_offset = 0;
     uint8_t l2src[GNRC_IPV6_NC_L2_ADDR_MAX];
@@ -197,7 +197,7 @@ void gnrc_ndp_nbr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                                    nbr_adv_opts);
 }
 
-static inline bool _pkt_has_l2addr(gnrc_netif_hdr_t *netif_hdr)
+bool _pkt_has_l2addr(gnrc_netif_hdr_t *netif_hdr)
 {
     return (netif_hdr != NULL) && (netif_hdr->src_l2addr_len != 0) &&
            (netif_hdr->dst_l2addr_len != 0);
@@ -205,7 +205,7 @@ static inline bool _pkt_has_l2addr(gnrc_netif_hdr_t *netif_hdr)
 
 void gnrc_ndp_nbr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_nbr_adv_t *nbr_adv,
-                             size_t icmpv6_size)
+                             uint32_t icmpv6_size)
 {
     uint16_t opt_offset = 0;
     uint8_t *buf = ((uint8_t *)nbr_adv) + sizeof(ndp_nbr_adv_t);
@@ -376,7 +376,7 @@ void gnrc_ndp_nbr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
 #if (defined(MODULE_GNRC_NDP_ROUTER) || defined(MODULE_GNRC_SIXLOWPAN_ND_ROUTER))
 void gnrc_ndp_rtr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
                              ipv6_hdr_t *ipv6, ndp_rtr_sol_t *rtr_sol,
-                             size_t icmpv6_size)
+                             uint32_t icmpv6_size)
 {
     gnrc_ipv6_netif_t *if_entry = gnrc_ipv6_netif_get(iface);
 
@@ -478,7 +478,7 @@ void gnrc_ndp_rtr_sol_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt,
 }
 #endif
 
-static inline void _set_reach_time(gnrc_ipv6_netif_t *if_entry, uint32_t mean)
+void _set_reach_time(gnrc_ipv6_netif_t *if_entry, uint32_t mean)
 {
     uint32_t reach_time = random_uint32_range(GNRC_NDP_MIN_RAND, GNRC_NDP_MAX_RAND);
 
@@ -491,7 +491,7 @@ static inline void _set_reach_time(gnrc_ipv6_netif_t *if_entry, uint32_t mean)
 
 /* 8051 implementation */
 void gnrc_ndp_rtr_adv_handle(kernel_pid_t iface, gnrc_pktsnip_t *pkt, ipv6_hdr_t *ipv6,
-                             ndp_rtr_adv_t *rtr_adv, size_t icmpv6_size)
+                             ndp_rtr_adv_t *rtr_adv, uint32_t icmpv6_size)
 {
     uint8_t *buf = (uint8_t *)(rtr_adv + 1);
     gnrc_ipv6_nc_t *nc_entry = NULL;
@@ -676,8 +676,8 @@ void gnrc_ndp_retrans_nbr_sol(gnrc_ipv6_nc_t *nc_entry)
 	    /* 8051 implementation */
             //if (nc_entry->iface == KERNEL_PID_UNDEF) {
 	    if (nc_entry-> iface == 0) {
-                size_t ifnum = 0;
-                size_t i = 0;
+                uint32_t ifnum = 0;
+                uint32_t i = 0;
                 kernel_pid_t ifs[GNRC_NETIF_NUMOF];
                 ifnum = gnrc_netif_get(ifs);
 
@@ -821,13 +821,13 @@ gnrc_pktsnip_t *gnrc_ndp_rtr_sol_build(gnrc_pktsnip_t *options)
     return pkt;
 }
 
-static inline size_t _ceil8(uint8_t length)
+uint32_t _ceil8(uint8_t length)
 {
     /* NDP options use units of 8 byte for there length field, so round up */
     return (length + 7U) & 0xf8U;
 }
 
-gnrc_pktsnip_t *gnrc_ndp_opt_build(uint8_t type, size_t size, gnrc_pktsnip_t *next)
+gnrc_pktsnip_t *gnrc_ndp_opt_build(uint8_t type, uint32_t size, gnrc_pktsnip_t *next)
 {
     ndp_opt_t *opt;
     gnrc_pktsnip_t *pkt = gnrc_pktbuf_add(next, NULL, _ceil8(size), GNRC_NETTYPE_UNDEF);
@@ -845,7 +845,7 @@ gnrc_pktsnip_t *gnrc_ndp_opt_build(uint8_t type, size_t size, gnrc_pktsnip_t *ne
     return pkt;
 }
 
-static inline gnrc_pktsnip_t *_opt_l2a_build(uint8_t type, const uint8_t *l2addr,
+gnrc_pktsnip_t *_opt_l2a_build(uint8_t type, const uint8_t *l2addr,
                                              uint8_t l2addr_len, gnrc_pktsnip_t *next)
 {
     gnrc_pktsnip_t *pkt = gnrc_ndp_opt_build(type, sizeof(ndp_opt_t) + l2addr_len, next);

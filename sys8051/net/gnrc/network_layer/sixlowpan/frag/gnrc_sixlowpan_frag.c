@@ -30,25 +30,25 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 
-#if ENABLE_DEBUG
+//#if ENABLE_DEBUG
 /* For PRIu16 etc. */
-#include <inttypes.h>
-#endif
+//#include <inttypes.h>
+//#endif
 
-static uint16_t _tag;
+uint16_t XDATA _tag;
 
-static inline uint16_t _floor8(uint16_t length)
+uint16_t _floor8(uint16_t length)
 {
     return length & 0xf8U;
 }
 
-static inline size_t _min(size_t a, size_t b)
+uint32_t _min(uint32_t a, uint32_t b)
 {
     return (a < b) ? a : b;
 }
 
-static gnrc_pktsnip_t *_build_frag_pkt(gnrc_pktsnip_t *pkt, size_t payload_len,
-                                       size_t size)
+gnrc_pktsnip_t *_build_frag_pkt(gnrc_pktsnip_t *pkt, uint32_t payload_len,
+                                       uint32_t size)
 {
     gnrc_netif_hdr_t *hdr = pkt->data, *new_hdr;
     gnrc_pktsnip_t *netif, *frag;
@@ -81,8 +81,8 @@ static gnrc_pktsnip_t *_build_frag_pkt(gnrc_pktsnip_t *pkt, size_t payload_len,
     return frag;
 }
 
-static uint16_t _send_1st_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t *pkt,
-                                   size_t payload_len, size_t datagram_size)
+uint16_t _send_1st_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t *pkt,
+                                   uint32_t payload_len, uint32_t datagram_size)
 {
     gnrc_pktsnip_t *frag;
     uint16_t local_offset = 0;
@@ -115,7 +115,7 @@ static uint16_t _send_1st_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t
     pkt = pkt->next;    /* don't copy netif header */
 
     while (pkt != NULL) {
-        size_t clen = _min(max_frag_size - local_offset, pkt->size);
+        uint32_t clen = _min(max_frag_size - local_offset, pkt->size);
 
         memcpy(data + local_offset, pkt->data, clen);
         local_offset += clen;
@@ -138,8 +138,8 @@ static uint16_t _send_1st_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t
     return local_offset;
 }
 
-static uint16_t _send_nth_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t *pkt,
-                                   size_t payload_len, size_t datagram_size,
+uint16_t _send_nth_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t *pkt,
+                                   uint32_t payload_len, uint32_t datagram_size,
                                    uint16_t offset)
 {
     gnrc_pktsnip_t *frag;
@@ -177,7 +177,7 @@ static uint16_t _send_nth_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t
         if (offset_count > offset) {    /* we overshot */
             /* => copy rest of partly send packet snip */
             uint16_t pkt_offset = offset - (offset_count - ((uint16_t)pkt->size));
-            size_t clen = _min(max_frag_size, pkt->size - pkt_offset);
+            uint32_t clen = _min(max_frag_size, pkt->size - pkt_offset);
 
             memcpy(data, ((uint8_t *)pkt->data) + pkt_offset, clen);
             local_offset = clen;
@@ -190,7 +190,7 @@ static uint16_t _send_nth_fragment(gnrc_sixlowpan_netif_t *iface, gnrc_pktsnip_t
 
     if (local_offset < max_frag_size) { /* copy other packet snips */
         while (pkt != NULL) {
-            size_t clen = _min(max_frag_size - local_offset, pkt->size);
+            uint32_t clen = _min(max_frag_size - local_offset, pkt->size);
 
             memcpy(data + local_offset, pkt->data, clen);
             local_offset += clen;
@@ -222,7 +222,7 @@ void gnrc_sixlowpan_frag_send(gnrc_sixlowpan_msg_frag_t *fragment_msg)
     uint16_t res;
     /* payload_len: actual size of the packet vs
      * datagram_size: size of the uncompressed IPv6 packet */
-    size_t payload_len = gnrc_pkt_len(fragment_msg->pkt->next);
+    uint32_t payload_len = gnrc_pkt_len(fragment_msg->pkt->next);
     msg_t msg;
 
 #if defined(DEVELHELP) && defined(ENABLE_DEBUG)
@@ -287,7 +287,7 @@ void gnrc_sixlowpan_frag_handle_pkt(gnrc_pktsnip_t *pkt)
     gnrc_netif_hdr_t *hdr = pkt->next->data;
     sixlowpan_frag_t *frag = pkt->data;
     uint16_t offset = 0;
-    size_t frag_size;
+    uint32_t frag_size;
 
     switch (frag->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) {
         case SIXLOWPAN_FRAG_1_DISP:

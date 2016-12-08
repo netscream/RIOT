@@ -27,21 +27,21 @@
 /* TODO: generalize and centralize (see https://github.com/RIOT-OS/RIOT/pull/3184) */
 #define MIN(a, b)   ((a) < (b)) ? (a) : (b)
 
-static inline size_t _fit(gnrc_pktsnip_t *pkt)
+uint32_t _fit(gnrc_pktsnip_t *pkt)
 {
     /* TODO: replace IPV6_MIN_MTU with known path MTU? */
     return MIN((gnrc_pkt_len(pkt) + ICMPV6_ERROR_SZ), IPV6_MIN_MTU);
 }
 
 /* Build a generic error message */
-static gnrc_pktsnip_t *_icmpv6_error_build(uint8_t type, uint8_t code,
+gnrc_pktsnip_t *_icmpv6_error_build(uint8_t type, uint8_t code,
                                            gnrc_pktsnip_t *orig_pkt, uint32_t value)
 {
     gnrc_pktsnip_t *pkt = gnrc_icmpv6_build(NULL, type, code, _fit(orig_pkt));
 
     /* copy as much of the originating packet into error message as fits the message's size */
     if (pkt != NULL) {
-        size_t offset = ICMPV6_ERROR_SZ;
+        uint32_t offset = ICMPV6_ERROR_SZ;
         uint8_t *data = pkt->data;
         ICMPV6_ERROR_SET_VALUE(data, value);
         while ((orig_pkt != NULL) && (offset < pkt->size)) {
@@ -70,7 +70,7 @@ gnrc_pktsnip_t *gnrc_icmpv6_error_time_exc_build(uint8_t code, gnrc_pktsnip_t *o
     return _icmpv6_error_build(ICMPV6_TIME_EXC, code, orig_pkt, 0);
 }
 
-static inline bool _in_range(uint8_t *ptr, uint8_t *start, size_t sz)
+bool _in_range(uint8_t *ptr, uint8_t *start, uint32_t sz)
 {
     return (ptr >= start) && (ptr < (start + sz));
 }
@@ -84,7 +84,7 @@ gnrc_pktsnip_t *gnrc_icmpv6_error_param_prob_build(uint8_t code, void *ptr,
     /* copy as much of the originating packet into error message and
      * determine relative *ptr* offset */
     if (pkt != NULL) {
-        size_t offset = sizeof(icmpv6_error_param_prob_t);
+        uint32_t offset = sizeof(icmpv6_error_param_prob_t);
         uint8_t *data = pkt->data;
         uint32_t ptr_offset = 0U;
         bool found_offset = false;
@@ -117,6 +117,63 @@ gnrc_pktsnip_t *gnrc_icmpv6_error_param_prob_build(uint8_t code, void *ptr,
     }
 
     return pkt;
+}
+
+void gnrc_icmpv6_error_dst_unr_send(uint8_t code, gnrc_pktsnip_t *orig_pkt)
+{
+    gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_dst_unr_build(code, orig_pkt);
+
+    if (pkt != NULL) {
+        gnrc_netapi_send(gnrc_ipv6_pid, pkt);
+    }
+#ifdef MODULE_GNRC_PKTBUF
+    gnrc_pktbuf_release_error(orig_pkt, EHOSTUNREACH);
+#else
+    (void)orig_pkt;
+#endif
+}
+
+void gnrc_icmpv6_error_pkt_too_big_send(uint32_t mtu, gnrc_pktsnip_t *orig_pkt)
+{
+    gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_pkt_too_big_build(mtu, orig_pkt);
+
+    if (pkt != NULL) {
+        gnrc_netapi_send(gnrc_ipv6_pid, pkt);
+    }
+#ifdef MODULE_GNRC_PKTBUF
+    gnrc_pktbuf_release_error(orig_pkt, EMSGSIZE);
+#else
+    (void)orig_pkt;
+#endif
+}
+
+void gnrc_icmpv6_error_time_exc_send(uint8_t code, gnrc_pktsnip_t *orig_pkt)
+{
+    gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_time_exc_build(code, orig_pkt);
+
+    if (pkt != NULL) {
+        gnrc_netapi_send(gnrc_ipv6_pid, pkt);
+    }
+#ifdef MODULE_GNRC_PKTBUF
+    gnrc_pktbuf_release_error(orig_pkt, ETIMEDOUT);
+#else
+    (void)orig_pkt;
+#endif
+}
+
+void gnrc_icmpv6_error_param_prob_send(uint8_t code, void *ptr,
+                                                     gnrc_pktsnip_t *orig_pkt)
+{
+    gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_param_prob_build(code, ptr, orig_pkt);
+
+    if (pkt != NULL) {
+        gnrc_netapi_send(gnrc_ipv6_pid, pkt);
+    }
+#ifdef MODULE_GNRC_PKTBUF
+    gnrc_pktbuf_release_error(orig_pkt, EINVAL);
+#else
+    (void)orig_pkt;
+#endif
 }
 
 /** @} */

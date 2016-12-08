@@ -15,7 +15,7 @@
 
 #include "net/gnrc/netif.h"
 
-static inline int _dehex(char c, int default_)
+int _dehex(char c, int default_)
 {
     if ('0' <= c && c <= '9') {
         return c - '0';
@@ -31,7 +31,7 @@ static inline int _dehex(char c, int default_)
     }
 }
 
-size_t gnrc_netif_addr_from_str(uint8_t *out, size_t out_len, const char *str)
+uint32_t gnrc_netif_addr_from_str(uint8_t *out, uint32_t out_len, const char *str)
 {
     /* Walk over str from the end. */
     /* Take two chars a time as one hex value (%hhx). */
@@ -41,7 +41,7 @@ size_t gnrc_netif_addr_from_str(uint8_t *out, size_t out_len, const char *str)
 
     const char *end_str = str;
     uint8_t *out_end = out;
-    size_t count = 0;
+    uint32_t count = 0;
     int assert_cell = 1;
 
     if (!str || !*str) {

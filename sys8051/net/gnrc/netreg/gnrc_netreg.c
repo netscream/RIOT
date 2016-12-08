@@ -12,8 +12,8 @@
  * @file
  */
 
-#include <errno.h>
-#include <string.h>
+//#include <errno.h>
+//#include <string.h>
 
 #include "assert.h"
 #include "utlist.h"
@@ -24,24 +24,26 @@
 #include "net/gnrc/ipv6.h"
 #include "net/gnrc/udp.h"
 
-#define _INVALID_TYPE(type) (((type) < GNRC_NETTYPE_UNDEF) || ((type) >= GNRC_NETTYPE_NUMOF))
+//#define _INVALID_TYPE(type) (((type) < GNRC_NETTYPE_UNDEF) || ((type) >= GNRC_NETTYPE_NUMOF))
 
 /* The registry as lookup table by gnrc_nettype_t */
-static gnrc_netreg_entry_t *netreg[GNRC_NETTYPE_NUMOF];
+gnrc_netreg_entry_t* XDATA netreg[GNRC_NETTYPE_NUMOF];
 
 void gnrc_netreg_init(void)
 {
     /* set all pointers in registry to NULL */
-    memset(netreg, 0, GNRC_NETTYPE_NUMOF * sizeof(gnrc_netreg_entry_t *));
+    //memset(netreg, 0, GNRC_NETTYPE_NUMOF * sizeof(gnrc_netreg_entry_t *));
+    memset(netreg, 0, 1 * sizeof(gnrc_netreg_entry_t *));
 }
 
 /* 8051 implementation */
-int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t *entry)
+int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t* XDATA entry)
 {
     /* only threads with a message queue are allowed to register at gnrc */
     //assert(sched_threads[entry->pid]->msg_array);
 
-    if (_INVALID_TYPE(type)) {
+    //if (_INVALID_TYPE(type)) {
+    if (type < 0 || type >= 1){
         return -22;
     }
 
@@ -50,20 +52,22 @@ int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t *entry)
     return 0;
 }
 
-void gnrc_netreg_unregister(gnrc_nettype_t type, gnrc_netreg_entry_t *entry)
+void gnrc_netreg_unregister(gnrc_nettype_t type, gnrc_netreg_entry_t* XDATA entry)
 {
-    if (_INVALID_TYPE(type)) {
+    //if (_INVALID_TYPE(type)) {
+    if (type < 0 || type >= 1){
         return;
     }
 
     LL_DELETE(netreg[type], entry);
 }
 
-gnrc_netreg_entry_t *gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t demux_ctx)
+gnrc_netreg_entry_t* gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t XDATA demux_ctx)
 {
-    gnrc_netreg_entry_t *res;
+    gnrc_netreg_entry_t* XDATA res;
 
-    if (_INVALID_TYPE(type)) {
+    //if (_INVALID_TYPE(type)) {
+    if (type < 0 || type >= 1){
         return NULL;
     }
 
@@ -72,12 +76,13 @@ gnrc_netreg_entry_t *gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t demux_ctx)
     return res;
 }
 
-int gnrc_netreg_num(gnrc_nettype_t type, uint32_t demux_ctx)
+int gnrc_netreg_num(gnrc_nettype_t type, uint32_t XDATA demux_ctx)
 {
-    int num = 0;
-    gnrc_netreg_entry_t *entry;
+    int XDATA num = 0;
+    gnrc_netreg_entry_t* XDATA entry;
 
-    if (_INVALID_TYPE(type)) {
+    //if (_INVALID_TYPE(type)) {
+    if (type < 0 || type >= 1){
         return 0;
     }
 
@@ -94,9 +99,9 @@ int gnrc_netreg_num(gnrc_nettype_t type, uint32_t demux_ctx)
     return num;
 }
 
-gnrc_netreg_entry_t *gnrc_netreg_getnext(gnrc_netreg_entry_t *entry)
+gnrc_netreg_entry_t* gnrc_netreg_getnext(gnrc_netreg_entry_t* XDATA entry)
 {
-    uint32_t demux_ctx;
+    uint32_t XDATA demux_ctx;
 
     if (entry == NULL) {
         return NULL;
@@ -109,7 +114,7 @@ gnrc_netreg_entry_t *gnrc_netreg_getnext(gnrc_netreg_entry_t *entry)
     return entry;
 }
 
-int gnrc_netreg_calc_csum(gnrc_pktsnip_t *hdr, gnrc_pktsnip_t *pseudo_hdr)
+int gnrc_netreg_calc_csum(gnrc_pktsnip_t* XDATA hdr, gnrc_pktsnip_t* XDATA pseudo_hdr)
 {
     if (pseudo_hdr == NULL) {
         /* XXX: Might be allowed for future checksums.

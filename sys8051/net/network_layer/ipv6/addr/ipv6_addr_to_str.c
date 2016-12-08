@@ -152,7 +152,7 @@ char *ipv6_addr_to_str(char *result, const ipv6_addr_t *addr, uint8_t result_len
     /*
      * Check for overflow, copy, and we're done.
      */
-    if ((size_t)(tp - tmp) > result_len) {
+    if ((uint32_t)(tp - tmp) > result_len) {
         return NULL;
     }
 

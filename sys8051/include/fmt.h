@@ -25,9 +25,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Format a byte value as hex
@@ -86,7 +86,7 @@ size_t fmt_u32_hex(char *out, uint32_t val);
  *
  * @return      16
  */
-size_t fmt_u64_hex(char *out, uint64_t val);
+//size_t fmt_u64_hex(char *out, uint64_t val);
 
 /**
  * @brief Convert a uint32 value to decimal string.
@@ -114,7 +114,7 @@ size_t fmt_u32_dec(char *out, uint32_t val);
  *
  * @return      nr of digits written to (or needed in) @p out
  */
-size_t fmt_u64_dec(char *out, uint64_t val);
+//size_t fmt_u64_dec(char *out, uint64_t val);
 
 /**
  * @brief Convert a uint16 value to decimal string.
@@ -257,7 +257,7 @@ void print_u32_hex(uint32_t val);
  *
  * @param[in]   val  Value to print
  */
-void print_u64_hex(uint64_t val);
+//void print_u64_hex(uint64_t val);
 
 /**
  * @brief Print uint64 value as decimal to stdout
@@ -266,7 +266,7 @@ void print_u64_hex(uint64_t val);
  *
  * @param[in]   val  Value to print
  */
-void print_u64_dec(uint64_t val);
+//void print_u64_dec(uint64_t val);
 
 /**
  * @brief Print null-terminated string to stdout
@@ -275,9 +275,9 @@ void print_u64_dec(uint64_t val);
  */
 void print_str(const char* str);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 /** @} */
 #endif /* FMT_H_ */

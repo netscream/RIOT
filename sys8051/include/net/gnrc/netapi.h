@@ -33,34 +33,34 @@
 #include "net/gnrc/nettype.h"
 #include "net/gnrc/pkt.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   @ref core_msg type for passing a @ref net_gnrc_pkt up the network stack
  */
-#define GNRC_NETAPI_MSG_TYPE_RCV        (0x0201)
+//#define GNRC_NETAPI_MSG_TYPE_RCV        (0x0201)
 
 /**
  * @brief   @ref core_msg type for passing a @ref net_gnrc_pkt down the network stack
  */
-#define GNRC_NETAPI_MSG_TYPE_SND        (0x0202)
+//#define GNRC_NETAPI_MSG_TYPE_SND        (0x0202)
 
 /**
  * @brief   @ref core_msg type for setting options of network modules
  */
-#define GNRC_NETAPI_MSG_TYPE_SET        (0x0203)
+//#define GNRC_NETAPI_MSG_TYPE_SET        (0x0203)
 
 /**
  * @brief   @ref core_msg type for getting options from network modules
  */
-#define GNRC_NETAPI_MSG_TYPE_GET        (0x0204)
+//#define GNRC_NETAPI_MSG_TYPE_GET        (0x0204)
 
 /**
  * @brief   @ref core_msg type for replying to get and set option messages
  */
-#define GNRC_NETAPI_MSG_TYPE_ACK        (0x0205)
+///#define GNRC_NETAPI_MSG_TYPE_ACK        (0x0205)
 
 /**
  * @brief   Data structure to be send for setting (@ref GNRC_NETAPI_MSG_TYPE_SET)
@@ -82,7 +82,7 @@ typedef struct {
  * @return              1 if packet was successfully delivered
  * @return              -1 on error (invalid PID or no space in queue)
  */
-int gnrc_netapi_send(kernel_pid_t pid, gnrc_pktsnip_t *pkt);
+int gnrc_netapi_send(kernel_pid_t XDATA pid, gnrc_pktsnip_t* XDATA pkt);
 
 /**
  * @brief   Sends @p cmd to all subscribers to (@p type, @p demux_ctx).
@@ -94,8 +94,8 @@ int gnrc_netapi_send(kernel_pid_t pid, gnrc_pktsnip_t *pkt);
  *
  * @return Number of subscribers to (@p type, @p demux_ctx).
  */
-int gnrc_netapi_dispatch(gnrc_nettype_t type, uint32_t demux_ctx, uint16_t cmd,
-                         gnrc_pktsnip_t *pkt);
+int gnrc_netapi_dispatch(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx, uint16_t XDATA cmd,
+                         gnrc_pktsnip_t* XDATA pkt);
 
 /**
  * @brief   Sends a @ref GNRC_NETAPI_MSG_TYPE_SND command to all subscribers to
@@ -107,11 +107,12 @@ int gnrc_netapi_dispatch(gnrc_nettype_t type, uint32_t demux_ctx, uint16_t cmd,
  *
  * @return Number of subscribers to (@p type, @p demux_ctx).
  */
-static inline int gnrc_netapi_dispatch_send(gnrc_nettype_t type, uint32_t demux_ctx,
-                                            gnrc_pktsnip_t *pkt)
-{
-    return gnrc_netapi_dispatch(type, demux_ctx, GNRC_NETAPI_MSG_TYPE_SND, pkt);
-}
+int gnrc_netapi_dispatch_send(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx,
+                                            gnrc_pktsnip_t* XDATA pkt);
+/*{
+  	//return gnrc_netapi_dispatch(type, demux_ctx, GNRC_NETAPI_MSG_TYPE_SND, pkt);
+	return gnrc_netapi_dispatch(type, demux_ctx, 0x0202, pkt);
+}*/
 
 /**
  * @brief   Shortcut function for sending @ref GNRC_NETAPI_MSG_TYPE_RCV messages
@@ -122,7 +123,7 @@ static inline int gnrc_netapi_dispatch_send(gnrc_nettype_t type, uint32_t demux_
  * @return              1 if packet was successfully delivered
  * @return              -1 on error (invalid PID or no space in queue)
  */
-int gnrc_netapi_receive(kernel_pid_t pid, gnrc_pktsnip_t *pkt);
+int gnrc_netapi_receive(kernel_pid_t XDATA pid, gnrc_pktsnip_t* XDATA pkt);
 
 /**
  * @brief   Sends a @ref GNRC_NETAPI_MSG_TYPE_RCV command to all subscribers to
@@ -134,11 +135,12 @@ int gnrc_netapi_receive(kernel_pid_t pid, gnrc_pktsnip_t *pkt);
  *
  * @return Number of subscribers to (@p type, @p demux_ctx).
  */
-static inline int gnrc_netapi_dispatch_receive(gnrc_nettype_t type, uint32_t demux_ctx,
-                                               gnrc_pktsnip_t *pkt)
-{
-    return gnrc_netapi_dispatch(type, demux_ctx, GNRC_NETAPI_MSG_TYPE_RCV, pkt);
-}
+int gnrc_netapi_dispatch_receive(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx,
+                                               gnrc_pktsnip_t* XDATA pkt);
+/*{
+    //return gnrc_netapi_dispatch(type, demux_ctx, GNRC_NETAPI_MSG_TYPE_RCV, pkt);
+    return gnrc_netapi_dispatch(type, demux_ctx, 0x0201, pkt);
+}*/
 
 /**
  * @brief   Shortcut function for sending @ref GNRC_NETAPI_MSG_TYPE_GET messages and
@@ -155,8 +157,8 @@ static inline int gnrc_netapi_dispatch_receive(gnrc_nettype_t type, uint32_t dem
  *                      actual error value is for the implementation to decide but should be
  *                      sensible to indicate what went wrong.
  */
-int gnrc_netapi_get(kernel_pid_t pid, netopt_t opt, uint16_t context,
-                    void *data, size_t max_len);
+int gnrc_netapi_get(kernel_pid_t XDATA pid, netopt_t XDATA opt, uint16_t XDATA context,
+                    void* XDATA data, uint32_t XDATA max_len);
 
 /**
  * @brief   Shortcut function for sending @ref GNRC_NETAPI_MSG_TYPE_SET messages and
@@ -173,12 +175,16 @@ int gnrc_netapi_get(kernel_pid_t pid, netopt_t opt, uint16_t context,
  *                      implementation to decide but should be sensible to indicate what went
  *                      wrong.
  */
-int gnrc_netapi_set(kernel_pid_t pid, netopt_t opt, uint16_t context,
-                    void *data, size_t data_len);
+int gnrc_netapi_set(kernel_pid_t XDATA pid, netopt_t XDATA opt, uint16_t XDATA context,
+                    void* XDATA data, uint32_t XDATA data_len);
 
-#ifdef __cplusplus
+int _get_set(kernel_pid_t XDATA pid, uint16_t XDATA type,
+                           netopt_t XDATA opt, uint16_t XDATA context,
+                           void* XDATA data, uint32_t XDATA data_len);
+int _snd_rcv(kernel_pid_t XDATA pid, uint16_t XDATA type, gnrc_pktsnip_t* XDATA pkt);
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETAPI_H_ */
 /**

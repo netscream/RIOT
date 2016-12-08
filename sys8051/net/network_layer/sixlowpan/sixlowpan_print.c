@@ -19,9 +19,11 @@
 #include "net/ipv6/hdr.h"
 #include "net/sixlowpan.h"
 
-void sixlowpan_print(uint8_t *data, size_t size)
+void sixlowpan_print(uint8_t *data, uint32_t size)
 {
-    if (data[0] == SIXLOWPAN_UNCOMP) {
+    uint8_t offset = 0;
+    //if (data[0] == SIXLOWPAN_UNCOMP) {
+    if (data[0] == 0x41) {
         puts("Uncompressed IPv6 packet");
 
         /* might just be the dispatch (or fragmented) so better check */
@@ -36,36 +38,41 @@ void sixlowpan_print(uint8_t *data, size_t size)
         puts("Not a LoWPAN (NALP) frame");
         od_hex_dump(data, size, OD_WIDTH_DEFAULT);
     }
-    else if ((data[0] & SIXLOWPAN_FRAG_DISP_MASK) == SIXLOWPAN_FRAG_1_DISP) {
+    else if ((data[0] & 0xf8) == 0xc0) {
+    //else if ((data[0] & SIXLOWPAN_FRAG_DISP_MASK) == SIXLOWPAN_FRAG_1_DISP) {
         sixlowpan_frag_t *hdr = (sixlowpan_frag_t *)data;
 
-        puts("Fragmentation Header (first)");
-        printf("datagram size: %" PRIu16 "\n",
-               (uint16_t) (byteorder_ntohs(hdr->disp_size) & SIXLOWPAN_FRAG_SIZE_MASK));
-        printf("tag: 0x%" PRIu16 "\n", byteorder_ntohs(hdr->tag));
-
+        puts("Fragmentation Header (first)\n");
+        //printf("datagram size: %" PRIu16 "\n",
+	//printf("datagram size: %d\n", (byteorder_ntohs(hdr->disp_size) & 0x07ff));
+        //printf("tag: 0x%" PRIu16 "\n", byteorder_ntohs(hdr->tag));
+	//printf("tag: 0x%x\n", byteorder_ntohs(hdr->tag));
         /* Print next dispatch */
         sixlowpan_print(data + sizeof(sixlowpan_frag_t),
                            size - sizeof(sixlowpan_frag_t));
     }
-    else if ((data[0] & SIXLOWPAN_FRAG_DISP_MASK) == SIXLOWPAN_FRAG_N_DISP) {
+    else if ((data[0] & 0xf8) == 0xe0) {
+    //else if ((data[0] & SIXLOWPAN_FRAG_DISP_MASK) == SIXLOWPAN_FRAG_N_DISP) {
         sixlowpan_frag_n_t *hdr = (sixlowpan_frag_n_t *)data;
 
         puts("Fragmentation Header (subsequent)");
-        printf("datagram size: %" PRIu16 "\n",
-               (uint16_t) (byteorder_ntohs(hdr->disp_size) & SIXLOWPAN_FRAG_SIZE_MASK));
-        printf("tag: 0x%" PRIu16 "\n", byteorder_ntohs(hdr->tag));
-        printf("offset: 0x%" PRIu8 "\n", hdr->offset);
+        //printf("datagram size: %" PRIu16 "\n",
+	//printf("datagram size: %d\n", (uint16_t) (byteorder_ntohs(hdr->disp_size) & 0x07ff));
+        //printf("tag: 0x%d\n", byteorder_ntohs(hdr->tag));
+        printf("offset: 0x%d\n", hdr->offset);
 
         od_hex_dump(data + sizeof(sixlowpan_frag_n_t),
                     size - sizeof(sixlowpan_frag_n_t),
                     OD_WIDTH_DEFAULT);
     }
-    else if ((data[0] & SIXLOWPAN_IPHC1_DISP_MASK) == SIXLOWPAN_IPHC1_DISP) {
-        uint8_t offset = SIXLOWPAN_IPHC_HDR_LEN;
+    else if ((data[0] & 0xe0) == 0x60) {
+    //else if ((data[0] & SIXLOWPAN_IPHC1_DISP_MASK) == SIXLOWPAN_IPHC1_DISP) {
+        //uint8_t offset = SIXLOWPAN_IPHC_HDR_LEN;
+	offset = 2;
         puts("IPHC dispatch");
 
-        switch (data[0] & SIXLOWPAN_IPHC1_TF) {
+        //switch (data[0] & SIXLOWPAN_IPHC1_TF) {
+	switch (data[0] & 0x18) {
             case 0x00:
                 puts("TF: ECN + DSCP + Flow Label (4 bytes)");
                 break;
@@ -83,7 +90,8 @@ void sixlowpan_print(uint8_t *data, size_t size)
                 break;
         }
 
-        switch (data[0] & SIXLOWPAN_IPHC1_NH) {
+        //switch (data[0] & SIXLOWPAN_IPHC1_NH) {
+	switch (data[0] & 0x18) {
             case 0x00:
                 puts("NH: inline");
                 break;
@@ -93,7 +101,8 @@ void sixlowpan_print(uint8_t *data, size_t size)
                 break;
         }
 
-        switch (data[0] & SIXLOWPAN_IPHC1_HL) {
+        //switch (data[0] & SIXLOWPAN_IPHC1_HL) {
+	switch (data[0] & 0x03) {
             case 0x00:
                 puts("HLIM: inline");
                 break;
@@ -111,10 +120,12 @@ void sixlowpan_print(uint8_t *data, size_t size)
                 break;
         }
 
-        if (data[1] & SIXLOWPAN_IPHC2_SAC) {
+        //if (data[1] & SIXLOWPAN_IPHC2_SAC) {
+	if (data[1] & 0x40) {
             printf("Stateful source address compression: ");
 
-            switch (data[1] & SIXLOWPAN_IPHC2_SAM) {
+            //switch (data[1] & SIXLOWPAN_IPHC2_SAM) {
+	    switch (data[1] & 0x30) {
                 case 0x00:
                     puts("unspecified address (::)");
                     break;
@@ -135,7 +146,8 @@ void sixlowpan_print(uint8_t *data, size_t size)
         else {
             printf("Stateless source address compression: ");
 
-            switch (data[1] & SIXLOWPAN_IPHC2_SAM) {
+            //switch (data[1] & SIXLOWPAN_IPHC2_SAM) {
+	    switch (data[1] & 0x30) {
                 case 0x00:
                     puts("128 bits inline");
                     break;
@@ -154,11 +166,14 @@ void sixlowpan_print(uint8_t *data, size_t size)
             }
         }
 
-        if (data[1] & SIXLOWPAN_IPHC2_M) {
-            if (data[1] & SIXLOWPAN_IPHC2_DAC) {
+        //if (data[1] & sixlowpan_iphc2_m) {
+	if (data[1] & 0x08) {
+            //if (data[1] & SIXLOWPAN_IPHC2_DAC) {
+	    if (data[1] & 0x04) {
                 puts("Stateful destinaton multicast address compression:");
 
-                switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+                //switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+		  switch (data[1] & 0x03) {
                     case 0x00:
                         puts("    48 bits carried inline (Unicast-Prefix-based)");
                         break;
@@ -173,7 +188,8 @@ void sixlowpan_print(uint8_t *data, size_t size)
             else {
                 puts("Stateless destinaton multicast address compression:");
 
-                switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+                //switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+		switch (data[1] & 0x03) {
                     case 0x00:
                         puts("    128 bits carried inline");
                         break;
@@ -193,10 +209,12 @@ void sixlowpan_print(uint8_t *data, size_t size)
             }
         }
         else {
-            if (data[1] & SIXLOWPAN_IPHC2_DAC) {
+            //if (data[1] & SIXLOWPAN_IPHC2_DAC) {
+	    if (data[1] & 0x04) {
                 printf("Stateful destinaton address compression: ");
 
-                switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+                //switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+		switch (data[1] & 0x03) {
                     case 0x00:
                         puts("reserved");
                         break;
@@ -217,7 +235,8 @@ void sixlowpan_print(uint8_t *data, size_t size)
             else {
                 printf("Stateless destinaton address compression: ");
 
-                switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+                //switch (data[1] & SIXLOWPAN_IPHC2_DAM) {
+		switch (data[1] & 0x03) {
                     case 0x00:
                         puts("128 bits inline");
                         break;
@@ -237,14 +256,23 @@ void sixlowpan_print(uint8_t *data, size_t size)
             }
         }
 
-        if (data[1] & SIXLOWPAN_IPHC2_CID_EXT) {
-            offset += SIXLOWPAN_IPHC_CID_EXT_LEN;
-            printf("SCI: 0x%" PRIx8 "; DCI: 0x%" PRIx8 "\n",
+        //if (data[1] & SIXLOWPAN_IPHC2_CID_EXT) {
+	if (data[1] & 0x80) {
+            //offset += SIXLOWPAN_IPHC_CID_EXT_LEN;
+	    offset += 0x80;
+            //printf("SCI: 0x%" PRIx8 "; DCI: 0x%" PRIx8 "\n",
+	    printf("SCI: 0x%d; DCI: 0x%x\n",
+
                    (uint8_t) (data[2] >> 4), (uint8_t) (data[2] & 0xf));
         }
 
         od_hex_dump(data + offset, size - offset, OD_WIDTH_DEFAULT);
     }
+}
+
+bool sixlowpan_nalp(uint8_t disp)
+{
+    return ((disp & 0xc0) == 0);
 }
 
 /** @} */

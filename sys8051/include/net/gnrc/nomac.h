@@ -24,16 +24,16 @@
 
 #include "net/gnrc/netdev.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Set the default message queue size for NOMAC layers
  */
-#ifndef GNRC_NOMAC_MSG_QUEUE_SIZE
+/*#ifndef GNRC_NOMAC_MSG_QUEUE_SIZE
 #define GNRC_NOMAC_MSG_QUEUE_SIZE       (8U)
-#endif
+#endif*/
 
 /**
  * @brief   Initialize an instance of the NOMAC layer
@@ -54,9 +54,9 @@ extern "C" {
 kernel_pid_t gnrc_nomac_init(char *stack, int stacksize, char priority,
                              const char *name, gnrc_netdev_t *dev);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* __NOMAC_H_ */
 /** @} */

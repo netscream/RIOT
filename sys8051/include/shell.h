@@ -72,8 +72,32 @@ typedef struct shell_command_t {
  *
  * @returns         This function does not return.
  */
-void shell_run(const shell_command_t *commands, char *line_buf, int len) NORETURN;
+//void shell_run(const shell_command_t *commands, char *line_buf, int len) NORETURN;
 
+/*
+ * @brief	read a line for the shell
+ * @param[in]   buf	ptr to char array for input
+ * @param[in]   size    size of input array  
+ *
+ * @returns	no return
+ */
+int readline(char *buf, size_t size);
+
+/*
+ * @brief 	handles the line from readline
+ * @param	command_list	ptr to command list
+ * @param	line		ptr to line
+ *
+ * @returns	Returns nothing
+ */
+void handle_input_line(const shell_command_t *command_list, char *line);
+
+/*
+ * @brief	prints the prompt
+ * @param[in]	nothing
+ * @returns	nothing
+ */
+void print_prompt(void);
 /*#ifdef __cplusplus
 }
 #endif*/

@@ -21,9 +21,9 @@
 
 #include "net/gnrc/netdev2.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Initialize gnrc handler thread for netdev2 ethernet device
@@ -36,9 +36,9 @@ extern "C" {
  */
 int gnrc_netdev2_eth_init(gnrc_netdev2_t *gnrc_netdev2, netdev2_t *dev);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETDEV2_ETH_H */
 /** @} */

@@ -43,9 +43,9 @@
 #include "net/fib.h"
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Default stack size to use for the IPv6 thread
@@ -76,7 +76,7 @@ extern "C" {
  * @details This variable is preferred for IPv6 internal communication *only*.
  *          Please use @ref net_gnrc_netreg for external communication.
  */
-extern kernel_pid_t gnrc_ipv6_pid;
+extern kernel_pid_t XDATA gnrc_ipv6_pid;
 
 #ifdef MODULE_FIB
 
@@ -96,7 +96,7 @@ extern kernel_pid_t gnrc_ipv6_pid;
  *
  * @see @ref net_fib
  */
-extern fib_table_t gnrc_ipv6_fib_table;
+extern fib_table_t XDATA gnrc_ipv6_fib_table;
 #endif
 
 /**
@@ -147,9 +147,12 @@ void gnrc_ipv6_demux(kernel_pid_t iface, gnrc_pktsnip_t *current, gnrc_pktsnip_t
  */
 ipv6_hdr_t *gnrc_ipv6_get_header(gnrc_pktsnip_t *pkt);
 
-#ifdef __cplusplus
+void _receive(gnrc_pktsnip_t* XDATA pkt);
+void _send(gnrc_pktsnip_t* XDATA pkt, bool prep_hdr);
+void* _event_loop(void* args);
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IPV6_H_ */
 /**

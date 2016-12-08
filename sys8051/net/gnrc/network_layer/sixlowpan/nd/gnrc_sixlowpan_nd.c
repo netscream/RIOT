@@ -23,10 +23,10 @@
 
 #include "net/gnrc/sixlowpan/nd.h"
 
-#define ENABLE_DEBUG (0)
-#include "debug.h"
+/*#define ENABLE_DEBUG (0)
+#include "debug.h"*/
 
-static inline void _rtr_sol_reschedule(gnrc_ipv6_netif_t *iface, uint32_t sec_delay)
+void _rtr_sol_reschedule(gnrc_ipv6_netif_t *iface, uint32_t sec_delay)
 {
     xtimer_remove(&iface->rtr_sol_timer);
     iface->rtr_sol_msg.type = GNRC_SIXLOWPAN_ND_MSG_MC_RTR_SOL;
@@ -35,12 +35,12 @@ static inline void _rtr_sol_reschedule(gnrc_ipv6_netif_t *iface, uint32_t sec_de
                    gnrc_ipv6_pid);
 }
 
-static inline uint32_t _binary_exp_backoff(uint32_t base_sec, unsigned int exp)
+uint32_t _binary_exp_backoff(uint32_t base_sec, unsigned int exp)
 {
     return random_uint32_range(0, (1 << exp)) * base_sec;
 }
 
-static inline void _revert_iid(uint8_t *iid)
+void _revert_iid(uint8_t *iid)
 {
     iid[0] ^= 0x02;
 }
@@ -51,7 +51,7 @@ void gnrc_sixlowpan_nd_init(gnrc_ipv6_netif_t *iface)
     mutex_lock(&iface->mutex);
     iface->rtr_sol_count = 0;   /* first will be sent immediately */
 
-    DEBUG("6lo nd: retransmit multicast rtr sol in 10 sec\n");
+    //DEBUG("6lo nd: retransmit multicast rtr sol in 10 sec\n");
 #ifndef MODULE_GNRC_SIXLOWPAN_ND_BORDER_ROUTER
     _rtr_sol_reschedule(iface, GNRC_SIXLOWPAN_ND_RTR_SOL_INT);
 #endif
@@ -94,7 +94,7 @@ void gnrc_sixlowpan_nd_mc_rtr_sol(gnrc_ipv6_netif_t *iface)
             interval = GNRC_SIXLOWPAN_ND_MAX_RTR_SOL_INT;
         }
 
-        DEBUG("6lo nd: retransmit multicast rtr sol in %" PRIu32 " sec\n", interval);
+        //DEBUG("6lo nd: retransmit multicast rtr sol in %" PRIu32 " sec\n", interval);
     }
     _rtr_sol_reschedule(iface, interval);
     mutex_unlock(&iface->mutex);
@@ -129,7 +129,7 @@ kernel_pid_t gnrc_sixlowpan_nd_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_
     ipv6_addr_t next_hop_actual;    /* FIB copies address into this variable */
     /* don't look-up link local addresses in FIB */
     if ((next_hop == NULL) && !ipv6_addr_is_link_local(dst)) {
-        size_t next_hop_size = sizeof(ipv6_addr_t);
+        uint32_t next_hop_size = sizeof(ipv6_addr_t);
         uint32_t next_hop_flags = 0;
         if ((next_hop == NULL) &&
             (fib_get_next_hop(&gnrc_ipv6_fib_table, &fib_iface, next_hop_actual.u8, &next_hop_size,
@@ -194,7 +194,7 @@ kernel_pid_t gnrc_sixlowpan_nd_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_
         }
 #endif
         kernel_pid_t ifs[GNRC_NETIF_NUMOF];
-        size_t ifnum = gnrc_netif_get(ifs);
+        uint32_t ifnum = gnrc_netif_get(ifs);
         /* we don't need address resolution, the EUI-64 is in next_hop's IID */
         *l2addr_len = sizeof(eui64_t);
         memcpy(l2addr, &next_hop->u8[8], sizeof(eui64_t));
@@ -252,7 +252,7 @@ gnrc_pktsnip_t *gnrc_sixlowpan_nd_opt_ar_build(uint8_t status, uint16_t ltime, e
 uint8_t gnrc_sixlowpan_nd_opt_ar_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6,
                                         uint8_t icmpv6_type, ipv6_addr_t *addr,
                                         sixlowpan_nd_opt_ar_t *ar_opt,
-                                        uint8_t *sl2a, size_t sl2a_len)
+                                        uint8_t *sl2a, uint32_t sl2a_len)
 {
     eui64_t eui64;
     gnrc_ipv6_netif_t *ipv6_iface;
@@ -300,19 +300,19 @@ uint8_t gnrc_sixlowpan_nd_opt_ar_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6,
                     mutex_unlock(&ipv6_iface->mutex);
                     break;
                 case SIXLOWPAN_ND_STATUS_DUP:
-                    DEBUG("6lo nd: address registration determined duplicated\n");
+                    //DEBUG("6lo nd: address registration determined duplicated\n");
                     /* TODO: handle DAD failed case */
                     gnrc_ipv6_netif_remove_addr(iface, &ipv6->dst);
                     /* address should not be used anymore */
                     break;
                 case SIXLOWPAN_ND_STATUS_NC_FULL:
-                    DEBUG("6lo nd: neighbor cache on router is full\n");
+                    //DEBUG("6lo nd: neighbor cache on router is full\n");
                     gnrc_ipv6_nc_remove(iface, &ipv6->src);
                     /* try to find another router */
                     gnrc_sixlowpan_nd_init(ipv6_iface);
                     break;
                 default:
-                    DEBUG("6lo nd: unknown status for registration received\n");
+                    //DEBUG("6lo nd: unknown status for registration received\n");
                     break;
             }
             break;
@@ -320,7 +320,7 @@ uint8_t gnrc_sixlowpan_nd_opt_ar_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6,
         case ICMPV6_NBR_SOL:
             if (!(ipv6_iface->flags & GNRC_IPV6_NETIF_FLAGS_SIXLOWPAN) &&
                 !(ipv6_iface->flags & GNRC_IPV6_NETIF_FLAGS_ROUTER)) {
-                DEBUG("6lo nd: interface not a 6LoWPAN or forwarding interface\n");
+               // DEBUG("6lo nd: interface not a 6LoWPAN or forwarding interface\n");
                 return 0;
             }
             if ((ar_opt->status != 0) ||
@@ -335,7 +335,7 @@ uint8_t gnrc_sixlowpan_nd_opt_ar_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6,
                 ((nc_entry->eui64.uint64.u64 != 0) &&
                  (ar_opt->eui64.uint64.u64 != nc_entry->eui64.uint64.u64))) {
                 /* there is already another node with this address */
-                DEBUG("6lo nd: duplicate address detected\n");
+                //DEBUG("6lo nd: duplicate address detected\n");
                 status = SIXLOWPAN_ND_STATUS_DUP;
             }
             else if ((nc_entry != NULL) && (ar_opt->ltime.u16 == 0)) {

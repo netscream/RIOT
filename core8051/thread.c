@@ -31,7 +31,7 @@
 #include "sched.h"
 //#include "board.h" //for debugging
 
-volatile thread_t *thread_get(kernel_pid_t pid)
+volatile thread_t *thread_get(kernel_pid_t XDATA pid)
 {
     if (pid_is_valid(pid)) {
         return sched_threads[pid];
@@ -39,9 +39,9 @@ volatile thread_t *thread_get(kernel_pid_t pid)
     return NULL;
 }
 
-int thread_getstatus(kernel_pid_t pid)
+int thread_getstatus(kernel_pid_t XDATA pid)
 {
-    volatile thread_t *t = thread_get(pid);
+    volatile thread_t* XDATA t = thread_get(pid);
     return t ? (int) t->status : STATUS_NOT_FOUND;
 }
 
@@ -55,7 +55,7 @@ const char *thread_getname(kernel_pid_t pid)
 
 void thread_sleep(void)
 {
-    unsigned state = 0;
+    unsigned XDATA state = 0;
     if (irq_is_in()) {
         return;
     }
@@ -68,10 +68,10 @@ void thread_sleep(void)
 }
 
 //8051 implementation
-int thread_wakeup(kernel_pid_t pid)
+int thread_wakeup(kernel_pid_t XDATA pid)
 {
-    thread_t *other_thread = NULL;
-    unsigned old_state = 0;
+    thread_t* XDATA other_thread = NULL;
+    unsigned XDATA old_state = 0;
     DEBUG("thread_wakeup: Trying to wakeup PID %" PRIkernel_pid "...\n", pid);
 
     //unsigned old_state = irq_disable();
@@ -103,7 +103,7 @@ int thread_wakeup(kernel_pid_t pid)
 }
 
 /* 8051 implementation */
-static kernel_pid_t thread_getpid(void)
+kernel_pid_t thread_getpid(void)
 {
     extern volatile kernel_pid_t sched_active_pid;
     return sched_active_pid;
@@ -111,8 +111,8 @@ static kernel_pid_t thread_getpid(void)
 
 void thread_yield(void)
 {
-    unsigned old_state = irq_disable();
-    thread_t *me = (thread_t *)sched_active_thread;
+    unsigned XDATA old_state = irq_disable();
+    thread_t* XDATA me = (thread_t *)sched_active_thread;
     if (me->status >= STATUS_ON_RUNQUEUE) {
         clist_lpoprpush(&sched_runqueues[me->priority]);
     }
@@ -121,10 +121,10 @@ void thread_yield(void)
     thread_yield_higher();
 }
 
-void thread_add_to_list(list_node_t *list, thread_t *thread)
+void thread_add_to_list(list_node_t* XDATA list, thread_t* XDATA thread)
 {
-    uint16_t my_prio = 0;
-    list_node_t	*new_node = (list_node_t*)&thread->rq_entry;
+    uint16_t XDATA my_prio = 0;
+    list_node_t* new_node = (list_node_t*)&thread->rq_entry;
     assert (thread->status < STATUS_ON_RUNQUEUE);
     //8051 implementation
     my_prio = thread->priority;
@@ -160,13 +160,13 @@ uintptr_t thread_measure_stack_free(char *stack)
 #endif*/
 
 //8051 implementation
-kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags, thread_task_func_t function, void *arg, const char *name)
+kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA priority, int XDATA flags, thread_task_func_t XDATA function, void* XDATA arg, const char* XDATA name)
 {
-    thread_t *cb = NULL;
-    unsigned state = 0;
-    kernel_pid_t pid;
-    kernel_pid_t i;
-    uintptr_t misalignment;
+    thread_t* XDATA cb = NULL;
+    unsigned XDATA state = 0;
+    kernel_pid_t XDATA pid;
+    kernel_pid_t XDATA i;
+    uintptr_t XDATA misalignment;
     
     if (priority >= SCHED_PRIO_LEVELS) {
 	//8051 implementation EINVAL = 22
@@ -202,7 +202,8 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     //stacksize -= stacksize % ALIGN_OF(thread_t);
      //stacksize needs fixing 8051
     if (stacksize < 0) {
-        DEBUG("thread_create: stacksize is too small!\n");
+        //DEBUG("thread_create: stacksize is too small!\n");
+	return 0;
     }
     /* allocate our thread control block at the top of our stackspace */
     //8051 implementation
@@ -242,7 +243,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, char priority, int flags,
     }
     //if (pid == KERNEL_PID_UNDEF) {
     if (pid == 0) {
-        DEBUG("thread_create(): too many threads!\n");
+        //DEBUG("thread_create(): too many threads!\n");
 
         irq_restore(state);
 	//8051 implementation EOVERFLOW = 75

@@ -14,6 +14,7 @@
  */
 
 #include <errno.h>
+#include <stdio.h>
 #include "kernel_types.h"
 #include "net/gnrc/netif.h"
 
@@ -21,7 +22,7 @@
 #include "net/gnrc/ipv6/netif.h"
 #endif
 
-static gnrc_netif_handler_t if_handler[] = {
+gnrc_netif_handler_t XDATA if_handler[] = {
 #ifdef MODULE_GNRC_IPV6_NETIF
     { gnrc_ipv6_netif_add, gnrc_ipv6_netif_remove },
 #endif
@@ -32,13 +33,15 @@ static gnrc_netif_handler_t if_handler[] = {
     { NULL, NULL }
 };
 
-static kernel_pid_t XDATA ifs[GNRC_NETIF_NUMOF];
+//kernel_pid_t XDATA ifs[GNRC_NETIF_NUMOF];
+kernel_pid_t XDATA ifs[1];
 
 /*8051 implementation */
 void gnrc_netif_init(void)
 {
     int i = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         //ifs[i] = KERNEL_PID_UNDEF;
 	ifs[i] = 0;
     }
@@ -51,7 +54,8 @@ int gnrc_netif_add(kernel_pid_t pid)
     int j = 0;
     kernel_pid_t *free_entry = NULL;
 
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i > 1; i++) {
         if (ifs[i] == pid) {
             return 0;
         }
@@ -79,7 +83,8 @@ void gnrc_netif_remove(kernel_pid_t pid)
 {
     int i = 0;
     int j = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         if (ifs[i] == pid) {
             //ifs[i] = KERNEL_PID_UNDEF;
 	    ifs[i] = 0;
@@ -94,11 +99,12 @@ void gnrc_netif_remove(kernel_pid_t pid)
 }
 
 /* 8051 implementation */
-size_t gnrc_netif_get(kernel_pid_t *netifs)
+uint32_t gnrc_netif_get(kernel_pid_t *netifs)
 {
-    size_t size = 0;
+    uint32_t size = 0;
     int i = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         //if (ifs[i] != KERNEL_PID_UNDEF) {
 	if (ifs[i] != 0) {
             netifs[size++] = ifs[i];
@@ -112,7 +118,8 @@ size_t gnrc_netif_get(kernel_pid_t *netifs)
 bool gnrc_netif_exist(kernel_pid_t pid)
 {
     int i = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         if (ifs[i] == pid) {
             return true;
         }

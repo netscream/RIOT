@@ -25,7 +25,7 @@
 #ifndef GNRC_NETIF_H_
 #define GNRC_NETIF_H_
 
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stdbool.h>
 #include "kernel_types.h"
 
@@ -36,9 +36,9 @@ extern "C" {
 /**
  * @brief   Maximum number of network interfaces
  */
-#ifndef GNRC_NETIF_NUMOF
+/*#ifndef GNRC_NETIF_NUMOF
 #define GNRC_NETIF_NUMOF    (1)
-#endif
+#endif*/
 
 /**
  * @brief   The add/remove operation to set network layer protocol
@@ -90,7 +90,7 @@ void gnrc_netif_remove(kernel_pid_t pid);
  *
  * @return  The number of active interfaces.
  */
-size_t gnrc_netif_get(kernel_pid_t *netifs);
+uint32_t gnrc_netif_get(kernel_pid_t *netifs);
 
 /**
  * @brief   Check if an interface exist.
@@ -119,8 +119,8 @@ bool gnrc_netif_exist(kernel_pid_t pid);
  * @return  Copy of @p out on success.
  * @return  NULL, if @p out_len < 3 * @p addr_len.
  */
-char *gnrc_netif_addr_to_str(char *out, size_t out_len, const uint8_t *addr,
-                             size_t addr_len);
+char *gnrc_netif_addr_to_str(char *out, uint32_t out_len, const uint8_t *addr,
+                             uint32_t addr_len);
 
 /**
  * @brief   Parses a string of colon-separated hexadecimals to a hardware
@@ -136,7 +136,7 @@ char *gnrc_netif_addr_to_str(char *out, size_t out_len, const uint8_t *addr,
  * @return  Actual length of @p out on success.
  * @return  0, on failure.
  */
-size_t gnrc_netif_addr_from_str(uint8_t *out, size_t out_len, const char *str);
+uint32_t gnrc_netif_addr_from_str(uint8_t *out, uint32_t out_len, const char *str);
 
 /*#ifdef __cplusplus
 }

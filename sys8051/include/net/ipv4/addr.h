@@ -53,10 +53,10 @@ typedef union ipv4_addr{
  * @return  false, otherwise.
  */
 /* 8051 implementation */
-bool ipv4_addr_equal(ipv4_addr_t *a, ipv4_addr_t *b)
-{
+bool ipv4_addr_equal(ipv4_addr_t *a, ipv4_addr_t *b);
+/*{
     return (a->u32.u32 == b->u32.u32);
-}
+}*/
 /*static inline bool ipv4_addr_equal(ipv4_addr_t *a, ipv4_addr_t *b)
 {
     return (a->u32.u32 == b->u32.u32);

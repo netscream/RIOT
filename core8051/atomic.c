@@ -45,7 +45,7 @@ int atomic_cas(atomic_int_t *var, int old, int now)
 }
 
 /* 8051 implementation */
-static int atomic_inc(atomic_int_t *var)
+int atomic_inc(atomic_int_t *var)
 {
     int old = 0;
     do {
@@ -56,7 +56,7 @@ static int atomic_inc(atomic_int_t *var)
 }
 
 /* 8051 implementation */
-static int atomic_dec(atomic_int_t *var)
+int atomic_dec(atomic_int_t *var)
 {
     int old = 0;
     do {
@@ -67,7 +67,7 @@ static int atomic_dec(atomic_int_t *var)
 }
 
 /* 8051 implementation */
-static int atomic_set_to_one(atomic_int_t *var)
+int atomic_set_to_one(atomic_int_t *var)
 {
     do {
         if (var->value != 0) {
@@ -79,7 +79,7 @@ static int atomic_set_to_one(atomic_int_t *var)
 }
 
 /* 8051 implementation */
-static int atomic_set_to_zero(atomic_int_t *var)
+int atomic_set_to_zero(atomic_int_t *var)
 {
     int old = 0;
     do {
@@ -94,7 +94,7 @@ static int atomic_set_to_zero(atomic_int_t *var)
 }
 
 /* 8051 implementation */
-static int ATOMIC_VALUE(atomic_int_t *var)
+int ATOMIC_VALUE(atomic_int_t *var)
 {
         return var->value;
 }

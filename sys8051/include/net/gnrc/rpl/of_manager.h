@@ -21,9 +21,9 @@
 
 #include "structs.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Initialization of Manager and of-functions.
@@ -37,9 +37,9 @@ void gnrc_rpl_of_manager_init(void);
 */
 gnrc_rpl_of_t *gnrc_rpl_get_of_for_ocp(uint16_t ocp);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* RPL_OFM_H */
 /** @} */

@@ -31,37 +31,37 @@
 #include "net/gnrc/pkt.h"
 #include "thread.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Timeout for tests in microseconds
  */
-#ifndef GNRC_NETTEST_TIMEOUT
+/*#ifndef GNRC_NETTEST_TIMEOUT
 #define GNRC_NETTEST_TIMEOUT        (1000)
-#endif
+#endif*/
 
 /**
  * @brief   Default stack size to use for the nettest thread
  */
-#ifndef GNRC_NETTEST_STACK_SIZE
+/*#ifndef GNRC_NETTEST_STACK_SIZE
 #define GNRC_NETTEST_STACK_SIZE     (THREAD_STACKSIZE_DEFAULT)
-#endif
+#endif*/
 
 /**
  * @brief   Default priority for the nettest thread
  */
-#ifndef GNRC_NETTEST_PRIO
+/*#ifndef GNRC_NETTEST_PRIO
 #define GNRC_NETTEST_PRIO           (THREAD_PRIORITY_MAIN)
-#endif
+#endif*/
 
 /**
  * @brief   Default message queue size to use for the nettest thread.
  */
-#ifndef GNRC_NETTEST_MSG_QUEUE_SIZE
+/*#ifndef GNRC_NETTEST_MSG_QUEUE_SIZE
 #define GNRC_NETTEST_MSG_QUEUE_SIZE (8U)
-#endif
+#endif*/
 
 
 /**
@@ -260,9 +260,9 @@ int gnrc_nettest_init(void);
  */
 void gnrc_nettest_reset(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETTEST_H_ */
 /** @} */

@@ -36,36 +36,36 @@
 #include "net/gnrc/sixlowpan/nd/border_router.h"
 #include "net/gnrc/sixlowpan/nd/router.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Message type for next multicast router solicitation.
  */
-#define GNRC_SIXLOWPAN_ND_MSG_MC_RTR_SOL    (0x0220)
+//#define GNRC_SIXLOWPAN_ND_MSG_MC_RTR_SOL    (0x0220)
 
 /**
  * @brief   Message type for next unicast router solicitation.
  */
-#define GNRC_SIXLOWPAN_ND_MSG_UC_RTR_SOL    (0x0221)
+//#define GNRC_SIXLOWPAN_ND_MSG_UC_RTR_SOL    (0x0221)
 
 /**
  * @brief   Message type for removing 6LoWPAN contexts.
  */
-#define GNRC_SIXLOWPAN_ND_MSG_DELETE_CTX    (0x0222)
+//#define GNRC_SIXLOWPAN_ND_MSG_DELETE_CTX    (0x0222)
 
 /**
  * @brief   Message type for authoritative border router timeout
  */
-#define GNRC_SIXLOWPAN_ND_MSG_ABR_TIMEOUT   (0x0223)
+//#define GNRC_SIXLOWPAN_ND_MSG_ABR_TIMEOUT   (0x0223)
 
 /**
  * @brief   Message type for address registration timeout
  */
-#define GNRC_SIXLOWPAN_ND_MSG_AR_TIMEOUT    (0x0224)
+//#define GNRC_SIXLOWPAN_ND_MSG_AR_TIMEOUT    (0x0224)
 
-#ifndef GNRC_SIXLOWPAN_ND_AR_LTIME
+//#ifndef GNRC_SIXLOWPAN_ND_AR_LTIME
 /**
  * @brief   Registration lifetime in minutes for the address registration option
  *
@@ -76,8 +76,8 @@ extern "C" {
  *          RFC 6775, section 5.8.1
  *      </a>
  */
-#define GNRC_SIXLOWPAN_ND_AR_LTIME          (15U)
-#endif
+//#define GNRC_SIXLOWPAN_ND_AR_LTIME          (15U)
+//#endif
 
 /**
  * @name    Border router constants
@@ -86,8 +86,8 @@ extern "C" {
  *              RFC 6775, section 9
  *          </a>
  */
-#define GNRC_SIXLOWPAN_ND_RTR_MIN_CTX_DELAY (300U)  /**< minimum delay between context change and
-                                                     *   stop of C=0 dissimination in seconds */
+//#define GNRC_SIXLOWPAN_ND_RTR_MIN_CTX_DELAY (300U)  /**< minimum delay between context change and
+                                                     /*   stop of C=0 dissimination in seconds */
 /** @} */
 /**
  * @name    Host constants
@@ -96,10 +96,10 @@ extern "C" {
  *              RFC 6775, section 9
  *          </a>
  */
-#define GNRC_SIXLOWPAN_ND_RTR_SOL_INT       (10U)   /**< replacement value (in seconds) for
-                                                     *   @ref GNRC_NDP_MAX_RTR_SOL_INT */
-#define GNRC_SIXLOWPAN_ND_MAX_RTR_SOL_INT   (60U)   /**< retransmission increment for exponential
-                                                     *   backoff of subsequent RS */
+//#define GNRC_SIXLOWPAN_ND_RTR_SOL_INT       (10U)   /**< replacement value (in seconds) for
+                                                     /*   @ref GNRC_NDP_MAX_RTR_SOL_INT */
+//#define GNRC_SIXLOWPAN_ND_MAX_RTR_SOL_INT   (60U)   /**< retransmission increment for exponential
+                                                     /*   backoff of subsequent RS */
 /** @} */
 /**
  * @name    Router constants
@@ -108,20 +108,20 @@ extern "C" {
  *              RFC 6775, section 9
  *          </a>
  */
-#define GNRC_SIXLOWPAN_ND_MIN_RTR_ADV_DELAY (10U)   /**< replacement value (in seconds) for
-                                                     *   @ref GNRC_NDP_MIN_RTR_ADV_DELAY */
+//#define GNRC_SIXLOWPAN_ND_MIN_RTR_ADV_DELAY (10U)   /**< replacement value (in seconds) for
+                                                     /*   @ref GNRC_NDP_MIN_RTR_ADV_DELAY */
 /**
  * @brief   replacement value (in microseconds) for @ref GNRC_NDP_MAX_RTR_ADV_DELAY
  */
-#define GNRC_SIXLOWPAN_ND_MAX_RTR_ADV_DELAY (2U * SEC_IN_USEC)
+//#define GNRC_SIXLOWPAN_ND_MAX_RTR_ADV_DELAY (2U * SEC_IN_USEC)
 /**
  * @brief   Lifetime of a tentative address entry in seconds
  */
-#define GNRC_SIXLOWPAN_ND_TENTATIVE_NCE_LIFETIME    (20U)
+//#define GNRC_SIXLOWPAN_ND_TENTATIVE_NCE_LIFETIME    (20U)
 /**
  * @brief   6LoWPAN Multihop Hoplimit
  */
-#define GNRC_SIXLOWPAN_ND_MULTIHOP_HOPLIMIT (64U)
+//#define GNRC_SIXLOWPAN_ND_MULTIHOP_HOPLIMIT (64U)
 /** @} */
 
 /**
@@ -278,9 +278,9 @@ gnrc_pktsnip_t *gnrc_sixlowpan_nd_opt_abr_build(uint32_t version, uint16_t ltime
 #define gnrc_sixlowpan_nd_opt_abr_build(version, ltime, braddr, next)                   (NULL)
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_SIXLOWPAN_ND_H_ */
 /** @} */

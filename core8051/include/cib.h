@@ -51,8 +51,8 @@ typedef struct cib{
  *                      Should be equal to 0 or power of 2.
  */
 /* 8051 implementation */
-static void cib_init(cib_t *restrict cib, unsigned int size);
-/*static inline void cib_init(cib_t *restrict cib, unsigned int size)
+void cib_init(cib_t *restrict cib, unsigned int size);
+/*inline void cib_init(cib_t *restrict cib, unsigned int size)
 {
     *//* check if size is a power of 2 by comparing it to its complement */
     /*assert(!(size & (size - 1)));
@@ -72,8 +72,8 @@ static void cib_init(cib_t *restrict cib, unsigned int size);
  * @return How often cib_get() can be called before @p cib is empty.
  */
 /* 8051 implementation */
-static unsigned int cib_avail(const cib_t *cib);
-/*static inline unsigned int cib_avail(const cib_t *cib)
+unsigned int cib_avail(const cib_t *cib);
+/*inline unsigned int cib_avail(const cib_t *cib)
 {
     return cib->write_count - cib->read_count;
 }*/
@@ -86,8 +86,8 @@ static unsigned int cib_avail(const cib_t *cib);
  * @return      1 if cib_put() would return "-1", 0 otherwise
  */
 /* 8051 implementation */
-static unsigned int cib_full(const cib_t *cib);
-/*static inline unsigned int cib_full(const cib_t *cib)
+unsigned int cib_full(const cib_t *cib);
+/*inline unsigned int cib_full(const cib_t *cib)
 {
     return ((int) cib_avail(cib)) > ((int) cib->mask);
 }*/
@@ -100,8 +100,8 @@ static unsigned int cib_full(const cib_t *cib);
  * @return index of next item, -1 if the buffer is empty
  */
 /* 8051 implementation */
-static int cib_get(cib_t *restrict cib);
-/*static inline int cib_get(cib_t *restrict cib)
+int cib_get(cib_t *restrict cib);
+/*inline int cib_get(cib_t *restrict cib)
 {
     if (cib->write_count > cib->read_count) {
         return (int) (cib->read_count++ & cib->mask);
@@ -118,8 +118,8 @@ static int cib_get(cib_t *restrict cib);
  * @return index of next item, -1 if the buffer is empty
  */
 /* 8051 implementation */
-static int cib_peek(cib_t *restrict cib);
-/*static inline int cib_peek(cib_t *restrict cib)
+int cib_peek(cib_t *restrict cib);
+/*inline int cib_peek(cib_t *restrict cib)
 {
     if (cib->write_count > cib->read_count) {
         return (int) (cib->read_count & cib->mask);
@@ -138,8 +138,8 @@ static int cib_peek(cib_t *restrict cib);
  * @return index of next item
  */
 /* 8051 implementation */
-static int cib_get_unsafe(cib_t *cib);
-/*static inline int cib_get_unsafe(cib_t *cib)
+int cib_get_unsafe(cib_t *cib);
+/*inline int cib_get_unsafe(cib_t *cib)
 {
         return (int) (cib->read_count++ & cib->mask);
 }*/
@@ -152,8 +152,8 @@ static int cib_get_unsafe(cib_t *cib);
  * @return index of item to put to, -1 if the buffer is full
  */
 /* 8051 implementation */
-static int cib_put(cib_t *restrict cib);
-/*static inline int cib_put(cib_t *restrict cib)
+int cib_put(cib_t *restrict cib);
+/*inline int cib_put(cib_t *restrict cib)
 {
     unsigned int avail = cib_avail(cib);
 */
@@ -175,8 +175,8 @@ static int cib_put(cib_t *restrict cib);
  * @return index of item to put to
  */
 /* 8051 implementation */
-static int cib_put_unsafe(cib_t *cib);
-/*static inline int cib_put_unsafe(cib_t *cib)
+int cib_put_unsafe(cib_t *cib);
+/*inline int cib_put_unsafe(cib_t *cib)
 {
     return (int) (cib->write_count++ & cib->mask);
 }*/

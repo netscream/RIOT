@@ -124,11 +124,11 @@ int timex_cmp(const timex_t *a, const timex_t *b);
  *
  * @param[in, out] time Pointer to the timestamp to normalize
  */
-static inline void timex_normalize(timex_t *time)
-{
+void timex_normalize(timex_t *time);
+/*{
     time->seconds += (time->microseconds / SEC_IN_USEC);
     time->microseconds %= SEC_IN_USEC;
-}
+}*/
 
 /**
  * @brief Tests a timex timestamp for normalization
@@ -138,10 +138,10 @@ static inline void timex_normalize(timex_t *time)
  * @return true for a normalized timex_t
  * @return false otherwise
  */
-static inline int timex_isnormalized(const timex_t *time)
-{
+int timex_isnormalized(const timex_t *time);
+/*{
     return (time->microseconds < SEC_IN_USEC);
-}
+}*/
 
 /**
  * @brief Converts a timex timestamp to a 64 bit value
@@ -152,7 +152,7 @@ static inline int timex_isnormalized(const timex_t *time)
  */
 /* cppcheck-suppress passedByValue */
 /* 8051 implementation */
-/*static inline uint64_t timex_uint64(const timex_t *a)
+/* uint64_t timex_uint64(const timex_t *a)
 {
     return (uint64_t) a->seconds * SEC_IN_USEC + a->microseconds;
 }*/
@@ -165,7 +165,7 @@ static inline int timex_isnormalized(const timex_t *time)
  * @return a timex representation of an uint64 timestamp.
  */
 /* 8051 implementation */
-/*static inline timex_t timex_from_uint64(const uint64_t timestamp)
+/* timex_t timex_from_uint64(const uint64_t timestamp)
 {
     return timex_set(timestamp / SEC_IN_USEC, timestamp % SEC_IN_USEC);
 }*/

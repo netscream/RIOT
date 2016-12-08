@@ -25,9 +25,9 @@
 #include "net/gnrc/pkt.h"
 #include "net/sixlowpan.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Decompresses a received 6LoWPAN IPHC frame.
@@ -60,9 +60,9 @@ size_t gnrc_sixlowpan_iphc_decode(gnrc_pktsnip_t **dec_hdr, gnrc_pktsnip_t *pkt,
  */
 bool gnrc_sixlowpan_iphc_encode(gnrc_pktsnip_t *pkt);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_SIXLOWPAN_IPHC_H_ */
 /** @} */

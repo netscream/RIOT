@@ -68,7 +68,7 @@ int atomic_cas(atomic_int_t *var, int old, int now);
  * @return The value of *val* before the increment.
  */
 /* 8051 implementation */
-static int atomic_inc(atomic_int_t *var);
+int atomic_inc(atomic_int_t *var);
 /*static inline int atomic_inc(atomic_int_t *var)
 {
     int old;
@@ -88,7 +88,7 @@ static int atomic_inc(atomic_int_t *var);
  * @return The value of *val* before the decrement.
  */
 /* 8051 implementation */
-static int atomic_dec(atomic_int_t *var);
+int atomic_dec(atomic_int_t *var);
 /*static inline int atomic_dec(atomic_int_t *var)
 {
     int old;
@@ -109,7 +109,7 @@ static int atomic_dec(atomic_int_t *var);
  * @return 0 if the variable was already set
  */
 /* 8051 implementation */
-static int atomic_set_to_one(atomic_int_t *var);
+int atomic_set_to_one(atomic_int_t *var);
 /*static inline int atomic_set_to_one(atomic_int_t *var)
 {
     do {
@@ -130,7 +130,7 @@ static int atomic_set_to_one(atomic_int_t *var);
  * @return 0 if the variable was already cleared
  */
 /* 8051 implementation */
-static int atomic_set_to_zero(atomic_int_t *var);
+int atomic_set_to_zero(atomic_int_t *var);
 /*static inline int atomic_set_to_zero(atomic_int_t *var)
 {
     int old;
@@ -156,7 +156,7 @@ static int atomic_set_to_zero(atomic_int_t *var);
  * @note This can be used for non-thread-safe assignment of the atomic integer
  */
 //#define ATOMIC_VALUE(var) ((var).value)
-static int ATOMIC_VALUE(atomic_int_t *var);
+int ATOMIC_VALUE(atomic_int_t *var);
 /*#ifdef __cplusplus
 }
 #endif*/

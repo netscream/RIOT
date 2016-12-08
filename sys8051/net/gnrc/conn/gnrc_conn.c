@@ -34,7 +34,8 @@ int gnrc_conn_recvfrom(conn_t *conn, void *data, size_t max_len, void *addr, siz
             case GNRC_NETAPI_MSG_TYPE_RCV:
                 pkt = msg.content.ptr;
                 if (pkt->size > max_len) {
-                    return -ENOMEM;
+                    //return -ENOMEM;
+		    return 12;
                 }
                 l3hdr = gnrc_pktsnip_search_type(pkt, conn->l3_type);
                 if (l3hdr == NULL) {
@@ -66,7 +67,8 @@ int gnrc_conn_recvfrom(conn_t *conn, void *data, size_t max_len, void *addr, siz
                 break;
         }
     }
-    return -ETIMEDOUT;
+    //return -ETIMEDOUT;
+    return 110;
 }
 
 #ifdef MODULE_GNRC_IPV6

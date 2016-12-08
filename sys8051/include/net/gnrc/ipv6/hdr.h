@@ -24,9 +24,9 @@
 #include "net/ipv6/hdr.h"
 #include "net/gnrc/pkt.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Builds an IPv6 header for sending and adds it to the packet buffer.
@@ -46,9 +46,9 @@ extern "C" {
 gnrc_pktsnip_t *gnrc_ipv6_hdr_build(gnrc_pktsnip_t *payload, const ipv6_addr_t *src,
                                     const ipv6_addr_t *dst);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IPV6_HDR_H_ */
 /** @} */

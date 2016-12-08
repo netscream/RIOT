@@ -17,8 +17,8 @@
 
 #include "net/gnrc/pkt.h"
 
-gnrc_pktsnip_t *gnrc_pktsnip_search_type(gnrc_pktsnip_t *ptr,
-                                         gnrc_nettype_t type)
+gnrc_pktsnip_t *gnrc_pktsnip_search_type(gnrc_pktsnip_t* XDATA ptr,
+                                         gnrc_nettype_t XDATA type)
 {
     while (ptr != NULL) {
         if (ptr->type == type) {
@@ -27,6 +27,47 @@ gnrc_pktsnip_t *gnrc_pktsnip_search_type(gnrc_pktsnip_t *ptr,
         ptr = ptr->next;
     }
     return NULL;
+}
+
+uint32_t gnrc_pkt_len(gnrc_pktsnip_t* XDATA pkt)
+{
+    uint32_t len = 0;
+
+    while (pkt) {
+        len += pkt->size;
+        pkt = pkt->next;
+    }
+
+    return len;
+}
+
+uint32_t gnrc_pkt_len_upto(gnrc_pktsnip_t* XDATA pkt, gnrc_nettype_t XDATA type)
+{
+    uint32_t len = 0;
+
+    while (pkt) {
+        len += pkt->size;
+
+        if (pkt->type == type) {
+            break;
+        }
+
+        pkt = pkt->next;
+    }
+
+    return len;
+}
+
+uint32_t gnrc_pkt_count(const gnrc_pktsnip_t* XDATA pkt)
+{
+    uint32_t count = 0;
+
+    while (pkt) {
+        ++count;
+        pkt = pkt->next;
+    }
+
+    return count;
 }
 
 /** @} */

@@ -28,23 +28,23 @@
 #include <stdio.h>  /* for fwrite() */
 #else
 /* work around broken sys/posix/unistd.h */
-ssize_t write(int fildes, const void *buf, size_t nbyte);
+int write(int fildes, const void *buf, size_t nbyte);
 #endif
 
 #include "fmt.h"
 
 static const char _hex_chars[16] = "0123456789ABCDEF";
 
-static inline int _is_digit(char c)
+static int _is_digit(char c)
 {
     return (c >= '0' && c <= '9');
 }
 
-static inline unsigned pwr(unsigned val, unsigned exp)
+static unsigned pwr(unsigned val, unsigned exp)
 {
     unsigned res = 1;
-
-    for (unsigned i = 0; i < exp; i++) {
+    unsigned i = 0;
+    for (i = 0; i < exp; i++) {
         res *= val;
     }
 
@@ -72,10 +72,10 @@ size_t fmt_strlen(const char *str)
 size_t fmt_str(char *out, const char *str)
 {
     int len = 0;
+    char c;
     if (!out) {
         len = fmt_strlen(str);
     } else {
-        char c;
         while ((c = *str++)) {
             *out++ = c;
             len++;
@@ -98,7 +98,7 @@ size_t fmt_u32_hex(char *out, uint32_t val)
     return fmt_bytes_hex_reverse(out, (uint8_t*) &val, 4);
 }
 
-size_t fmt_u64_hex(char *out, uint64_t val)
+/*size_t fmt_u64_hex(char *out, uint64_t val)
 {
     return fmt_bytes_hex_reverse(out, (uint8_t*) &val, 8);
 }
@@ -156,13 +156,13 @@ size_t fmt_u64_dec(char *out, uint64_t val)
 
     return total_len;
 }
-
+*/
 size_t fmt_u32_dec(char *out, uint32_t val)
 {
     size_t len = 1;
-
+    uint32_t tmp = 0;
     /* count needed characters */
-    for (uint32_t tmp = val; (tmp > 9); len++) {
+    for (tmp = val; (tmp > 9); len++) {
         tmp /= 10;
     }
 
@@ -205,7 +205,7 @@ size_t fmt_s16_dfp(char *out, int16_t val, unsigned fp_digits)
     size_t div_len, len;
     unsigned e;
     char tmp[4];
-
+    size_t i = 0;
     if (fp_digits > 4) {
         return 0;
     }
@@ -236,7 +236,7 @@ size_t fmt_s16_dfp(char *out, int16_t val, unsigned fp_digits)
     while (pos < (len - div_len)) {
         out[pos++] = '0';
     }
-    for (size_t i = 0; i < div_len; i++) {
+    for (i = 0; i < div_len; i++) {
         out[pos++] = tmp[i];
     }
 
@@ -261,12 +261,13 @@ uint32_t scn_u32_dec(const char *str, size_t n)
 
 void print(const char *s, size_t n)
 {
+    uint32_t written = 0;
 #ifdef __WITH_AVRLIBC__
     /* AVR's libc doesn't offer write(), so use fwrite() instead */
     fwrite(s, n, 1, stdout);
 #else
     while (n > 0) {
-        ssize_t written = write(STDOUT_FILENO, s, n);
+        written = write(STDOUT_FILENO, s, n);
         if (written < 0) {
             break;
         }
@@ -297,7 +298,7 @@ void print_u32_hex(uint32_t val)
     print(buf, sizeof(buf));
 }
 
-void print_u64_hex(uint64_t val)
+/*void print_u64_hex(uint64_t val)
 {
     print_u32_hex(val>>32);
     print_u32_hex(val);
@@ -309,7 +310,7 @@ void print_u64_dec(uint64_t val)
     size_t len = fmt_u64_dec(buf, val);
     print(buf, len);
 }
-
+*/
 void print_str(const char* str)
 {
     print(str, fmt_strlen(str));

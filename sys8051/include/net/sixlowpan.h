@@ -21,7 +21,7 @@
 #define SIXLOWPAN_H_
 
 #include <stdbool.h>
-#include <stddef.h>
+//#include <stddef.h>
 #include <stdint.h>
 
 #include "byteorder.h"
@@ -69,10 +69,10 @@ extern "C" {
  * @return  true, if frame is a NALP.
  * @return  false, if frame is not a NALP.
  */
-bool sixlowpan_nalp(uint8_t disp)
-{
+bool sixlowpan_nalp(uint8_t disp);
+/*{
     return ((disp & 0xc0) == 0);
-}
+}*/
 /*static inline bool sixlowpan_nalp(uint8_t disp)
 {
     return ((disp & 0xc0) == 0);
@@ -138,15 +138,15 @@ typedef struct {
  * @return  true, if given fragment is a 6LoWPAN fragment.
  * @return  false, if given fragment is not a 6LoWPAN fragment.
  */
-bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
-{
+bool sixlowpan_frag_is(sixlowpan_frag_t *hdr);
+/*{
     //return ((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
     return ((hdr->disp_size.u8[0] & 0xf8) == 0xc0) ||
 	    ((hdr->disp_size.u8[0] & 0xf8) == 0xe0);
             //SIXLOWPAN_FRAG_1_DISP) ||
            //((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
             //SIXLOWPAN_FRAG_N_DISP);
-}
+}*/
 /*static inline bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
 {
     return ((hdr->disp_size.u8[0] & SIXLOWPAN_FRAG_DISP_MASK) ==
@@ -258,11 +258,11 @@ bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)
  * @return  true, if datagram is an IPHC datagram.
  * @return  false, if datagram is not an IPHC datagram.
  */
-bool sixlowpan_iphc_is(uint8_t *data)
-{
+bool sixlowpan_iphc_is(uint8_t *data);
+/*{
     //return ((*data & SIXLOWPAN_IPHC1_DISP_MASK) == SIXLOWPAN_IPHC1_DISP);
     return ((*data & 0xe0) == 0x60);
-}
+}*/
 /*static inline bool sixlowpan_iphc_is(uint8_t *data)
 {
     return ((*data & SIXLOWPAN_IPHC1_DISP_MASK) == SIXLOWPAN_IPHC1_DISP);
@@ -275,7 +275,7 @@ bool sixlowpan_iphc_is(uint8_t *data)
  * @param[in] data  A 6LoWPAN frame.
  * @param[in] size  Size of @p data.
  */
-void sixlowpan_print(uint8_t *data, size_t size);
+void sixlowpan_print(uint8_t *data, uint32_t size);
 
 /*#ifdef __cplusplus
 }

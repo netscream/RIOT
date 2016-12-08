@@ -42,40 +42,40 @@
 #define RBUF_INT_SIZE (DIV_CEIL(GNRC_IPV6_NETIF_DEFAULT_MTU, GNRC_SIXLOWPAN_FRAG_SIZE) * RBUF_SIZE)
 #endif
 
-static rbuf_int_t rbuf_int[RBUF_INT_SIZE];
+rbuf_int_t XDATA rbuf_int[RBUF_INT_SIZE];
 
-static rbuf_t rbuf[RBUF_SIZE];
+rbuf_t XDATA rbuf[RBUF_SIZE];
 
-#if ENABLE_DEBUG
-static char l2addr_str[3 * RBUF_L2ADDR_MAX_LEN];
-#endif
+/*#if ENABLE_DEBUG
+char l2addr_str[3 * RBUF_L2ADDR_MAX_LEN];
+#endif*/
 
 /* ------------------------------------
  * internal function definitions
  * ------------------------------------*/
 /* checks whether start and end overlaps, but not identical to, given interval i */
-static inline bool _rbuf_int_overlap_partially(rbuf_int_t *i, uint16_t start, uint16_t end);
+bool _rbuf_int_overlap_partially(rbuf_int_t *i, uint16_t start, uint16_t end);
 /* gets a free entry from interval buffer */
-static rbuf_int_t *_rbuf_int_get_free(void);
+rbuf_int_t *_rbuf_int_get_free(void);
 /* remove entry from reassembly buffer */
-static void _rbuf_rem(rbuf_t *entry);
+void _rbuf_rem(rbuf_t *entry);
 /* update interval buffer of entry */
-static bool _rbuf_update_ints(rbuf_t *entry, uint16_t offset, size_t frag_size);
+bool _rbuf_update_ints(rbuf_t *entry, uint16_t offset, uint32_t frag_size);
 /* checks timeouts and removes entries if necessary (oldest if full) */
-static void _rbuf_gc(void);
+void _rbuf_gc(void);
 /* gets an entry identified by its tupel */
-static rbuf_t *_rbuf_get(const void *src, size_t src_len,
-                         const void *dst, size_t dst_len,
-                         size_t size, uint16_t tag);
+rbuf_t *_rbuf_get(const void *src, uint32_t src_len,
+                         const void *dst, uint32_t dst_len,
+                         uint32_t size, uint16_t tag);
 
 void rbuf_add(gnrc_netif_hdr_t *netif_hdr, gnrc_pktsnip_t *pkt,
-              size_t frag_size, size_t offset)
+              uint32_t frag_size, uint32_t offset)
 {
     rbuf_t *entry;
     /* cppcheck is clearly wrong here */
     /* cppcheck-suppress variableScope */
     unsigned int data_offset = 0;
-    size_t original_size = frag_size;
+    uint32_t original_size = frag_size;
     sixlowpan_frag_t *frag = pkt->data;
     rbuf_int_t *ptr;
     uint8_t *data = ((uint8_t *)pkt->data) + sizeof(sixlowpan_frag_t);
@@ -101,7 +101,7 @@ void rbuf_add(gnrc_netif_hdr_t *netif_hdr, gnrc_pktsnip_t *pkt,
         }
 #ifdef MODULE_GNRC_SIXLOWPAN_IPHC
         else if (sixlowpan_iphc_is(data)) {
-            size_t iphc_len, nh_len = 0;
+            uint32_t iphc_len, nh_len = 0;
             iphc_len = gnrc_sixlowpan_iphc_decode(&entry->pkt, pkt, entry->pkt->size,
                                                   sizeof(sixlowpan_frag_t), &nh_len);
             if (iphc_len == 0) {
@@ -189,14 +189,14 @@ void rbuf_add(gnrc_netif_hdr_t *netif_hdr, gnrc_pktsnip_t *pkt,
     }
 }
 
-static inline bool _rbuf_int_overlap_partially(rbuf_int_t *i, uint16_t start, uint16_t end)
+inline bool _rbuf_int_overlap_partially(rbuf_int_t *i, uint16_t start, uint16_t end)
 {
     /* start and ends are both inclusive, so using <= for both */
     return ((i->start <= end) && (start <= i->end)) && /* overlaps */
         ((start != i->start) || (end != i->end)); /* not identical */
 }
 
-static rbuf_int_t *_rbuf_int_get_free(void)
+rbuf_int_t *_rbuf_int_get_free(void)
 {
     for (unsigned int i = 0; i < RBUF_INT_SIZE; i++) {
         if (rbuf_int[i].end == 0) { /* start must be smaller than end anyways*/
@@ -207,7 +207,7 @@ static rbuf_int_t *_rbuf_int_get_free(void)
     return NULL;
 }
 
-static void _rbuf_rem(rbuf_t *entry)
+void _rbuf_rem(rbuf_t *entry)
 {
     while (entry->ints != NULL) {
         rbuf_int_t *next = entry->ints->next;
@@ -221,7 +221,7 @@ static void _rbuf_rem(rbuf_t *entry)
     entry->pkt = NULL;
 }
 
-static bool _rbuf_update_ints(rbuf_t *entry, uint16_t offset, size_t frag_size)
+bool _rbuf_update_ints(rbuf_t *entry, uint16_t offset, uint32_t frag_size)
 {
     rbuf_int_t *new;
     uint16_t end = (uint16_t)(offset + frag_size - 1);
@@ -248,7 +248,7 @@ static bool _rbuf_update_ints(rbuf_t *entry, uint16_t offset, size_t frag_size)
     return true;
 }
 
-static void _rbuf_gc(void)
+void _rbuf_gc(void)
 {
     uint32_t now_usec = xtimer_now();
     unsigned int i;
@@ -270,9 +270,9 @@ static void _rbuf_gc(void)
     }
 }
 
-static rbuf_t *_rbuf_get(const void *src, size_t src_len,
-                         const void *dst, size_t dst_len,
-                         size_t size, uint16_t tag)
+rbuf_t *_rbuf_get(const void *src, uint32_t src_len,
+                         const void *dst, uint32_t dst_len,
+                         uint32_t size, uint16_t tag)
 {
     rbuf_t *res = NULL, *oldest = NULL;
     uint32_t now_usec = xtimer_now();

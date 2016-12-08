@@ -76,7 +76,7 @@ else #8051/mcs51 specific architecture
 $(BINDIR)$(MODULE).lib $(OBJ): | $(BINDIR)$(MODULE)/
 
 $(BINDIR)$(MODULE).lib: $(OBJ) | ${DIRS:%=ALL--%}
-	$(AD) if [ "$?" == "" ]; then echo "rusl"; elif [ "$?" != "$(BINDIR)$(APPLICATION)/main.rel" ]; then $(LINK) $(ARFLAGS) $@ $? ; else $(AR) $(ARFLAGS) $(BINDIR)$(MODULE).rel $?; cp $(BINDIR)$(MODULE)/main.lst $(BINDIR)$(MODULE).lst; fi 
+	$(AD) if [ "$?" == "" ]; then echo "rusl"; elif [ "$?" != "$(BINDIR)$(APPLICATION)/main.rel" ]; then $(AR) $(ARFLAGS) $@ $? ; else $(AR) $(ARFLAGS) $(BINDIR)$(MODULE).rel $?; cp $(BINDIR)$(MODULE)/main.lst $(BINDIR)$(MODULE).lst; fi 
 endif
 # compile and generate dependency info
 
@@ -106,7 +106,7 @@ $(OBJC): $(BINDIR)$(MODULE)/%.rel: %.c $(RIOTBUILD_CONFIG_HEADER_C)
 	$(AD)$(CCACHE) $(CC) -c $(abspath $<) \
 		-DRIOT_FILE_RELATIVE=\"$(patsubst $(RIOTBASE)/%,%,$(abspath $<))\" \
 		-DRIOT_FILE_NOPATH=\"$(notdir $<)\" \
-		-Wp,-MMD,$(@:%.rel=%.d),-MT,$@,-MP $(INCLUDES)-Wa,-p --model-medium --debug -o $@
+		-Wp,-MMD,$(@:%.rel=%.d),-MT,$@,-MP $(INCLUDES) -Wa,-p --model-medium --debug -o $@
 		
 $(ASMOBJ): $(BINDIR)$(MODULE)/%.rel: %.s
 	$(AD)$(AS) -glos -p $@ $(abspath $<)

@@ -22,7 +22,7 @@
 #define IEEE802154_H_
 
 #include <stdint.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "byteorder.h"
 #include "net/eui64.h"
@@ -133,8 +133,8 @@ extern "C" {
  * @return  0, on error (flags set to unexpected state).
  */
 /* 8051 implementation */
-size_t ieee802154_set_frame_hdr(uint8_t *buf, const uint8_t *src, size_t src_len,
-                                const uint8_t *dst, size_t dst_len,
+uint32_t ieee802154_set_frame_hdr(uint8_t *buf, const uint8_t *src, uint32_t src_len,
+                                const uint8_t *dst, uint32_t dst_len,
                                 le_uint16_t *src_pan, le_uint16_t *dst_pan,
                                 uint8_t flags, uint8_t seq);
 
@@ -148,7 +148,7 @@ size_t ieee802154_set_frame_hdr(uint8_t *buf, const uint8_t *src, size_t src_len
  * @return  Length of MAC header on success.
  * @return  0, on error (source mode or destination mode set to reserved).
  */
-size_t ieee802154_get_frame_hdr_len(const uint8_t *mhr);
+uint32_t ieee802154_get_frame_hdr_len(const uint8_t *mhr);
 
 /**
  * @brief   Gets source address from MAC header.
@@ -212,7 +212,7 @@ static inline uint8_t ieee802154_get_seq(const uint8_t *mhr)
  * @return NULL, if @p addr_len was of illegal length.
  */
 static inline eui64_t *ieee802154_get_iid(eui64_t *eui64, const uint8_t *addr,
-                                          size_t addr_len)
+                                          uint32_t addr_len)
 {
     int i = 0;
 

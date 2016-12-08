@@ -26,9 +26,9 @@
 #include "kernel_types.h"
 #include "net/ipv6/hdr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Builds an ICMPv6 echo message of type @p type for sending.
@@ -58,9 +58,9 @@ gnrc_pktsnip_t *gnrc_icmpv6_echo_build(uint8_t type, uint16_t id, uint16_t seq,
 void gnrc_icmpv6_echo_req_handle(kernel_pid_t iface, ipv6_hdr_t *ipv6_hdr,
                                  icmpv6_echo_t *echo, uint16_t len);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_ICMPV6_ECHO_H_ */
 /** @} */

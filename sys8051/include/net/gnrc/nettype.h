@@ -122,8 +122,8 @@ typedef enum {
  * @return  The corresponding @ref net_gnrc_nettype to @p type.
  * @return  @ref GNRC_NETTYPE_UNDEF if @p type not translatable.
  */
-static inline gnrc_nettype_t gnrc_nettype_from_ethertype(uint16_t type)
-{
+gnrc_nettype_t gnrc_nettype_from_ethertype(uint16_t type);
+/*{
     switch (type) {
 #ifdef MODULE_GNRC_IPV6
         case ETHERTYPE_IPV6:
@@ -136,7 +136,7 @@ static inline gnrc_nettype_t gnrc_nettype_from_ethertype(uint16_t type)
         default:
             return GNRC_NETTYPE_UNDEF;
     }
-}
+}*/
 
 /**
  * @brief   Translates @ref net_gnrc_nettype to an Ether Type number
@@ -149,8 +149,8 @@ static inline gnrc_nettype_t gnrc_nettype_from_ethertype(uint16_t type)
  * @return  The corresponding Ether Type number to @p type.
  * @return  @ref ETHERTYPE_RESERVED if @p type not translatable.
  */
-static inline uint16_t gnrc_nettype_to_ethertype(gnrc_nettype_t type)
-{
+uint16_t gnrc_nettype_to_ethertype(gnrc_nettype_t type);
+/*{
     switch (type) {
 #ifdef MODULE_GNRC_IPV6
         case GNRC_NETTYPE_IPV6:
@@ -163,7 +163,7 @@ static inline uint16_t gnrc_nettype_to_ethertype(gnrc_nettype_t type)
         default:
             return ETHERTYPE_UNKNOWN;
     }
-}
+}*/
 
 /**
  * @brief   Translates a Protocol Number to @ref net_gnrc_nettype
@@ -176,8 +176,8 @@ static inline uint16_t gnrc_nettype_to_ethertype(gnrc_nettype_t type)
  * @return  The corresponding @ref net_gnrc_nettype to @p num.
  * @return  @ref GNRC_NETTYPE_UNDEF if @p num not translatable.
  */
-static inline gnrc_nettype_t gnrc_nettype_from_protnum(uint8_t num)
-{
+gnrc_nettype_t gnrc_nettype_from_protnum(uint8_t num);
+/*{
     switch (num) {
 #ifdef MODULE_GNRC_ICMPV6
         case PROTNUM_ICMPV6:
@@ -208,7 +208,7 @@ static inline gnrc_nettype_t gnrc_nettype_from_protnum(uint8_t num)
         default:
             return GNRC_NETTYPE_UNDEF;
     }
-}
+}*/
 
 /**
  * @brief   Translates @ref net_gnrc_nettype to a Protocol Number
@@ -221,8 +221,8 @@ static inline gnrc_nettype_t gnrc_nettype_from_protnum(uint8_t num)
  * @return  The corresponding Protocol Number to @p type.
  * @return  @ref PROTNUM_RESERVED if @p type not translatable.
  */
-static inline uint8_t gnrc_nettype_to_protnum(gnrc_nettype_t type)
-{
+uint8_t gnrc_nettype_to_protnum(gnrc_nettype_t type);
+/*{
     switch (type) {
 #ifdef MODULE_GNRC_ICMPV6
         case GNRC_NETTYPE_ICMPV6:
@@ -243,7 +243,7 @@ static inline uint8_t gnrc_nettype_to_protnum(gnrc_nettype_t type)
         default:
             return PROTNUM_RESERVED;
     }
-}
+}*/
 
 /*#ifdef __cplusplus
 }

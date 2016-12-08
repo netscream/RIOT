@@ -47,7 +47,7 @@ extern "C" {
  *
  * @return  The unnormalized Internet Checksum of @p buf.
  */
-uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, size_t accum_len);
+uint16_t inet_csum_slice(uint16_t sum, const uint8_t *buf, uint16_t len, uint32_t accum_len);
 
 /**
  * @brief   Calculates the unnormalized Internet Checksum of @p buf, where the

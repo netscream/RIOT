@@ -30,7 +30,7 @@
 
 #ifdef MODULE_CORE_MBOX
 /* 8051 implementation */
-static void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size)
+void mbox_init(mbox_t* XDATA mbox, msg_t* XDATA queue, unsigned int XDATA queue_size)
 {
     mbox->msg_array->sender_pid = queue->sender_pid;
     mbox->msg_array->type = queue->type;
@@ -38,27 +38,27 @@ static void mbox_init(mbox_t *mbox, msg_t *queue, unsigned int queue_size)
     mbox->msg_array->content.value = queue->content.value;
 }
 /* 8051 implementation */
-static void mbox_put(mbox_t *mbox, msg_t *msg)
+void mbox_put(mbox_t* XDATA mbox, msg_t* XDATA msg)
 {
     _mbox_put(mbox, msg, BLOCKING);
 }
 /* 8051 implementation */
-static int mbox_try_put(mbox_t *mbox, msg_t *msg)
+int mbox_try_put(mbox_t* XDATA mbox, msg_t* XDATA msg)
 {
     return _mbox_put(mbox, msg, NON_BLOCKING);
 }
 /* 8051 implementation */
-static void mbox_get(mbox_t *mbox, msg_t *msg)
+void mbox_get(mbox_t* XDATA mbox, msg_t* XDATA msg)
 {
     _mbox_get(mbox, msg, BLOCKING);
 }
 /* 8051 implementation */
-static int mbox_try_get(mbox_t *mbox, msg_t *msg)
+int mbox_try_get(mbox_t* XDATA mbox, msg_t* XDATA msg)
 {
     return _mbox_get(mbox, msg, NON_BLOCKING);
 }
 
-static void _wake_waiter(thread_t *thread, unsigned irqstate)
+void _wake_waiter(thread_t* XDATA thread, unsigned XDATA irqstate)
 {
     sched_set_status(thread, STATUS_PENDING);
 
@@ -70,7 +70,7 @@ static void _wake_waiter(thread_t *thread, unsigned irqstate)
     sched_switch(process_priority);
 }
 
-static void _wait(list_node_t *wait_list, unsigned irqstate)
+void _wait(list_node_t* XDATA wait_list, unsigned XDATA irqstate)
 {
     DEBUG("mbox: Thread %"PRIkernel_pid" _wait(): going blocked.\n",
             sched_active_pid);
@@ -85,7 +85,7 @@ static void _wait(list_node_t *wait_list, unsigned irqstate)
             sched_active_pid);
 }
 
-int _mbox_put(mbox_t *mbox, msg_t *msg, int blocking)
+int _mbox_put(mbox_t* XDATA mbox, msg_t* XDATA msg, int XDATA blocking)
 {
     unsigned irqstate = irq_disable();
 
@@ -120,7 +120,7 @@ int _mbox_put(mbox_t *mbox, msg_t *msg, int blocking)
     }
 }
 
-int _mbox_get(mbox_t *mbox, msg_t *msg, int blocking)
+int _mbox_get(mbox_t* XDATA mbox, msg_t* XDATA msg, int XDATA blocking)
 {
     unsigned irqstate = irq_disable();
 

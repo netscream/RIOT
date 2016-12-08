@@ -67,6 +67,9 @@ endif
 ifneq (,$(filter gnrc_nettest,$(USEMODULE)))
     DIRS += nettest
 endif
+ifneq (,$(filter gnrc_nettype,$(USEMODULE)))
+    DIRS += nettype
+endif
 ifneq (,$(filter gnrc_nomac,$(USEMODULE)))
     DIRS += link_layer/nomac
 endif
@@ -78,6 +81,9 @@ ifneq (,$(filter gnrc_pktbuf_static,$(USEMODULE)))
 endif
 ifneq (,$(filter gnrc_pktdump,$(USEMODULE)))
     DIRS += pktdump
+endif
+ifneq (,$(filter gnrc_pktqueue,$(USEMODULE)))
+    DIRS += pktqueue
 endif
 ifneq (,$(filter gnrc_rpl,$(USEMODULE)))
     DIRS += routing/rpl

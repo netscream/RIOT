@@ -51,13 +51,14 @@
 /* number of "points" assigned to an source address candidate in preferred state */
 //#define RULE_3_PTS          (1)
 
-static gnrc_ipv6_netif_t ipv6_ifs[GNRC_NETIF_NUMOF];
+//static gnrc_ipv6_netif_t ipv6_ifs[GNRC_NETIF_NUMOF];
+gnrc_ipv6_netif_t XDATA ipv6_ifs[1];
 
-#if ENABLE_DEBUG
+/*#if ENABLE_DEBUG
 static char addr_str[IPV6_ADDR_MAX_STR_LEN];
-#endif
+#endif*/
 /* 8051 implementation */
-static ipv6_addr_t *_add_addr_to_entry(gnrc_ipv6_netif_t *entry, const ipv6_addr_t *addr,
+ipv6_addr_t *_add_addr_to_entry(gnrc_ipv6_netif_t *entry, const ipv6_addr_t *addr,
                                        uint8_t prefix_len, uint8_t flags)
 {
     int i = 0;
@@ -159,19 +160,20 @@ static ipv6_addr_t *_add_addr_to_entry(gnrc_ipv6_netif_t *entry, const ipv6_addr
          *       source address. */
     }
 
-    tmp_addr->valid_timeout_msg.type = GNRC_NDP_MSG_ADDR_TIMEOUT;
+    //tmp_addr->valid_timeout_msg.type = GNRC_NDP_MSG_ADDR_TIMEOUT;
+    tmp_addr->valid_timeout_msg.type = 0x0211;
     tmp_addr->valid_timeout_msg.content.ptr = &tmp_addr->addr;
 
     return &(tmp_addr->addr);
 }
 
-static void _reset_addr_from_entry(gnrc_ipv6_netif_t *entry)
+void _reset_addr_from_entry(gnrc_ipv6_netif_t *entry)
 {
     DEBUG("ipv6 netif: Reset IPv6 addresses on interface %" PRIkernel_pid "\n", entry->pid);
     memset(entry->addrs, 0, sizeof(entry->addrs));
 }
 
-static void _ipv6_netif_remove(gnrc_ipv6_netif_t *entry)
+void _ipv6_netif_remove(gnrc_ipv6_netif_t *entry)
 {
     if (entry == NULL) {
         return;
@@ -199,7 +201,8 @@ static void _ipv6_netif_remove(gnrc_ipv6_netif_t *entry)
 void gnrc_ipv6_netif_init(void)
 {
     int i = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         mutex_init(&(ipv6_ifs[i].mutex));
         _ipv6_netif_remove(&ipv6_ifs[i]);
     }
@@ -211,7 +214,8 @@ void gnrc_ipv6_netif_add(kernel_pid_t pid)
     int i = 0;
     gnrc_ipv6_netif_t *free_entry = NULL;
 
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         if (ipv6_ifs[i].pid == pid) {
             /* pid has already been added */
             return;
@@ -268,7 +272,8 @@ void gnrc_ipv6_netif_remove(kernel_pid_t pid)
 gnrc_ipv6_netif_t *gnrc_ipv6_netif_get(kernel_pid_t pid)
 {
     int i = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         if (ipv6_ifs[i].pid == pid) {
             DEBUG("ipv6 netif: Get IPv6 interface %" PRIkernel_pid " (%p, i = %d)\n", pid,
                   (void *)(&(ipv6_ifs[i])), i);
@@ -328,7 +333,7 @@ ipv6_addr_t *gnrc_ipv6_netif_add_addr(kernel_pid_t pid, const ipv6_addr_t *addr,
 }
 
 /* 8051 implementation */
-static void _remove_addr_from_entry(gnrc_ipv6_netif_t *entry, ipv6_addr_t *addr)
+void _remove_addr_from_entry(gnrc_ipv6_netif_t *entry, ipv6_addr_t *addr)
 {
     int i = 0;
     mutex_lock(&entry->mutex);
@@ -373,7 +378,8 @@ void gnrc_ipv6_netif_remove_addr(kernel_pid_t pid, ipv6_addr_t *addr)
     int i = 0;
     //if (pid == KERNEL_PID_UNDEF) {
     if (pid == 0){
-        for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+        //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+	for (i = 0; i < 1; i++) {
             //if (ipv6_ifs[i].pid == KERNEL_PID_UNDEF) {
 	    if (ipv6_ifs[i].pid == 0) {
                 continue;
@@ -408,7 +414,8 @@ void gnrc_ipv6_netif_reset_addr(kernel_pid_t pid)
 kernel_pid_t gnrc_ipv6_netif_find_by_addr(ipv6_addr_t **out, const ipv6_addr_t *addr)
 {
     int i = 0;
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         if (out != NULL) {
             *out = gnrc_ipv6_netif_find_addr(ipv6_ifs[i].pid, addr);
 
@@ -464,7 +471,7 @@ ipv6_addr_t *gnrc_ipv6_netif_find_addr(kernel_pid_t pid, const ipv6_addr_t *addr
     return NULL;
 }
 
-static uint8_t _find_by_prefix_unsafe(ipv6_addr_t **res, gnrc_ipv6_netif_t *iface,
+uint8_t _find_by_prefix_unsafe(ipv6_addr_t **res, gnrc_ipv6_netif_t *iface,
                                       const ipv6_addr_t *addr, uint8_t *only)
 {   
     int i = 0;
@@ -532,7 +539,8 @@ kernel_pid_t gnrc_ipv6_netif_find_by_prefix(ipv6_addr_t **out, const ipv6_addr_t
     //kernel_pid_t res = KERNEL_PID_UNDEF;
     kernel_pid_t res = 0;
 
-    for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    //for (i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         uint8_t match;
 
         mutex_lock(&(ipv6_ifs[i].mutex));
@@ -584,7 +592,7 @@ kernel_pid_t gnrc_ipv6_netif_find_by_prefix(ipv6_addr_t **out, const ipv6_addr_t
  *      runtime of this function
  */
 /* 8051 implementation */
-static int _create_candidate_set(gnrc_ipv6_netif_t *iface, const ipv6_addr_t *dst,
+int _create_candidate_set(gnrc_ipv6_netif_t *iface, const ipv6_addr_t *dst,
                                  uint8_t *candidate_set, bool link_local_only)
 {
     int i = 0;
@@ -666,7 +674,7 @@ ipv6_addr_t *gnrc_ipv6_netif_match_prefix(kernel_pid_t pid, const ipv6_addr_t *p
  * @pre address is not loopback or unspecified.
  * see http://tools.ietf.org/html/rfc6724#section-4
  */
-static uint8_t _get_scope(const ipv6_addr_t *addr, const bool maybe_multicast)
+uint8_t _get_scope(const ipv6_addr_t *addr, const bool maybe_multicast)
 {
     if (maybe_multicast && ipv6_addr_is_multicast(addr)) {
         return (addr->u8[1] & 0x0f);
@@ -703,7 +711,7 @@ static uint8_t _get_scope(const ipv6_addr_t *addr, const bool maybe_multicast)
  *         is found.
  */
 /* 8051 implementation */
-static ipv6_addr_t *_source_address_selection(gnrc_ipv6_netif_t *iface, const ipv6_addr_t *dst,
+ipv6_addr_t *_source_address_selection(gnrc_ipv6_netif_t *iface, const ipv6_addr_t *dst,
                                               uint8_t *candidate_set)
 {
     /* create temporary set for assigning "points" to candidates wining in the
@@ -851,12 +859,13 @@ bool gnrc_ipv6_netif_addr_is_non_unicast(const ipv6_addr_t *addr)
 /* 8051 implementation */
 void gnrc_ipv6_netif_init_by_dev(void)
 {
-    kernel_pid_t ifs[GNRC_NETIF_NUMOF];
-    size_t ifnum = gnrc_netif_get(ifs);
+    //kernel_pid_t ifs[GNRC_NETIF_NUMOF];
+    kernel_pid_t ifs[1];
+    uint32_t ifnum = gnrc_netif_get(ifs);
 #ifdef MODULE_GNRC_SIXLOWPAN_ND_BORDER_ROUTER
     bool abr_init = false;
 #endif
-    size_t i = 0;
+    uint32_t i = 0;
     for (i = 0; i < ifnum; i++) {
         ipv6_addr_t addr;
         eui64_t iid;
@@ -969,6 +978,12 @@ netstats_t *gnrc_ipv6_netif_get_stats(kernel_pid_t pid)
     return &(iface->stats);
 }
 #endif
+
+gnrc_ipv6_netif_addr_t *gnrc_ipv6_netif_addr_get(const ipv6_addr_t *addr)
+{
+    //return container_of(addr, gnrc_ipv6_netif_addr_t, addr); 
+    return ((gnrc_ipv6_netif_addr_t*) ((char*) (addr) - offsetof(gnrc_ipv6_netif_addr_t, addr)));
+}
 
 /**
  * @}

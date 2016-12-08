@@ -33,23 +33,23 @@
 #include "net/gnrc/pktqueue.h"
 #include "xtimer.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
-#ifndef GNRC_IPV6_NC_SIZE
+//#ifndef GNRC_IPV6_NC_SIZE
 /**
  * @brief   The size of the neighbor cache
  */
-#define GNRC_IPV6_NC_SIZE           (GNRC_NETIF_NUMOF * 8)
-#endif
+//#define GNRC_IPV6_NC_SIZE           (GNRC_NETIF_NUMOF * 8)
+//#endif
 
-#ifndef GNRC_IPV6_NC_L2_ADDR_MAX
+//#ifndef GNRC_IPV6_NC_L2_ADDR_MAX
 /**
  * @brief   The maximum size of a link layer address
  */
-#define GNRC_IPV6_NC_L2_ADDR_MAX    (8)
-#endif
+//#define GNRC_IPV6_NC_L2_ADDR_MAX    (8)
+//#endif
 
 /**
  * @{
@@ -63,10 +63,10 @@ extern "C" {
  *          RFC 4861, section 7.3.2
  *      </a>
  */
-#define GNRC_IPV6_NC_STATE_MASK         (0x07)  /**< Mask for neighbor cache state */
-#define GNRC_IPV6_NC_STATE_POS          (0)     /**< Shift of neighbor cache state */
+//#define GNRC_IPV6_NC_STATE_MASK         (0x07)  /**< Mask for neighbor cache state */
+//#define GNRC_IPV6_NC_STATE_POS          (0)     /**< Shift of neighbor cache state */
 
-#define GNRC_IPV6_NC_STATE_UNMANAGED    (0x00)  /**< The entry is not manage by NDP */
+//#define GNRC_IPV6_NC_STATE_UNMANAGED    (0x00)  /**< The entry is not manage by NDP */
 
 /**
  * @brief The entry is unreachable
@@ -75,19 +75,19 @@ extern "C" {
  *          RFC 7048, section 3
  *      </a>
  */
-#define GNRC_IPV6_NC_STATE_UNREACHABLE  (0x01)
-#define GNRC_IPV6_NC_STATE_INCOMPLETE   (0x02)  /**< Address resolution is performed */
-#define GNRC_IPV6_NC_STATE_STALE        (0x03)  /**< The entry is stale */
-#define GNRC_IPV6_NC_STATE_DELAY        (0x04)  /**< The entry was stale but packet was sent out */
-#define GNRC_IPV6_NC_STATE_PROBE        (0x05)  /**< Periodic reachabality confirmation */
-#define GNRC_IPV6_NC_STATE_REACHABLE    (0x07)  /**< The entry is reachable */
+//#define GNRC_IPV6_NC_STATE_UNREACHABLE  (0x01)
+//#define GNRC_IPV6_NC_STATE_INCOMPLETE   (0x02)  /**< Address resolution is performed */
+//#define GNRC_IPV6_NC_STATE_STALE        (0x03)  /**< The entry is stale */
+//#define GNRC_IPV6_NC_STATE_DELAY        (0x04)  /**< The entry was stale but packet was sent out */
+//#define GNRC_IPV6_NC_STATE_PROBE        (0x05)  /**< Periodic reachabality confirmation */
+//#define GNRC_IPV6_NC_STATE_REACHABLE    (0x07)  /**< The entry is reachable */
 /**
  * @}
  */
 
-#define GNRC_IPV6_NC_IS_ROUTER          (0x08)  /**< The neighbor is a router */
+//#define GNRC_IPV6_NC_IS_ROUTER          (0x08)  /**< The neighbor is a router */
 
-#define GNRC_IPV6_NC_TYPE_MASK          (0x30)  /**< Mask for neighbor cache state */
+//#define GNRC_IPV6_NC_TYPE_MASK          (0x30)  /**< Mask for neighbor cache state */
 
 /**
  * @{
@@ -102,10 +102,10 @@ extern "C" {
  *
  * @details The node sents multicast Neighbor Solicitations for hosts.
  */
-#define GNRC_IPV6_NC_TYPE_NONE          (0x00)
-#define GNRC_IPV6_NC_TYPE_GC            (0x10)  /**< The entry is marked for removal */
-#define GNRC_IPV6_NC_TYPE_TENTATIVE     (0x20)  /**< The entry is temporary */
-#define GNRC_IPV6_NC_TYPE_REGISTERED    (0x30)  /**< The entry is registered */
+//#define GNRC_IPV6_NC_TYPE_NONE          (0x00)
+//#define GNRC_IPV6_NC_TYPE_GC            (0x10)  /**< The entry is marked for removal */
+//#define GNRC_IPV6_NC_TYPE_TENTATIVE     (0x20)  /**< The entry is temporary */
+//#define GNRC_IPV6_NC_TYPE_REGISTERED    (0x30)  /**< The entry is registered */
 /**
  * @}
  */
@@ -124,7 +124,8 @@ typedef struct { /* 8051 implementation */
     gnrc_pktqueue_t *pkts;                      /**< Packets waiting for address resolution */
 //#endif
     ipv6_addr_t ipv6_addr;                      /**< IPv6 address of the neighbor */
-    uint8_t l2_addr[GNRC_IPV6_NC_L2_ADDR_MAX];  /**< Link layer address of the neighbor */
+    //uint8_t l2_addr[GNRC_IPV6_NC_L2_ADDR_MAX];  /**< Link layer address of the neighbor */
+    uint8_t l2_addr[8];
     uint8_t l2_addr_len;                        /**< Length of gnrc_ipv6_nc_t::l2_addr */
     uint8_t flags;                              /**< Flags as defined above */
     kernel_pid_t iface;                         /**< PID to the interface where the neighbor is */
@@ -187,7 +188,7 @@ void gnrc_ipv6_nc_init(void);
  * @return  NULL, on failure
  */
 gnrc_ipv6_nc_t *gnrc_ipv6_nc_add(kernel_pid_t iface, const ipv6_addr_t *ipv6_addr,
-                                 const void *l2_addr, size_t l2_addr_len, uint8_t flags);
+                                 const void *l2_addr, uint32_t l2_addr_len, uint8_t flags);
 
 /**
  * @brief   Removes a neighbor from the neighbor cache
@@ -237,9 +238,10 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get_next_router(gnrc_ipv6_nc_t *prev);
  *
  * @return  The state of the neighbor cache entry as defined by its flags.
  */
-static inline uint8_t gnrc_ipv6_nc_get_state(const gnrc_ipv6_nc_t *entry)
+uint8_t gnrc_ipv6_nc_get_state(const gnrc_ipv6_nc_t *entry)
 {
-    return (entry->flags & GNRC_IPV6_NC_STATE_MASK);
+    //return (entry->flags & GNRC_IPV6_NC_STATE_MASK);
+    return (entry->flags & 0x07);
 }
 
 /**
@@ -249,9 +251,10 @@ static inline uint8_t gnrc_ipv6_nc_get_state(const gnrc_ipv6_nc_t *entry)
  *
  * @return  The type of the neighbor cache entry as defined by its flags.
  */
-static inline uint8_t gnrc_ipv6_nc_get_type(const gnrc_ipv6_nc_t *entry)
+uint8_t gnrc_ipv6_nc_get_type(const gnrc_ipv6_nc_t *entry)
 {
-    return (entry->flags & GNRC_IPV6_NC_TYPE_MASK);
+    //return (entry->flags & GNRC_IPV6_NC_TYPE_MASK);
+    return (entry->flags & 0x30);
 }
 
 /**
@@ -263,11 +266,13 @@ static inline uint8_t gnrc_ipv6_nc_get_type(const gnrc_ipv6_nc_t *entry)
  * @return  true, if you can send packets to @p entry
  * @return  false, if you can't send packets to @p entry
  */
-static inline bool gnrc_ipv6_nc_is_reachable(const gnrc_ipv6_nc_t *entry)
+bool gnrc_ipv6_nc_is_reachable(const gnrc_ipv6_nc_t *entry)
 {
     switch (gnrc_ipv6_nc_get_state(entry)) {
-        case GNRC_IPV6_NC_STATE_UNREACHABLE:
-        case GNRC_IPV6_NC_STATE_INCOMPLETE:
+        //case GNRC_IPV6_NC_STATE_UNREACHABLE:
+	case 0x01:
+	case 0x02:
+        //case GNRC_IPV6_NC_STATE_INCOMPLETE:
             return false;
 
         default:
@@ -309,9 +314,9 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_still_reachable(const ipv6_addr_t *ipv6_addr);
 kernel_pid_t gnrc_ipv6_nc_get_l2_addr(uint8_t *l2_addr, uint8_t *l2_addr_len,
                                       const gnrc_ipv6_nc_t *entry);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IPV6_NC_H_ */
 /**

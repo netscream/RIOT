@@ -37,7 +37,7 @@ static gnrc_ipv6_nc_t *_last_router = NULL; /* last router chosen as default
                                              * not at all) */
 static gnrc_pktsnip_t *_build_headers(kernel_pid_t iface, gnrc_pktsnip_t *payload,
                                       ipv6_addr_t *dst, ipv6_addr_t *src);
-static size_t _get_l2src(kernel_pid_t iface, uint8_t *l2src, size_t l2src_maxlen);
+static uint32_t _get_l2src(kernel_pid_t iface, uint8_t *l2src, uint32_t l2src_maxlen);
 
 /**
  * @brief   Sends @ref GNRC_NETAPI_MSG_TYPE_SND delayed.
@@ -172,7 +172,7 @@ void gnrc_ndp_internal_send_nbr_adv(kernel_pid_t iface, ipv6_addr_t *tgt, ipv6_a
 
     if (supply_tl2a) {
         uint8_t l2src[8];
-        size_t l2src_len;
+        uint32_t l2src_len;
         /* we previously checked if we are the target, so we can take our L2src */
         l2src_len = _get_l2src(iface, l2src, sizeof(l2src));
 
@@ -239,7 +239,7 @@ void gnrc_ndp_internal_send_nbr_sol(kernel_pid_t iface, ipv6_addr_t *src, ipv6_a
     /* cppcheck-suppress variableScope */
     uint8_t l2src[8];
     /* cppcheck-suppress variableScope */
-    size_t l2src_len = 0;
+    uint32_t l2src_len = 0;
 
     DEBUG("ndp internal: send neighbor solicitation (iface: %" PRIkernel_pid ", src: %s, ",
           iface, ipv6_addr_to_str(addr_str, src ? src : &ipv6_addr_unspecified, sizeof(addr_str)));
@@ -319,7 +319,7 @@ void gnrc_ndp_internal_send_rtr_sol(kernel_pid_t iface, ipv6_addr_t *dst)
     /* check if there is a fitting source address to target */
     if ((src = gnrc_ipv6_netif_find_best_src_addr(iface, dst, false)) != NULL) {
         uint8_t l2src[8];
-        size_t l2src_len;
+        uint32_t l2src_len;
         l2src_len = _get_l2src(iface, l2src, sizeof(l2src));
         if (l2src_len > 0) {
             /* add source address link-layer address option */
@@ -533,7 +533,7 @@ void gnrc_ndp_internal_send_rtr_adv(kernel_pid_t iface, ipv6_addr_t *src, ipv6_a
     if (src != NULL) {
         DEBUG(" - SL2A\n");
         uint8_t l2src[8];
-        size_t l2src_len;
+        uint32_t l2src_len;
         /* optimization note: MAY also be omitted to facilitate in-bound load balancing over
          * replicated interfaces.
          * source: https://tools.ietf.org/html/rfc4861#section-6.2.3 */
@@ -807,7 +807,7 @@ bool gnrc_ndp_internal_pi_opt_handle(kernel_pid_t iface, uint8_t icmpv6_type,
     return true;
 }
 
-static size_t _get_l2src(kernel_pid_t iface, uint8_t *l2src, size_t l2src_maxlen)
+static uint32_t _get_l2src(kernel_pid_t iface, uint8_t *l2src, uint32_t l2src_maxlen)
 {
     bool try_long = false;
     int res;

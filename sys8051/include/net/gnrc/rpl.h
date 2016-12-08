@@ -115,30 +115,30 @@
 #include "net/rpl/rpl_netstats.h"
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Default stack size to use for the RPL thread
  */
-#ifndef GNRC_RPL_STACK_SIZE
+/*#ifndef GNRC_RPL_STACK_SIZE
 #define GNRC_RPL_STACK_SIZE     (THREAD_STACKSIZE_DEFAULT)
-#endif
+#endif*/
 
 /**
  * @brief   Default priority for the RPL thread
  */
-#ifndef GNRC_RPL_PRIO
+/*#ifndef GNRC_RPL_PRIO
 #define GNRC_RPL_PRIO           (GNRC_IPV6_PRIO + 1)
-#endif
+#endif*/
 
 /**
  * @brief   Default message queue size to use for the RPL thread.
  */
-#ifndef GNRC_RPL_MSG_QUEUE_SIZE
+/*#ifndef GNRC_RPL_MSG_QUEUE_SIZE
 #define GNRC_RPL_MSG_QUEUE_SIZE (8U)
-#endif
+#endif*/
 
 /**
  * @brief   Static initializer for the all-RPL-nodes multicast IPv6
@@ -148,27 +148,27 @@ extern "C" {
  *          RFC 6550, section 6
  *      </a>
  */
-#define GNRC_RPL_ALL_NODES_ADDR {{ 0xff, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x1a }}
+//#define GNRC_RPL_ALL_NODES_ADDR {{ 0xff, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x1a }}
 
 /**
  * @brief   Message type for lifetime updates
  */
-#define GNRC_RPL_MSG_TYPE_LIFETIME_UPDATE     (0x0900)
+//#define GNRC_RPL_MSG_TYPE_LIFETIME_UPDATE     (0x0900)
 
 /**
  * @brief   Message type for trickle intervals
  */
-#define GNRC_RPL_MSG_TYPE_TRICKLE_INTERVAL    (0x0901)
+//#define GNRC_RPL_MSG_TYPE_TRICKLE_INTERVAL    (0x0901)
 
 /**
  * @brief   Message type for trickle callbacks
  */
-#define GNRC_RPL_MSG_TYPE_TRICKLE_CALLBACK    (0x0902)
+//#define GNRC_RPL_MSG_TYPE_TRICKLE_CALLBACK    (0x0902)
 
 /**
  * @brief   Message type for handling DAO sending
  */
-#define GNRC_RPL_MSG_TYPE_DAO_HANDLE  (0x0903)
+//#define GNRC_RPL_MSG_TYPE_DAO_HANDLE  (0x0903)
 
 /**
  * @brief   Infinite rank
@@ -176,7 +176,7 @@ extern "C" {
  *          RFC 6550, section 17
  *      </a>
  */
-#define GNRC_RPL_INFINITE_RANK (0xFFFF)
+//#define GNRC_RPL_INFINITE_RANK (0xFFFF)
 
 /**
  * @brief   Default minimum hop rank increase
@@ -184,47 +184,47 @@ extern "C" {
  *          RFC 6550, section 17
  *      </a>
  */
-#ifndef GNRC_RPL_DEFAULT_MIN_HOP_RANK_INCREASE
+/*#ifndef GNRC_RPL_DEFAULT_MIN_HOP_RANK_INCREASE
 #define GNRC_RPL_DEFAULT_MIN_HOP_RANK_INCREASE (256)
-#endif
+#endif*/
 
 /**
  * @brief   Maximum rank increase
  */
-#ifndef GNRC_RPL_DEFAULT_MAX_RANK_INCREASE
+/*#ifndef GNRC_RPL_DEFAULT_MAX_RANK_INCREASE
 #define GNRC_RPL_DEFAULT_MAX_RANK_INCREASE (0)
-#endif
+#endif*/
 
 /**
  * @brief   Number of implemented Objective Functions
  */
-#define GNRC_RPL_IMPLEMENTED_OFS_NUMOF (1)
+//#define GNRC_RPL_IMPLEMENTED_OFS_NUMOF (1)
 
 /**
  * @brief   Default Objective Code Point (OF0)
  */
-#define GNRC_RPL_DEFAULT_OCP (0)
+//#define GNRC_RPL_DEFAULT_OCP (0)
 
 /**
  * @brief   Default Instance ID
  */
-#ifndef GNRC_RPL_DEFAULT_INSTANCE
+/*#ifndef GNRC_RPL_DEFAULT_INSTANCE
 #define GNRC_RPL_DEFAULT_INSTANCE (0)
-#endif
+#endif*/
 
 /**
  * @name RPL Mode of Operations
  * @{
  */
-#define GNRC_RPL_MOP_NO_DOWNWARD_ROUTES  (0x00)
+/*#define GNRC_RPL_MOP_NO_DOWNWARD_ROUTES  (0x00)
 #define GNRC_RPL_MOP_NON_STORING_MODE    (0x01)
 #define GNRC_RPL_MOP_STORING_MODE_NO_MC  (0x02)
-#define GNRC_RPL_MOP_STORING_MODE_MC     (0x03)
+#define GNRC_RPL_MOP_STORING_MODE_MC     (0x03)*/
 
 /** default MOP set on compile time */
-#ifndef GNRC_RPL_DEFAULT_MOP
+/*#ifndef GNRC_RPL_DEFAULT_MOP
 #define GNRC_RPL_DEFAULT_MOP GNRC_RPL_MOP_STORING_MODE_NO_MC
-#endif
+#endif*/
 /** @} */
 
 /**
@@ -234,30 +234,30 @@ extern "C" {
  *      </a>
  * @{
  */
-#define GNRC_RPL_COUNTER_MAX                 (255)
+/*#define GNRC_RPL_COUNTER_MAX                 (255)
 #define GNRC_RPL_COUNTER_LOWER_REGION        (127)
 #define GNRC_RPL_COUNTER_SEQ_WINDOW          (16)
-#define GNRC_RPL_COUNTER_INIT                (GNRC_RPL_COUNTER_MAX - GNRC_RPL_COUNTER_SEQ_WINDOW + 1)
+#define GNRC_RPL_COUNTER_INIT                (GNRC_RPL_COUNTER_MAX - GNRC_RPL_COUNTER_SEQ_WINDOW + 1)*/
 
-static inline uint8_t GNRC_RPL_COUNTER_INCREMENT(uint8_t counter)
+uint8_t GNRC_RPL_COUNTER_INCREMENT(uint8_t counter)
 {
     return ((counter > GNRC_RPL_COUNTER_LOWER_REGION) ?
             ((counter == GNRC_RPL_COUNTER_MAX) ? counter = 0 : ++counter) :
             ((counter == GNRC_RPL_COUNTER_LOWER_REGION) ? counter = 0 : ++counter));
 }
 
-static inline bool GNRC_RPL_COUNTER_IS_INIT(uint8_t counter)
+bool GNRC_RPL_COUNTER_IS_INIT(uint8_t counter)
 {
     return (counter > GNRC_RPL_COUNTER_LOWER_REGION);
 }
 
-static inline bool GNRC_RPL_COUNTER_GREATER_THAN_LOCAL(uint8_t A, uint8_t B)
+bool GNRC_RPL_COUNTER_GREATER_THAN_LOCAL(uint8_t A, uint8_t B)
 {
     return (((A < B) && (GNRC_RPL_COUNTER_LOWER_REGION + 1 - B + A < GNRC_RPL_COUNTER_SEQ_WINDOW))
             || ((A > B) && (A - B < GNRC_RPL_COUNTER_SEQ_WINDOW)));
 }
 
-static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
+bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
 {
     return ((A > GNRC_RPL_COUNTER_LOWER_REGION) ? ((B > GNRC_RPL_COUNTER_LOWER_REGION) ?
                 GNRC_RPL_COUNTER_GREATER_THAN_LOCAL(A, B) : 0) :
@@ -272,7 +272,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *      </a>
  * @{
  */
-#ifndef GNRC_RPL_DEFAULT_DIO_INTERVAL_DOUBLINGS
+/*#ifndef GNRC_RPL_DEFAULT_DIO_INTERVAL_DOUBLINGS
 #define GNRC_RPL_DEFAULT_DIO_INTERVAL_DOUBLINGS (20)
 #endif
 
@@ -282,7 +282,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
 
 #ifndef GNRC_RPL_DEFAULT_DIO_REDUNDANCY_CONSTANT
 #define GNRC_RPL_DEFAULT_DIO_REDUNDANCY_CONSTANT (10)
-#endif
+#endif*/
 /** @} */
 
 /**
@@ -293,18 +293,18 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
         </a>
  * @{
  */
-#ifndef GNRC_RPL_DEFAULT_LIFETIME
+/*#ifndef GNRC_RPL_DEFAULT_LIFETIME
 #define GNRC_RPL_DEFAULT_LIFETIME (5)
 #endif
 #ifndef GNRC_RPL_LIFETIME_UNIT
 #define GNRC_RPL_LIFETIME_UNIT (60)
-#endif
+#endif*/
 /** @} */
 
 /**
  * @brief Default prefix length for the DODAG id
  */
-#define GNRC_RPL_DEFAULT_PREFIX_LEN   (64)
+//#define GNRC_RPL_DEFAULT_PREFIX_LEN   (64)
 
 /**
  * @brief Default prefix valid and preferred time for the DODAG id
@@ -313,7 +313,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          Route Information
  *      </a>
  */
-#define GNRC_RPL_DEFAULT_PREFIX_LIFETIME  (0xFFFFFFFF)
+//#define GNRC_RPL_DEFAULT_PREFIX_LIFETIME  (0xFFFFFFFF)
 
 /**
  * @brief A DODAG can be grounded or floating
@@ -321,7 +321,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          Grounded and Floating DODAGs
  *      </a>
  */
-#define GNRC_RPL_GROUNDED (1)
+//#define GNRC_RPL_GROUNDED (1)
 
 /**
  * @name Parameters used for DAO handling
@@ -330,7 +330,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
         </a>
  * @{
  */
-#ifndef GNRC_RPL_DAO_SEND_RETRIES
+/*#ifndef GNRC_RPL_DAO_SEND_RETRIES
 #define GNRC_RPL_DAO_SEND_RETRIES (4)
 #endif
 #ifndef GNRC_RPL_DEFAULT_WAIT_FOR_DAO_ACK
@@ -341,21 +341,21 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
 #endif
 #ifndef GNRC_RPL_DEFAULT_DAO_DELAY
 #define GNRC_RPL_DEFAULT_DAO_DELAY (1)
-#endif
+#endif*/
 /** @} */
 
 /**
  * @brief Cleanup timeout in seconds
  */
-#define GNRC_RPL_CLEANUP_TIME (5)
+//#define GNRC_RPL_CLEANUP_TIME (5)
 
 /**
  * @name Node Status
  * @{
  */
-#define GNRC_RPL_NORMAL_NODE (0)
+/*#define GNRC_RPL_NORMAL_NODE (0)
 #define GNRC_RPL_ROOT_NODE (1)
-#define GNRC_RPL_LEAF_NODE (2)
+#define GNRC_RPL_LEAF_NODE (2)*/
 /** @} */
 
 
@@ -366,7 +366,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *      </a>
  * @{
  */
-#define GNRC_RPL_OPT_PAD1                 (0)
+/*#define GNRC_RPL_OPT_PAD1                 (0)
 #define GNRC_RPL_OPT_PADN                 (1)
 #define GNRC_RPL_OPT_DAG_METRIC_CONTAINER (2)
 #define GNRC_RPL_OPT_ROUTE_INFO           (3)
@@ -375,13 +375,13 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
 #define GNRC_RPL_OPT_TRANSIT              (6)
 #define GNRC_RPL_OPT_SOLICITED_INFO       (7)
 #define GNRC_RPL_OPT_PREFIX_INFO          (8)
-#define GNRC_RPL_OPT_TARGET_DESC          (9)
+#define GNRC_RPL_OPT_TARGET_DESC          (9)*/
 /** @} */
 
 /**
  * @brief Rank of the root node
  */
-#define GNRC_RPL_ROOT_RANK (GNRC_RPL_DEFAULT_MIN_HOP_RANK_INCREASE)
+//#define GNRC_RPL_ROOT_RANK (GNRC_RPL_DEFAULT_MIN_HOP_RANK_INCREASE)
 
 /**
  *  @brief  DIS ICMPv6 code
@@ -389,7 +389,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          RFC 6550, section 6
  *      </a>
  */
-#define GNRC_RPL_ICMPV6_CODE_DIS (0x00)
+//#define GNRC_RPL_ICMPV6_CODE_DIS (0x00)
 
 /**
  *  @brief  DIO ICMPv6 code
@@ -397,7 +397,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          RFC 6550, section 6
  *      </a>
  */
-#define GNRC_RPL_ICMPV6_CODE_DIO (0x01)
+//#define GNRC_RPL_ICMPV6_CODE_DIO (0x01)
 
 /**
  *  @brief  DAO ICMPv6 code
@@ -405,7 +405,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          RFC 6550, section 6
  *      </a>
  */
-#define GNRC_RPL_ICMPV6_CODE_DAO (0x02)
+//#define GNRC_RPL_ICMPV6_CODE_DAO (0x02)
 
 /**
  *  @brief  DAO ACK ICMPv6 code
@@ -413,12 +413,12 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          RFC 6550, section 6
  *      </a>
  */
-#define GNRC_RPL_ICMPV6_CODE_DAO_ACK (0x03)
+//#define GNRC_RPL_ICMPV6_CODE_DAO_ACK (0x03)
 
 /**
  * @brief Update interval of the lifetime update function
  */
-#define GNRC_RPL_LIFETIME_UPDATE_STEP (2)
+//#define GNRC_RPL_LIFETIME_UPDATE_STEP (2)
 
 /**
  *  @brief Rank part of the DODAG
@@ -426,7 +426,7 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *          RFC 6550, section 3.5.1, Rank Comparison (DAGRank())
  *      </a>
  */
-#define DAGRANK(rank,mhri)   (rank/mhri)
+//#define DAGRANK(rank,mhri)   (rank/mhri)
 
 /**
  *  @name   Global / Local instance id masks
@@ -435,27 +435,27 @@ static inline bool GNRC_RPL_COUNTER_GREATER_THAN(uint8_t A, uint8_t B)
  *      </a>
  *  @{
  */
-#define GNRC_RPL_INSTANCE_ID_MSB      (1 << 7)
+/*#define GNRC_RPL_INSTANCE_ID_MSB      (1 << 7)
 #define GNRC_RPL_GLOBAL_INSTANCE_MASK (0x7F)
 #define GNRC_RPL_LOCAL_INSTANCE_MASK  (0x3F)
-#define GNRC_RPL_INSTANCE_D_FLAG_MASK (1 << 6)
+#define GNRC_RPL_INSTANCE_D_FLAG_MASK (1 << 6)*/
 /** @} */
 
 /**
  * @brief PID of the RPL thread.
  */
-extern kernel_pid_t gnrc_rpl_pid;
+extern kernel_pid_t XDATA gnrc_rpl_pid;
 
 /**
  * @brief @see @ref GNRC_RPL_ALL_NODES_ADDR
  */
-extern const ipv6_addr_t ipv6_addr_all_rpl_nodes;
+extern const ipv6_addr_t CODE ipv6_addr_all_rpl_nodes;
 
 #ifdef MODULE_NETSTATS_RPL
 /**
  * @brief Statistics for RPL control messages
  */
-extern netstats_rpl_t gnrc_rpl_netstats;
+extern netstats_rpl_t XDATA gnrc_rpl_netstats;
 #endif
 
 /**
@@ -623,16 +623,16 @@ uint8_t gnrc_rpl_gen_instance_id(bool local);
  * @param[in] dodag             Pointer to the DODAG
  * @param[in] status            true for activating PIOs and false for deactivating them
  */
-static inline void gnrc_rpl_config_pio(gnrc_rpl_dodag_t *dodag, bool status)
+void gnrc_rpl_config_pio(gnrc_rpl_dodag_t *dodag, bool status)
 {
     dodag->dio_opts = (dodag->dio_opts & ~GNRC_RPL_REQ_DIO_OPT_PREFIX_INFO) |
                       (status << GNRC_RPL_REQ_DIO_OPT_PREFIX_INFO_SHIFT);
 }
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_RPL_H_ */
 /** @} */

@@ -28,9 +28,9 @@
 #include "net/gnrc.h"
 #include "sched.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Connection base class
@@ -80,7 +80,7 @@ struct conn_udp {
  * @param[in] type      @ref net_ng_nettype.
  * @param[in] demux_ctx demux context (port or proto) for the connection.
  */
-static inline void gnrc_conn_reg(gnrc_netreg_entry_t *entry, gnrc_nettype_t type,
+void gnrc_conn_reg(gnrc_netreg_entry_t *entry, gnrc_nettype_t type,
                                  uint32_t demux_ctx)
 {
     entry->pid = sched_active_pid;
@@ -124,9 +124,9 @@ bool gnrc_conn6_set_local_addr(uint8_t *conn_addr, const ipv6_addr_t *addr);
 int gnrc_conn_recvfrom(conn_t *conn, void *data, size_t max_len, void *addr, size_t *addr_len,
                        uint16_t *port);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_CONN_H_ */
 /** @} */

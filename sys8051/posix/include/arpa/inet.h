@@ -34,9 +34,9 @@
 #include "sys/bytes.h"
 #include "netinet/in.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Size in byte of an IPv4 address
@@ -66,14 +66,15 @@ extern "C" {
  * @return  NULL, if @p size was smaller than needed
  * @return  NULL, if @p src or @p dst was NULL
  */
-static inline const char *inet_ntop(int af, const void *restrict src, char *restrict dst,
+static inline const char *inet_ntop(int af, const void* restrict src, char* restrict dst,
                                     socklen_t size)
 {
     switch (af) {
 #ifdef MODULE_IPV4_ADDR
         case AF_INET:
             if (ipv4_addr_to_str(dst, src, (size_t)size) == NULL) {
-                errno = ENOSPC;
+                //errno = ENOSPC;
+		errno = 28;
                 return NULL;
             }
             break;
@@ -81,7 +82,8 @@ static inline const char *inet_ntop(int af, const void *restrict src, char *rest
 #ifdef MODULE_IPV6_ADDR
         case AF_INET6:
             if (ipv6_addr_to_str(dst, src, (size_t)size) == NULL) {
-                errno = ENOSPC;
+                //errno = ENOSPC;
+		errno = 28;
                 return NULL;
             }
             break;
@@ -90,10 +92,11 @@ static inline const char *inet_ntop(int af, const void *restrict src, char *rest
             (void)src;
             (void)dst;
             (void)size;
-            errno = EAFNOSUPPORT;
+            //errno = EAFNOSUPPORT;
+	    errno = 97;
             return NULL;
     }
-    return dst;
+    //return dst; //no need default allways executed
 }
 
 /**
@@ -130,15 +133,16 @@ static inline int inet_pton(int af, const char *src, void *dst)
         default:
             (void)src;
             (void)dst;
-            errno = EAFNOSUPPORT;
+            //errno = EAFNOSUPPORT;
+	    errno = 97;
             return -1;
     }
     return 1;
 }
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 /**
  * @}

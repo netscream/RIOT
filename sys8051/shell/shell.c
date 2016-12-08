@@ -101,9 +101,9 @@ static void print_help(const shell_command_t *command_list)
     }
 }
 
-static void handle_input_line(const shell_command_t *command_list, char *line)
+void handle_input_line(const shell_command_t *command_list, char *line)
 {
-    static const char *INCORRECT_QUOTING = "shell: incorrect quoting";
+    const char *INCORRECT_QUOTING = "shell: incorrect quoting";
 
     /* first we need to calculate the number of arguments */
     unsigned argc = 0;
@@ -124,7 +124,7 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
                 do {
                     ++pos;
                     if (!*pos) {
-                        puts(INCORRECT_QUOTING);
+                        printf(INCORRECT_QUOTING);
                         return;
                     }
                     else if (*pos == '\\') {
@@ -132,14 +132,14 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
                         ++contains_esc_seq;
                         ++pos;
                         if (!*pos) {
-                            puts(INCORRECT_QUOTING);
+                            printf(INCORRECT_QUOTING);
                             return;
                         }
                         continue;
                     }
                 } while (*pos != quote_char);
                 if ((unsigned char) pos[1] > ' ') {
-                    puts(INCORRECT_QUOTING);
+                    printf(INCORRECT_QUOTING);
                     return;
                 }
             }
@@ -151,13 +151,13 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
                         ++contains_esc_seq;
                         ++pos;
                         if (!*pos) {
-                            puts(INCORRECT_QUOTING);
+                            printf(INCORRECT_QUOTING);
                             return;
                         }
                     }
                     ++pos;
                     if (*pos == '"') {
-                        puts(INCORRECT_QUOTING);
+                        printf(INCORRECT_QUOTING);
                         return;
                     }
                 } while ((unsigned char) *pos > ' ');
@@ -181,7 +181,7 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
     }
 
     /* then we fill the argv array */
-    argv[argc + 1];
+    //argv[argc + 1];
     //argv[argc] = NULL;
     pos = line;
     for (i = 0; i < argc; ++i) {
@@ -225,7 +225,7 @@ static void handle_input_line(const shell_command_t *command_list, char *line)
     }
 }
 
-static int readline(char *buf, size_t size)
+int readline(char *buf, size_t size)
 {
     char *line_buf_ptr = buf;
     int c = 0;
@@ -244,10 +244,10 @@ static int readline(char *buf, size_t size)
         /* DOS newlines are handled like hitting enter twice, but empty lines are ignored. */
         if (c == '\r' || c == '\n') {
             *line_buf_ptr = '\0';
-#ifndef SHELL_NO_ECHO
+/*#ifndef SHELL_NO_ECHO
             _putchar('\r');
             _putchar('\n');
-#endif
+#endif*/
 
             /* return 1 if line is empty, 0 otherwise */
             return line_buf_ptr == buf;
@@ -261,34 +261,33 @@ static int readline(char *buf, size_t size)
 
             *--line_buf_ptr = '\0';
             /* white-tape the character */
-#ifndef SHELL_NO_ECHO
+/*#ifndef SHELL_NO_ECHO
             _putchar('\b');
             _putchar(' ');
             _putchar('\b');
-#endif
+#endif*/
         }
         else {
             *line_buf_ptr++ = c;
-#ifndef SHELL_NO_ECHO
+/*#ifndef SHELL_NO_ECHO
             _putchar(c);
-#endif
+#endif*/
         }
     }
 }
 
-static inline void print_prompt(void)
+void print_prompt(void)
 {
-#ifndef SHELL_NO_PROMPT
-    _putchar('>');
-    _putchar(' ');
-#endif
+//#ifndef SHELL_NO_PROMPT
+    putchar('> ');
+//#endif
 
-#ifdef MODULE_NEWLIB
+/*#ifdef MODULE_NEWLIB
     fflush(stdout);
-#endif
+#endif*/
 }
 
-void shell_run(const shell_command_t *shell_commands, char *line_buf, int len)
+/*void shell_run(const shell_command_t *shell_commands, char *line_buf, int len)
 {
     print_prompt();
 
@@ -301,4 +300,4 @@ void shell_run(const shell_command_t *shell_commands, char *line_buf, int len)
 
         print_prompt();
     }
-}
+}*/

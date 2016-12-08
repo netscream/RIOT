@@ -31,7 +31,7 @@
 #define GNRC_PKTBUF_H_
 
 #include <stdbool.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
 
 #include "atomic.h"
@@ -41,9 +41,14 @@
 #include "net/gnrc/nettype.h"
 #include "utlist.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
+
+typedef struct _unused {
+    struct _unused *next;
+    unsigned int size;
+} _unused_t;
 
 /**
  * @def     GNRC_PKTBUF_SIZE
@@ -55,9 +60,9 @@ extern "C" {
  *          @ref GNRC_PKTBUF_SIZE is 0 the packet buffer will use dynamic memory
  *          management to allocate packets.
  */
-#ifndef GNRC_PKTBUF_SIZE
-#define GNRC_PKTBUF_SIZE    (6144)
-#endif  /* GNRC_PKTBUF_SIZE */
+//#ifndef GNRC_PKTBUF_SIZE
+//#define GNRC_PKTBUF_SIZE    (6144)
+//#endif  /* GNRC_PKTBUF_SIZE */
 
 /**
  * @brief   Initializes packet buffer module.
@@ -83,10 +88,10 @@ void gnrc_pktbuf_init(void);
  * @param[in] type      Protocol type of the gnrc_pktsnip_t.
  *
  * @return  Pointer to the packet part that represents the new gnrc_pktsnip_t.
- * @return  NULL, if no space is left in the packet buffer.
+ * @retunrn  NULL, if no space is left in the packet buffer.
  */
-gnrc_pktsnip_t *gnrc_pktbuf_add(gnrc_pktsnip_t *next, void *data, size_t size,
-                                gnrc_nettype_t type);
+gnrc_pktsnip_t* gnrc_pktbuf_add(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size,
+                                gnrc_nettype_t XDATA type);
 
 /**
  * @brief   Marks the first @p size bytes in a received packet with a new
@@ -118,7 +123,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_add(gnrc_pktsnip_t *next, void *data, size_t size,
  * @return  NULL, if pkt == NULL or size == 0 or size > pkt->size or pkt->data == NULL.
  * @return  NULL, if no space is left in the packet buffer.
  */
-gnrc_pktsnip_t *gnrc_pktbuf_mark(gnrc_pktsnip_t *pkt, size_t size, gnrc_nettype_t type);
+gnrc_pktsnip_t* gnrc_pktbuf_mark(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA size, gnrc_nettype_t XDATA type);
 
 /**
  * @brief   Reallocates gnrc_pktsnip_t::data of @p pkt in the packet buffer, without
@@ -139,7 +144,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_mark(gnrc_pktsnip_t *pkt, size_t size, gnrc_nettype_
  * @return  0, on success
  * @return  ENOMEM, if no space is left in the packet buffer.
  */
-int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t *pkt, size_t size);
+int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA size);
 
 /**
  * @brief   Increases gnrc_pktsnip_t::users of @p pkt atomically.
@@ -147,7 +152,7 @@ int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t *pkt, size_t size);
  * @param[in] pkt   A packet.
  * @param[in] num   Number you want to increment gnrc_pktsnip_t::users of @p pkt by.
  */
-void gnrc_pktbuf_hold(gnrc_pktsnip_t *pkt, unsigned int num);
+void gnrc_pktbuf_hold(gnrc_pktsnip_t* XDATA pkt, unsigned int XDATA num);
 
 /**
  * @brief   Decreases gnrc_pktsnip_t::users of @p pkt atomically and removes it if it
@@ -159,7 +164,7 @@ void gnrc_pktbuf_hold(gnrc_pktsnip_t *pkt, unsigned int num);
  * @param[in] pkt   A packet.
  * @param[in] err   An error code.
  */
-void gnrc_pktbuf_release_error(gnrc_pktsnip_t *pkt, uint32_t err);
+void gnrc_pktbuf_release_error(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA err);
 
 /**
  * @brief   Decreases gnrc_pktsnip_t::users of @p pkt atomically and removes it if it
@@ -167,10 +172,11 @@ void gnrc_pktbuf_release_error(gnrc_pktsnip_t *pkt, uint32_t err);
  *
  * @param[in] pkt   A packet.
  */
-static inline void gnrc_pktbuf_release(gnrc_pktsnip_t *pkt)
-{
-    gnrc_pktbuf_release_error(pkt, GNRC_NETERR_SUCCESS);
-}
+void gnrc_pktbuf_release(gnrc_pktsnip_t* XDATA pkt);
+/*{
+    //gnrc_pktbuf_release_error(pkt, GNRC_NETERR_SUCCESS);
+    gnrc_pktbuf_release_error(pkt, 0);
+}*/
 
 /**
  * @brief   Must be called once before there is a write operation in a thread.
@@ -186,7 +192,7 @@ static inline void gnrc_pktbuf_release(gnrc_pktsnip_t *pkt)
  * @return  NULL, if gnrc_pktsnip_t::users of @p pkt > 1 and if there is not
  *          enough space in the packet buffer.
  */
-gnrc_pktsnip_t *gnrc_pktbuf_start_write(gnrc_pktsnip_t *pkt);
+gnrc_pktsnip_t* gnrc_pktbuf_start_write(gnrc_pktsnip_t* XDATA pkt);
 
 /**
  * @brief   Create a IOVEC representation of the packet pointed to by *pkt*
@@ -201,7 +207,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_start_write(gnrc_pktsnip_t *pkt);
  * @return  Pointer to the 'IOVEC packet snip'
  * @return  NULL, if packet is empty of the packet buffer is full
  */
-gnrc_pktsnip_t *gnrc_pktbuf_get_iovec(gnrc_pktsnip_t *pkt, size_t *len);
+gnrc_pktsnip_t* gnrc_pktbuf_get_iovec(gnrc_pktsnip_t* XDATA pkt, uint32_t* XDATA len);
 
 /**
  * @brief   Deletes a snip from a packet and the packet buffer.
@@ -211,7 +217,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_get_iovec(gnrc_pktsnip_t *pkt, size_t *len);
  *
  * @return  The new reference to @p pkt.
  */
-gnrc_pktsnip_t *gnrc_pktbuf_remove_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *snip);
+gnrc_pktsnip_t* gnrc_pktbuf_remove_snip(gnrc_pktsnip_t* XDATA pkt, gnrc_pktsnip_t* XDATA snip);
 
 /**
  * @brief   Replace a snip from a packet and the packet buffer by another snip.
@@ -222,7 +228,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_remove_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *sni
  *
  * @return  The new reference to @p pkt
  */
-gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *old, gnrc_pktsnip_t *add);
+gnrc_pktsnip_t* gnrc_pktbuf_replace_snip(gnrc_pktsnip_t* XDATA pkt, gnrc_pktsnip_t* XDATA old, gnrc_pktsnip_t* XDATA add);
 
 /**
  * @brief Duplicates pktsnip chain upto (including) a snip with the given type
@@ -272,7 +278,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *ol
  * @return The duplicated snip, if succeeded.
  * @return NULL, if no space is left in the packet buffer.
  */
-gnrc_pktsnip_t *gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type);
+gnrc_pktsnip_t* gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t* XDATA pkt, gnrc_nettype_t XDATA type);
 
 #ifdef DEVELHELP
 /**
@@ -304,9 +310,21 @@ bool gnrc_pktbuf_is_empty(void);
 bool gnrc_pktbuf_is_sane(void);
 #endif
 
-#ifdef __cplusplus
+void* _pktbuf_alloc(uint32_t XDATA size);
+void _pktbuf_free(void* XDATA data, uint32_t XDATA size);
+gnrc_pktsnip_t* _create_snip(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size, gnrc_nettype_t XDATA type);
+uint32_t _align(uint32_t XDATA size);
+bool _pktbuf_contains(void* XDATA ptr);
+void _set_pktsnip(gnrc_pktsnip_t* XDATA pkt, gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size, gnrc_nettype_t XDATA type);
+void _release_error_locked(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA err);
+void* _pktbuf_alloc(uint32_t XDATA size);
+bool _too_small_hole(_unused_t* XDATA a, _unused_t* XDATA b);
+_unused_t* _merge(_unused_t* XDATA a, _unused_t* XDATA b);
+void _pktbuf_free(void* XDATA data, uint32_t XDATA size);
+
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_PKTBUF_H_ */
 /** @} */

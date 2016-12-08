@@ -24,35 +24,35 @@
 
 #include "kernel_types.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Message queue size for the pktdump thread
  */
-#ifndef GNRC_PKTDUMP_MSG_QUEUE_SIZE
+/*#ifndef GNRC_PKTDUMP_MSG_QUEUE_SIZE
 #define GNRC_PKTDUMP_MSG_QUEUE_SIZE     (8U)
-#endif
+#endif*/
 
 /**
  * @brief   Priority of the pktdump thread
  */
-#ifndef GNRC_PKTDUMP_PRIO
+/*#ifndef GNRC_PKTDUMP_PRIO
 #define GNRC_PKTDUMP_PRIO               (THREAD_PRIORITY_MAIN - 1)
-#endif
+#endif*/
 
 /**
  * @brief   Stack size used for the pktdump thread
  */
-#ifndef GNRC_PKTDUMP_STACKSIZE
+/*#ifndef GNRC_PKTDUMP_STACKSIZE
 #define GNRC_PKTDUMP_STACKSIZE          (THREAD_STACKSIZE_MAIN)
-#endif
+#endif*/
 
 /**
  * @brief   The PID of the pktdump thread
  */
-extern kernel_pid_t gnrc_pktdump_pid;
+extern kernel_pid_t XDATA gnrc_pktdump_pid;
 
 /**
  * @brief   Start the packet dump thread and listening for incoming packets
@@ -62,9 +62,9 @@ extern kernel_pid_t gnrc_pktdump_pid;
  */
 kernel_pid_t gnrc_pktdump_init(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_PKTDUMP_H_ */
 /** @} */

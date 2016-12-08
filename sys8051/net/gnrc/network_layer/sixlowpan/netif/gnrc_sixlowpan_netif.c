@@ -20,33 +20,39 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 
-static gnrc_sixlowpan_netif_t sixlow_ifs[GNRC_NETIF_NUMOF];
+//static gnrc_sixlowpan_netif_t sixlow_ifs[GNRC_NETIF_NUMOF];
+gnrc_sixlowpan_netif_t XDATA sixlow_ifs[1];
 
 void gnrc_sixlowpan_netif_init(void)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    /*for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
         sixlow_ifs[i].pid = KERNEL_PID_UNDEF;
         sixlow_ifs[i].max_frag_size = 0;
-    }
+    }*/
+    for (i = 0; i < 1; i++) {
+	sixlow_ifs[i].pid = 0;
+	sixlow_ifs[i].max_frag_size = 0;
+    } 
 }
 
 void gnrc_sixlowpan_netif_add(kernel_pid_t pid, uint16_t max_frag_size)
 {
-    gnrc_sixlowpan_netif_t *free_entry = NULL;
-
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    gnrc_sixlowpan_netif_t* XDATA free_entry = NULL;
+    int i = 0;
+    for (i = 0; i < 1; i++) { //GNRC_NETIF_NUMOF
         if (sixlow_ifs[i].pid == pid) {
             return;
         }
 
-        if ((sixlow_ifs[i].pid == KERNEL_PID_UNDEF) && !free_entry) {
+        if ((sixlow_ifs[i].pid == 0) && !free_entry) { //KERNEL_PID_UNDEF
             /* found the first free entry */
             free_entry = &sixlow_ifs[i];
         }
     }
 
     if (!free_entry) {
-        DEBUG("gnrc_sixlowpan_netif_add: couldn't add interface with PID %d: No space left.\n", pid);
+        //DEBUG("gnrc_sixlowpan_netif_add: couldn't add interface with PID %d: No space left.\n", pid);
         return;
     }
 
@@ -60,14 +66,17 @@ void gnrc_sixlowpan_netif_add(kernel_pid_t pid, uint16_t max_frag_size)
 
 void gnrc_sixlowpan_netif_remove(kernel_pid_t pid)
 {
-    gnrc_sixlowpan_netif_t *entry = gnrc_sixlowpan_netif_get(pid);
+    gnrc_sixlowpan_netif_t* XDATA entry = gnrc_sixlowpan_netif_get(pid);
 
-    entry->pid = KERNEL_PID_UNDEF;
+    //entry->pid = KERNEL_PID_UNDEF;
+    entry->pid = 0;
 }
 
-gnrc_sixlowpan_netif_t *gnrc_sixlowpan_netif_get(kernel_pid_t pid)
+gnrc_sixlowpan_netif_t* XDATA gnrc_sixlowpan_netif_get(kernel_pid_t pid)
 {
-    for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    int i = 0;
+    //for (int i = 0; i < GNRC_NETIF_NUMOF; i++) {
+    for (i = 0; i < 1; i++) {
         if (sixlow_ifs[i].pid == pid) {
             return sixlow_ifs + i;
         }

@@ -176,4 +176,9 @@ int sema_post(sema_t *sema)
     return 0;
 }
 
+int sema_wait_msg(sema_t *sema, msg_t *msg)
+{
+    return sema_wait_timed_msg(sema, 0, msg);
+}
+
 /** @} */

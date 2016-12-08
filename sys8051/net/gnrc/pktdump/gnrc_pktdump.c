@@ -36,14 +36,16 @@
 /**
  * @brief   PID of the pktdump thread
  */
-kernel_pid_t gnrc_pktdump_pid = KERNEL_PID_UNDEF;
+//kernel_pid_t XDATA gnrc_pktdump_pid = KERNEL_PID_UNDEF;
+kernel_pid_t XDATA gnrc_pktdump_pid = 0;
+
 
 /**
  * @brief   Stack for the pktdump thread
  */
-static char _stack[GNRC_PKTDUMP_STACKSIZE];
+char XDATA _stack[GNRC_PKTDUMP_STACKSIZE];
 
-static void _dump_snip(gnrc_pktsnip_t *pkt)
+void _dump_snip(gnrc_pktsnip_t *pkt)
 {
     switch (pkt->type) {
         case GNRC_NETTYPE_UNDEF:
@@ -97,7 +99,7 @@ static void _dump_snip(gnrc_pktsnip_t *pkt)
     }
 }
 
-static void _dump(gnrc_pktsnip_t *pkt)
+void _dump(gnrc_pktsnip_t *pkt)
 {
     int snips = 0;
     int size = 0;
@@ -116,7 +118,7 @@ static void _dump(gnrc_pktsnip_t *pkt)
     gnrc_pktbuf_release(pkt);
 }
 
-static void *_eventloop(void *arg)
+void *_eventloop(void *arg)
 {
     (void)arg;
     msg_t msg, reply;

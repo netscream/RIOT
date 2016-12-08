@@ -28,25 +28,29 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 
-#if ENABLE_DEBUG
+//#if ENABLE_DEBUG
 /* For PRIu8 etc. */
-#include <inttypes.h>
+//#include <inttypes.h>
 
-static char addr_str[IPV6_ADDR_MAX_STR_LEN];
-#endif
+//static char addr_str[IPV6_ADDR_MAX_STR_LEN];
+//char XDATA addr_str[IPV6_ADDR_MAX_STR_LEN];
 
-static gnrc_ipv6_nc_t ncache[GNRC_IPV6_NC_SIZE];
+//#endif
 
-static void _nc_remove(kernel_pid_t iface, gnrc_ipv6_nc_t *entry)
+//static gnrc_ipv6_nc_t ncache[GNRC_IPV6_NC_SIZE];
+//gnrc_ipv6_nc_t XDATA ncache[GNRC_IPV6_NC_SIZE];
+gnrc_ipv6_nc_t XDATA ncache[8];
+
+void _nc_remove(kernel_pid_t iface, gnrc_ipv6_nc_t *entry)
 {
     (void) iface;
     if (entry == NULL) {
         return;
     }
 
-    DEBUG("ipv6_nc: Remove %s for interface %" PRIkernel_pid "\n",
-          ipv6_addr_to_str(addr_str, &(entry->ipv6_addr), sizeof(addr_str)),
-          iface);
+   // DEBUG("ipv6_nc: Remove %s for interface %" PRIkernel_pid "\n",
+        //  ipv6_addr_to_str(addr_str, &(entry->ipv6_addr), sizeof(addr_str)),
+          //iface);
 
 #ifdef MODULE_GNRC_NDP_NODE
     while (entry->pkts != NULL) {
@@ -83,7 +87,8 @@ void gnrc_ipv6_nc_init(void)
 {
     gnrc_ipv6_nc_t *entry;
 
-    for (entry = ncache; entry < (ncache + GNRC_IPV6_NC_SIZE); entry++) {
+    //for (entry = ncache; entry < (ncache + GNRC_IPV6_NC_SIZE); entry++) {
+    for (entry = ncache; entry < (ncache + 8); entry++) {
         _nc_remove(entry->iface, entry);
     }
     memset(ncache, 0, sizeof(ncache));
@@ -92,7 +97,8 @@ void gnrc_ipv6_nc_init(void)
 gnrc_ipv6_nc_t *_find_free_entry(void)
 {
     int i = 0;
-    for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    //for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    for (i = 0; i < 8; i++) {
         if (ipv6_addr_is_unspecified(&(ncache[i].ipv6_addr))) {
             return ncache + i;
         }
@@ -103,35 +109,37 @@ gnrc_ipv6_nc_t *_find_free_entry(void)
 
 /* 8051 implementation */
 gnrc_ipv6_nc_t *gnrc_ipv6_nc_add(kernel_pid_t iface, const ipv6_addr_t *ipv6_addr,
-                                 const void *l2_addr, size_t l2_addr_len, uint8_t flags)
+                                 const void *l2_addr, uint32_t l2_addr_len, uint8_t flags)
 {
     int i = 0;
     gnrc_ipv6_nc_t *free_entry = NULL;
 
     if (ipv6_addr == NULL) {
-        DEBUG("ipv6_nc: address was NULL\n");
+        //DEBUG("ipv6_nc: address was NULL\n");
         return NULL;
     }
 
-    if ((l2_addr_len > GNRC_IPV6_NC_L2_ADDR_MAX) || ipv6_addr_is_unspecified(ipv6_addr)) {
-        DEBUG("ipv6_nc: invalid parameters\n");
+    //if ((l2_addr_len > GNRC_IPV6_NC_L2_ADDR_MAX) || ipv6_addr_is_unspecified(ipv6_addr)) {
+    if ((l2_addr_len > 8) || ipv6_addr_is_unspecified(ipv6_addr)) {
+        //DEBUG("ipv6_nc: invalid parameters\n");
         return NULL;
     }
 
-    for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    //for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    for (i = 0; i < 8; i++) {
         if (ipv6_addr_equal(&(ncache[i].ipv6_addr), ipv6_addr)) {
-            DEBUG("ipv6_nc: Address %s already registered.\n",
-                  ipv6_addr_to_str(addr_str, ipv6_addr, sizeof(addr_str)));
+           // DEBUG("ipv6_nc: Address %s already registered.\n",
+                  //ipv6_addr_to_str(addr_str, ipv6_addr, sizeof(addr_str)));
 
             if ((l2_addr != NULL) && (l2_addr_len > 0)) {
-                DEBUG("ipv6_nc: Update to L2 address %s",
-                      gnrc_netif_addr_to_str(addr_str, sizeof(addr_str),
-                                             l2_addr, l2_addr_len));
+                //DEBUG("ipv6_nc: Update to L2 address %s",
+                //      gnrc_netif_addr_to_str(addr_str, sizeof(addr_str),
+                //                             l2_addr, l2_addr_len));
 
                 memcpy(&(ncache[i].l2_addr), l2_addr, l2_addr_len);
                 ncache[i].l2_addr_len = l2_addr_len;
                 ncache[i].flags = flags;
-                DEBUG(" with flags = 0x%0x\n", flags);
+                //DEBUG(" with flags = 0x%0x\n", flags);
 
             }
             return &ncache[i];
@@ -170,19 +178,24 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_add(kernel_pid_t iface, const ipv6_addr_t *ipv6_add
 
     free_entry->flags = flags;
 
-    DEBUG(" with flags = 0x%0x\n", flags);
+   // DEBUG(" with flags = 0x%0x\n", flags);
 
-    if (gnrc_ipv6_nc_get_state(free_entry) == GNRC_IPV6_NC_STATE_INCOMPLETE) {
+    //if (gnrc_ipv6_nc_get_state(free_entry) == GNRC_IPV6_NC_STATE_INCOMPLETE) {
+    if (gnrc_ipv6_nc_get_state(free_entry) == 0x02) {
         DEBUG("ipv6_nc: Set remaining probes to %" PRIu8 "\n", (uint8_t) GNRC_NDP_MAX_MC_NBR_SOL_NUMOF);
-        free_entry->probes_remaining = GNRC_NDP_MAX_MC_NBR_SOL_NUMOF;
+        //free_entry->probes_remaining = GNRC_NDP_MAX_MC_NBR_SOL_NUMOF;
+	free_entry->probes_remaining = 3U;
     }
 
 #ifdef MODULE_GNRC_SIXLOWPAN_ND_ROUTER
-    free_entry->type_timeout_msg.type = GNRC_SIXLOWPAN_ND_MSG_AR_TIMEOUT;
+    //free_entry->type_timeout_msg.type = GNRC_SIXLOWPAN_ND_MSG_AR_TIMEOUT;
+    free_entry->type_timeout_msg.type = 0x0224;
     free_entry->type_timeout_msg.content.ptr = free_entry;
 #endif
 
-    free_entry->rtr_timeout_msg.type = GNRC_NDP_MSG_RTR_TIMEOUT;
+    //free_entry->rtr_timeout_msg.type = GNRC_NDP_MSG_RTR_TIMEOUT;
+    free_entry->rtr_timeout_msg.type = 0x0210;
+
     free_entry->rtr_timeout_msg.content.ptr = free_entry;
 
 #if defined(MODULE_GNRC_NDP_ROUTER) || defined(MODULE_GNRC_SIXLOWPAN_ND_BORDER_ROUTER)
@@ -210,7 +223,8 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get(kernel_pid_t iface, const ipv6_addr_t *ipv6_add
         return NULL;
     }
    
-    for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    //for (i = 0; i < GNRC_IPV6_NC_SIZE; i++) {
+    for (i = 0;  i < 8; i++) {
         //if (((ncache[i].iface == KERNEL_PID_UNDEF) || (iface == KERNEL_PID_UNDEF) ||
 	if (((ncache[i].iface == 0) || (iface == 0) ||
              (iface == ncache[i].iface)) &&
@@ -236,7 +250,8 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get_next(gnrc_ipv6_nc_t *prev)
         prev++;     /* get next entry */
     }
 
-    while (prev < (ncache + GNRC_IPV6_NC_SIZE)) { /* while not reached end */
+    //while (prev < (ncache + GNRC_IPV6_NC_SIZE)) { /* while not reached end */
+    while (prev < (ncache + 8)) {
         if (!ipv6_addr_is_unspecified(&(prev->ipv6_addr))) {
             return prev;
         }
@@ -252,7 +267,8 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_get_next_router(gnrc_ipv6_nc_t *prev)
     gnrc_ipv6_nc_t *router = NULL;
     for (router = gnrc_ipv6_nc_get_next(prev); router != NULL;
          router = gnrc_ipv6_nc_get_next(router)) {
-        if (router->flags & GNRC_IPV6_NC_IS_ROUTER) {
+        //if (router->flags & GNRC_IPV6_NC_IS_ROUTER) {
+	if (router->flags & 0x08) {
             return router;
         }
     }
@@ -271,19 +287,24 @@ gnrc_ipv6_nc_t *gnrc_ipv6_nc_still_reachable(const ipv6_addr_t *ipv6_addr)
         return NULL;
     }
 
-    if ((gnrc_ipv6_nc_get_state(entry) != GNRC_IPV6_NC_STATE_INCOMPLETE) &&
-        (gnrc_ipv6_nc_get_state(entry) != GNRC_IPV6_NC_STATE_UNMANAGED)) {
+    //if ((gnrc_ipv6_nc_get_state(entry) != GNRC_IPV6_NC_STATE_INCOMPLETE) &&
+    //    (gnrc_ipv6_nc_get_state(entry) != GNRC_IPV6_NC_STATE_UNMANAGED)) {
+    if ((gnrc_ipv6_nc_get_state(entry) != 0x02) &&
+	(gnrc_ipv6_nc_get_state(entry) != 0x00)) {
 #if defined(MODULE_GNRC_IPV6_NETIF) && defined(MODULE_XTIMER) && defined(MODULE_GNRC_IPV6)
         gnrc_ipv6_netif_t *iface = gnrc_ipv6_netif_get(entry->iface);
 
         gnrc_ndp_internal_reset_nbr_sol_timer(entry, iface->reach_time,
                                               GNRC_NDP_MSG_NC_STATE_TIMEOUT, gnrc_ipv6_pid);
+	//gnrc_ndp_internal_reset_nbr_sol_timer(entry, iface->reach_time,
 #endif
 
         DEBUG("ipv6_nc: Marking entry %s as reachable\n",
               ipv6_addr_to_str(addr_str, ipv6_addr, sizeof(addr_str)));
-        entry->flags &= ~(GNRC_IPV6_NC_STATE_MASK >> GNRC_IPV6_NC_STATE_POS);
-        entry->flags |= (GNRC_IPV6_NC_STATE_REACHABLE >> GNRC_IPV6_NC_STATE_POS);
+        //entry->flags &= ~(GNRC_IPV6_NC_STATE_MASK >> GNRC_IPV6_NC_STATE_POS);
+	entry->flags &= ~(0x07 >> 0);
+        //entry->flags |= (GNRC_IPV6_NC_STATE_REACHABLE >> GNRC_IPV6_NC_STATE_POS);
+	entry->flags |= (0x01 >> 0);
     }
 
     return entry;

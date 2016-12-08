@@ -26,9 +26,9 @@
 #include "priority_queue.h"
 #include "timex.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Creates semaphore statically.
@@ -104,10 +104,10 @@ int sema_wait_timed_msg(sema_t *sema, uint64_t timeout, msg_t *msg);
  * @return  -ECANCELED, if the semaphore was destroyed.
  * @return  -EAGAIN, if the thread received a message while waiting for the lock.
  */
-static inline int sema_wait_msg(sema_t *sema, msg_t *msg)
-{
+int sema_wait_msg(sema_t *sema, msg_t *msg);
+/*{
     return sema_wait_timed_msg(sema, 0, msg);
-}
+}*/
 
 /**
  * @brief   Wait for a semaphore being posted (dropping spurious messages).
@@ -132,10 +132,10 @@ int sema_wait_timed(sema_t *sema, uint64_t timeout);
  * @return  -EINVAL, if semaphore is invalid.
  * @return  -ECANCELED, if the semaphore was destroyed.
  */
-static inline int sema_wait(sema_t *sema)
-{
+int sema_wait(sema_t *sema);
+/*{
     return sema_wait_timed(sema, 0);
-}
+}*/
 
 /**
  * @brief   Signal semaphore.
@@ -148,9 +148,9 @@ static inline int sema_wait(sema_t *sema)
  */
 int sema_post(sema_t *sema);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* SEM_H_ */
 /** @} */

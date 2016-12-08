@@ -107,3 +107,15 @@ int timex_cmp(const timex_t a, const timex_t b)
 
     return 1;
 }
+
+void timex_normalize(timex_t *time)
+{
+    time->seconds += (time->microseconds / SEC_IN_USEC);
+    time->microseconds %= SEC_IN_USEC;
+}
+
+int timex_isnormalized(const timex_t *time)
+{   
+    return (time->microseconds < SEC_IN_USEC);
+}
+

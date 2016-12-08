@@ -34,24 +34,24 @@
 #include "debug.h"
 
 /* dispatch byte definitions */
-#define IPHC1_IDX                   (0U)
-#define IPHC2_IDX                   (1U)
-#define CID_EXT_IDX                 (2U)
+//#define IPHC1_IDX                   (0U)
+//#define IPHC2_IDX                   (1U)
+//#define CID_EXT_IDX                 (2U)
 
 /* compression values for traffic class and flow label */
-#define IPHC_TF_ECN_DSCP_FL         (0x00)
-#define IPHC_TF_ECN_FL              (0x08)
-#define IPHC_TF_ECN_DSCP            (0x10)
-#define IPHC_TF_ECN_ELIDE           (0x18)
+//#define IPHC_TF_ECN_DSCP_FL         (0x00)
+//#define IPHC_TF_ECN_FL              (0x08)
+//#define IPHC_TF_ECN_DSCP            (0x10)
+//#define IPHC_TF_ECN_ELIDE           (0x18)
 
 /* compression values for hop limit */
-#define IPHC_HL_INLINE              (0x00)
-#define IPHC_HL_1                   (0x01)
-#define IPHC_HL_64                  (0x02)
-#define IPHC_HL_255                 (0x03)
+//#define IPHC_HL_INLINE              (0x00)
+//#define IPHC_HL_1                   (0x01)
+//#define IPHC_HL_64                  (0x02)
+//#define IPHC_HL_255                 (0x03)
 
 /* compression values for source address */
-#define IPHC_SAC_SAM_FULL           (0x00)
+/*#define IPHC_SAC_SAM_FULL           (0x00)
 #define IPHC_SAC_SAM_64             (0x10)
 #define IPHC_SAC_SAM_16             (0x20)
 #define IPHC_SAC_SAM_L2             (0x30)
@@ -59,9 +59,9 @@
 #define IPHC_SAC_SAM_CTX_64         (0x50)
 #define IPHC_SAC_SAM_CTX_16         (0x60)
 #define IPHC_SAC_SAM_CTX_L2         (0x70)
-
+*/
 /* compression values for destination address */
-#define IPHC_M_DAC_DAM_U_FULL       (0x00)
+/*#define IPHC_M_DAC_DAM_U_FULL       (0x00)
 #define IPHC_M_DAC_DAM_U_64         (0x01)
 #define IPHC_M_DAC_DAM_U_16         (0x02)
 #define IPHC_M_DAC_DAM_U_L2         (0x03)
@@ -88,8 +88,8 @@
 #define NHC_UDP_4BIT_MASK           (0xFFF0)
 #define NHC_UDP_8BIT_PORT           (0xF000)
 #define NHC_UDP_8BIT_MASK           (0xFF00)
-
-static inline bool _context_overlaps_iid(gnrc_sixlowpan_ctx_t *ctx,
+*/
+bool _context_overlaps_iid(gnrc_sixlowpan_ctx_t *ctx,
                                          ipv6_addr_t *addr,
                                          eui64_t *iid)
 {
@@ -111,8 +111,8 @@ static inline bool _context_overlaps_iid(gnrc_sixlowpan_ctx_t *ctx,
 }
 
 #ifdef MODULE_GNRC_SIXLOWPAN_IPHC_NHC
-inline static size_t iphc_nhc_udp_decode(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t **dec_hdr,
-                                         size_t datagram_size, size_t offset)
+uint32_t iphc_nhc_udp_decode(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t **dec_hdr,
+                                         uint32_t datagram_size, uint32_t offset)
 {
     uint8_t *payload = pkt->data;
     gnrc_pktsnip_t *ipv6 = *dec_hdr;
@@ -208,15 +208,15 @@ inline static size_t iphc_nhc_udp_decode(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t **d
 }
 #endif
 
-size_t gnrc_sixlowpan_iphc_decode(gnrc_pktsnip_t **dec_hdr, gnrc_pktsnip_t *pkt,
-                                  size_t datagram_size, size_t offset,
-                                  size_t *nh_len)
+uint32_t gnrc_sixlowpan_iphc_decode(gnrc_pktsnip_t **dec_hdr, gnrc_pktsnip_t *pkt,
+                                  uint32_t datagram_size, uint32_t offset,
+                                  uint32_t *nh_len)
 {
     gnrc_pktsnip_t *ipv6;
     gnrc_netif_hdr_t *netif_hdr = pkt->next->data;
     ipv6_hdr_t *ipv6_hdr;
     uint8_t *iphc_hdr = pkt->data;
-    size_t payload_offset = SIXLOWPAN_IPHC_HDR_LEN;
+    uint32_t payload_offset = SIXLOWPAN_IPHC_HDR_LEN;
     gnrc_sixlowpan_ctx_t *ctx = NULL;
 
     assert(dec_hdr != NULL);
@@ -520,13 +520,13 @@ size_t gnrc_sixlowpan_iphc_decode(gnrc_pktsnip_t **dec_hdr, gnrc_pktsnip_t *pkt,
 }
 
 #ifdef MODULE_GNRC_SIXLOWPAN_IPHC_NHC
-inline static size_t iphc_nhc_udp_encode(gnrc_pktsnip_t *udp, ipv6_hdr_t *ipv6_hdr)
+uint32_t iphc_nhc_udp_encode(gnrc_pktsnip_t *udp, ipv6_hdr_t *ipv6_hdr)
 {
     udp_hdr_t *udp_hdr = udp->data;
     network_uint16_t *src_port = &(udp_hdr->src_port);
     network_uint16_t *dst_port = &(udp_hdr->dst_port);
     uint8_t *udp_data = udp->data;
-    size_t nhc_len = 0;
+    uint32_t nhc_len = 0;
 
     /* TODO: Add support for elided checksum. */
 
@@ -570,8 +570,8 @@ inline static size_t iphc_nhc_udp_encode(gnrc_pktsnip_t *udp, ipv6_hdr_t *ipv6_h
 
     if (udp->type == GNRC_NETTYPE_IPV6) {
         /* forwarded ipv6 packet */
-        size_t diff = sizeof(udp_hdr_t) - nhc_len;
-        for (size_t i = nhc_len; i < (udp->size - diff); i++) {
+        uint32_t diff = sizeof(udp_hdr_t) - nhc_len;
+        for (uint32_t i = nhc_len; i < (udp->size - diff); i++) {
             udp_data[i] = udp_data[i + diff];
         }
         /* NOTE: gnrc_pktbuf_realloc_data overflow if (udp->size - diff) < 4 */
@@ -881,7 +881,7 @@ bool gnrc_sixlowpan_iphc_encode(gnrc_pktsnip_t *pkt)
 
     /* shrink dispatch allocation to final size */
     /* NOTE: Since this only shrinks the data nothing bad SHOULD happen ;-) */
-    gnrc_pktbuf_realloc_data(dispatch, (size_t)inline_pos);
+    gnrc_pktbuf_realloc_data(dispatch, (uint32_t)inline_pos);
 
     /* remove IPv6 header */
     pkt = gnrc_pktbuf_remove_snip(pkt, pkt->next);

@@ -1,5 +1,5 @@
-# name of your application
-APPLICATION = hello-world
+#name of your application
+APPLICATION = wixel_hello-world
 
 # If no BOARD is found in the environment, use this default:
 BOARD = cc2511

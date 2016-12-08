@@ -45,7 +45,7 @@ static gnrc_pktqueue_t _pkt_nodes[GNRC_IPV6_NC_SIZE * 2];
 /* 8051 implementation */
 static gnrc_pktqueue_t *_alloc_pkt_node(gnrc_pktsnip_t *pkt)
 {
-    size_t i = 0;
+    uint32_t i = 0;
     for (i = 0; i < sizeof(_pkt_nodes) / sizeof(gnrc_pktqueue_t); i++) {
         if ((_pkt_nodes[i].pkt == NULL) && (_pkt_nodes[i].next == NULL)) {
             _pkt_nodes[i].pkt = pkt;
@@ -69,7 +69,7 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
     ipv6_addr_t next_hop_actual;    /* FIB copies address into this variable */
     /* don't look-up link local addresses in FIB */
     if (!dst_link_local) {
-        size_t next_hop_size = sizeof(ipv6_addr_t);
+        uint32_t next_hop_size = sizeof(ipv6_addr_t);
         uint32_t next_hop_flags = 0;
 
         if ((next_hop_ip == NULL) &&
@@ -158,8 +158,8 @@ kernel_pid_t gnrc_ndp_node_next_hop_l2addr(uint8_t *l2addr, uint8_t *l2addr_len,
         //if (iface == KERNEL_PID_UNDEF) { /* 8051 implementation */
 	if (iface == 0) {
             kernel_pid_t ifs[GNRC_NETIF_NUMOF];
-            size_t ifnum = gnrc_netif_get(ifs);
-            size_t i = 0;
+            uint32_t ifnum = gnrc_netif_get(ifs);
+            uint32_t i = 0;
             for (i = 0; i < ifnum; i++) {
                 gnrc_ndp_internal_send_nbr_sol(ifs[i], NULL, next_hop_ip, &dst_sol);
             }

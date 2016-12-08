@@ -28,14 +28,14 @@
 #include "net/gnrc/rpl/structs.h"
 #include "net/gnrc/rpl/p2p_structs.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   P2P-RPL Mode of Operation
  */
-#define GNRC_RPL_P2P_MOP        (0x04)
+//#define GNRC_RPL_P2P_MOP        (0x04)
 
 /**
  * @brief   Default lifetime of the P2P-RPL DODAG, encoded
@@ -43,7 +43,7 @@ extern "C" {
  *          RFC 6997, section 7, P2P Route Discovery Option (P2P-RDO)
  *      </a>
  */
-#define GNRC_RPL_P2P_LIFETIME   (0x02)
+//#define GNRC_RPL_P2P_LIFETIME   (0x02)
 
 /**
  * @brief   Number of elided prefix octets from the target field and address vector
@@ -51,7 +51,7 @@ extern "C" {
  *          RFC 6997, section 7, P2P Route Discovery Option (P2P-RDO)
  *      </a>
  */
-#define GNRC_RPL_P2P_COMPR      (0)
+//#define GNRC_RPL_P2P_COMPR      (0)
 
 /**
  * @brief   Maximum rank in the DODAG during the route discovery
@@ -59,7 +59,7 @@ extern "C" {
  *          RFC 6997, section 7, P2P Route Discovery Option (P2P-RDO)
  *      </a>
  */
-#define GNRC_RPL_P2P_MAX_RANK   (0)
+//#define GNRC_RPL_P2P_MAX_RANK   (0)
 
 /**
  * @name Trickle parameters
@@ -68,8 +68,8 @@ extern "C" {
  *      </a>
  * @{
  */
-#define GNRC_RPL_P2P_DEFAULT_DIO_INTERVAL_MIN           (6)
-#define GNRC_RPL_P2P_DEFAULT_DIO_REDUNDANCY_CONSTANT    (1)
+//#define GNRC_RPL_P2P_DEFAULT_DIO_INTERVAL_MIN           (6)
+//#define GNRC_RPL_P2P_DEFAULT_DIO_REDUNDANCY_CONSTANT    (1)
 /** @} */
 
 /**
@@ -77,8 +77,8 @@ extern "C" {
  * default lifetime will be multiplied by the lifetime unit to obtain the resulting lifetime
  * @{
  */
-#define GNRC_RPL_P2P_DEFAULT_LIFETIME   (0xFF)
-#define GNRC_RPL_P2P_LIFETIME_UNIT      (0xFFFF)
+//#define GNRC_RPL_P2P_DEFAULT_LIFETIME   (0xFF)
+//#define GNRC_RPL_P2P_LIFETIME_UNIT      (0xFFFF)
 /** @} */
 
 /**
@@ -87,7 +87,7 @@ extern "C" {
  *              RFC 6997, section 7, P2P Route Discovery Option (P2P-RDO)
  *          </a>
  */
-#define GNRC_RPL_P2P_OPT_RDO    (0x0A)
+//#define GNRC_RPL_P2P_OPT_RDO    (0x0A)
 
 /**
  *  @brief  DRO ICMPv6 code
@@ -95,7 +95,7 @@ extern "C" {
  *          RFC 6997, section 8, The P2P Discovery Reply Object (P2P-DRO)
  *      </a>
  */
-#define GNRC_RPL_P2P_ICMPV6_CODE_DRO    (0x04)
+//#define GNRC_RPL_P2P_ICMPV6_CODE_DRO    (0x04)
 
 /**
  *  @brief  DRO-ACK ICMPv6 code
@@ -103,22 +103,22 @@ extern "C" {
  *          RFC 6997, section 10, The P2P Discovery Reply Object Acknowledgement (P2P-DRO-ACK)
  *      </a>
  */
-#define GNRC_RPL_P2P_ICMPV6_CODE_DRO_ACK    (0x05)
+//#define GNRC_RPL_P2P_ICMPV6_CODE_DRO_ACK    (0x05)
 
 /**
  *  @brief  Time in seconds to wait before sending a DRO
  */
-#define GNRC_RPL_P2P_DRO_DELAY  (4)
+//#define GNRC_RPL_P2P_DRO_DELAY  (4)
 
 /**
  *  @brief  Message type for handling DRO sending
  */
-#define GNRC_RPL_P2P_MSG_TYPE_DRO_HANDLE    (0x09A0)
+//#define GNRC_RPL_P2P_MSG_TYPE_DRO_HANDLE    (0x09A0)
 
 /**
  *  @brief  Lookup table used to decode/encode the lifetime values
  */
-extern const uint8_t gnrc_rpl_p2p_lifetime_lookup[4];
+extern const uint8_t CODE gnrc_rpl_p2p_lifetime_lookup[4];
 
 /**
  * @brief Initialization of a P2P-RPL Instance as root node.
@@ -172,9 +172,9 @@ void gnrc_rpl_p2p_recv_DRO(gnrc_pktsnip_t *pkt, ipv6_addr_t *src);
  */
 void gnrc_rpl_p2p_update(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_RPL_P2P_H_ */
 /** @} */

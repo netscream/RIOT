@@ -20,7 +20,7 @@
  * @}
  */
 
-#include <stdlib.h>
+//#include <stdlib.h> // not needed 
 #include "shell_commands.h"
 
 extern int _reboot_handler(int argc, char **argv);

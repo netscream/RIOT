@@ -23,9 +23,9 @@
 
 #include "net/gnrc/ipv6/netif.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Initializes interface @p iface as host.
@@ -46,9 +46,9 @@ void gnrc_ndp_host_init(gnrc_ipv6_netif_t *iface);
  */
 void gnrc_ndp_host_retrans_rtr_sol(gnrc_ipv6_netif_t *iface);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NDP_HOST_H_ */
 /** @} */

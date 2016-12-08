@@ -276,13 +276,15 @@ struct _thread {
  *                      @ref SCHED_PRIO_LEVELS
  * @return              -EOVERFLOW, if there are too many threads running already
 */
-kernel_pid_t thread_create(char *stack,
+/*kernel_pid_t thread_create(char *stack,
                   int stacksize,
                   char priority,
                   int flags,
                   thread_task_func_t task_func,
                   void *arg,
                   const char *name);
+*/
+kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA priority, int XDATA flags, thread_task_func_t XDATA function, void* XDATA arg, const char* XDATA name);
 
 /**
  * @brief       Retreive a thread control block by PID.
@@ -291,7 +293,7 @@ kernel_pid_t thread_create(char *stack,
  * @param[in]   pid   Thread to retreive.
  * @return      `NULL` if the PID is invalid or there is no such thread.
  */
-volatile thread_t *thread_get(kernel_pid_t pid);
+volatile thread_t *thread_get(kernel_pid_t XDATA pid);
 
 /**
  * @brief Returns the status of a process
@@ -301,7 +303,7 @@ volatile thread_t *thread_get(kernel_pid_t pid);
  * @return          status of the thread
  * @return          `STATUS_NOT_FOUND` if pid is unknown
  */
-int thread_getstatus(kernel_pid_t pid);
+int thread_getstatus(kernel_pid_t XDATA pid);
 
 /**
  * @brief Puts the current thread into sleep mode. Has to be woken up externally.
@@ -343,7 +345,7 @@ void thread_yield_higher(void);
  * @return          `1` on success
  * @return          `STATUS_NOT_FOUND` if pid is unknown or not sleeping
  */
-int thread_wakeup(kernel_pid_t pid);
+int thread_wakeup(kernel_pid_t XDATA pid);
 
 /**
  * @brief Returns the process ID of the currently running thread
@@ -351,7 +353,7 @@ int thread_wakeup(kernel_pid_t pid);
  * @return          obviously you are not a golfer.
  */
 /* 8051 implementation */
-static kernel_pid_t thread_getpid(void);
+kernel_pid_t thread_getpid(void);
 /*static inline kernel_pid_t thread_getpid(void)
 {
     extern volatile kernel_pid_t sched_active_pid;
@@ -368,7 +370,7 @@ static kernel_pid_t thread_getpid(void);
  *
  * @return stack pointer
  */
-char *thread_stack_init(thread_task_func_t *task_func, void *arg, void *stack_start, int stack_size);
+char *thread_stack_init(thread_task_func_t* task_func, void* XDATA arg, void* XDATA stack_start, int XDATA stack_size);
 
 /**
  * @brief Add thread to list, sorted by priority (internal)
@@ -383,7 +385,7 @@ char *thread_stack_init(thread_task_func_t *task_func, void *arg, void *stack_st
  * @param[in] list      ptr to list root node
  * @param[in] thread    thread to add
  */
-void thread_add_to_list(list_node_t *list, thread_t *thread);
+void thread_add_to_list(list_node_t* XDATA list, thread_t* XDATA thread);
 
 #ifdef DEVELHELP
 /**
@@ -394,7 +396,7 @@ void thread_add_to_list(list_node_t *list, thread_t *thread);
  * @return          the threads name
  * @return          `NULL` if pid is unknown
  */
-const char *thread_getname(kernel_pid_t pid);
+const char *thread_getname(kernel_pid_t XDATA pid);
 
 /**
  * @brief Measures the stack usage of a stack
@@ -405,7 +407,7 @@ const char *thread_getname(kernel_pid_t pid);
  *
  * @return          the amount of unused space of the thread's stack
  */
-uintptr_t thread_measure_stack_free(char *stack);
+uintptr_t thread_measure_stack_free(char* XDATA stack);
 #endif /* DEVELHELP */
 
 /**

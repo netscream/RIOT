@@ -24,9 +24,9 @@
 
 #include "kernel_types.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Definition of 6LoWPAN interface type.
@@ -67,11 +67,11 @@ void gnrc_sixlowpan_netif_remove(kernel_pid_t pid);
  * @return  The interface describing structure, on success.
  * @return  NULL, if there is no interface with PID @p pid.
  */
-gnrc_sixlowpan_netif_t *gnrc_sixlowpan_netif_get(kernel_pid_t pid);
+gnrc_sixlowpan_netif_t* XDATA gnrc_sixlowpan_netif_get(kernel_pid_t pid);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_SIXLOWPAN_NETIF_H_ */
 /** @} */

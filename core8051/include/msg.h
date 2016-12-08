@@ -169,9 +169,9 @@
 #include <stdbool.h>
 #include "kernel_types.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Describes a message object which can be sent between threads.
@@ -210,7 +210,7 @@ typedef struct {
  *            (it is not waiting or it's message queue is full)
  * @return -1, on error (invalid PID)
  */
-int msg_send(msg_t *m, kernel_pid_t target_pid);
+int msg_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid);
 
 
 /**
@@ -229,7 +229,7 @@ int msg_send(msg_t *m, kernel_pid_t target_pid);
  * @return 0, if receiver is not waiting or has a full message queue
  * @return -1, on error (invalid PID)
  */
-int msg_try_send(msg_t *m, kernel_pid_t target_pid);
+int msg_try_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid);
 
 
 /**
@@ -245,12 +245,12 @@ int msg_try_send(msg_t *m, kernel_pid_t target_pid);
  * @return 1 if sending was successful
  * @return 0 if the thread's message queue is full (or inexistent)
  */
-int msg_send_to_self(msg_t *m);
+int msg_send_to_self(msg_t* XDATA m);
 
 /**
  * Value of msg_t::sender_pid if the sender was an interrupt service routine.
  */
-#define KERNEL_PID_ISR (KERNEL_PID_LAST + 1)
+//#define KERNEL_PID_ISR (KERNEL_PID_LAST + 1)
 
 /**
  * @brief Send message from interrupt.
@@ -270,7 +270,7 @@ int msg_send_to_self(msg_t *m);
  * @return 0, if receiver is not waiting and ``block == 0``
  * @return -1, on error (invalid PID)
  */
-int msg_send_int(msg_t *m, kernel_pid_t target_pid);
+int msg_send_int(msg_t* XDATA m, kernel_pid_t XDATA target_pid);
 
 /**
  * @brief Test if the message was sent inside an ISR.
@@ -280,7 +280,7 @@ int msg_send_int(msg_t *m, kernel_pid_t target_pid);
  * @returns `!= 0` if sent by an ISR
  */
 /* 8051 implementation */
-static int msg_sent_by_int(const msg_t *m);
+int msg_sent_by_int(const msg_t* XDATA m);
 /*static inline int msg_sent_by_int(const msg_t *m)
 {
     return (m->sender_pid == KERNEL_PID_ISR);
@@ -296,7 +296,7 @@ static int msg_sent_by_int(const msg_t *m);
  *
  * @return  1, Function always succeeds or blocks forever.
  */
-int msg_receive(msg_t *m);
+int msg_receive(msg_t* XDATA m);
 
 /**
  * @brief Try to receive a message.
@@ -309,7 +309,7 @@ int msg_receive(msg_t *m);
  * @return  1, if a message was received
  * @return  -1, otherwise.
  */
-int msg_try_receive(msg_t *m);
+int msg_try_receive(msg_t* XDATA m);
 
 /**
  * @brief Send a message, block until reply received.
@@ -327,7 +327,7 @@ int msg_try_receive(msg_t *m);
  *
  * @return  1, if successful.
  */
-int msg_send_receive(msg_t *m, msg_t *reply, kernel_pid_t target_pid);
+int msg_send_receive(msg_t* XDATA m, msg_t* XDATA reply, kernel_pid_t XDATA target_pid);
 
 /**
  * @brief Replies to a message.
@@ -340,7 +340,7 @@ int msg_send_receive(msg_t *m, msg_t *reply, kernel_pid_t target_pid);
  * @return 1, if successful
  * @return -1, on error
  */
-int msg_reply(msg_t *m, msg_t *reply);
+int msg_reply(msg_t* XDATA m, msg_t* XDATA reply);
 
 /**
  * @brief Replies to a message from interrupt.
@@ -354,7 +354,7 @@ int msg_reply(msg_t *m, msg_t *reply);
  * @return 1, if successful
  * @return -1, on error
  */
-int msg_reply_int(msg_t *m, msg_t *reply);
+int msg_reply_int(msg_t* XDATA m, msg_t* XDATA reply);
 
 /**
  * @brief Check how many messages are available in the message queue
@@ -372,16 +372,20 @@ int msg_avail(void);
  * @param[in] num   Number of ``msg_t`` structures in array.
  *                  **MUST BE POWER OF TWO!**
  */
-void msg_init_queue(msg_t *array, int num);
+void msg_init_queue(msg_t* XDATA array, int XDATA num);
 
 /**
  * @brief   Prints the message queue of the current thread.
  */
 void msg_queue_print(void);
 
-#ifdef __cplusplus
+int _msg_receive(msg_t* XDATA m, int XDATA block);
+int _msg_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid, bool block, unsigned XDATA state);
+
+/* functions that were not included in the header but are needed for 8051 implementation */
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* MSG_H_ */
 /** @} */

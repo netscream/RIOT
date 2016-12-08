@@ -33,18 +33,18 @@
 #include "net/netdev2.h"
 #include "net/gnrc.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
-#ifndef GNRC_NETDEV2_MAC_PRIO
-#define GNRC_NETDEV2_MAC_PRIO   (THREAD_PRIORITY_MAIN - 5)
-#endif
+//#ifndef GNRC_NETDEV2_MAC_PRIO
+//#define GNRC_NETDEV2_MAC_PRIO   (THREAD_PRIORITY_MAIN - 5)
+//#endif
 
 /**
  * @brief   Type for @ref msg_t if device fired an event
  */
-#define NETDEV2_MSG_TYPE_EVENT 0x1234
+//#define NETDEV2_MSG_TYPE_EVENT 0x1234
 
 /**
  * @brief Structure holding GNRC netdev2 adapter state
@@ -98,9 +98,9 @@ typedef struct gnrc_netdev2 {
 kernel_pid_t gnrc_netdev2_init(char *stack, int stacksize, char priority,
                                const char *name, gnrc_netdev2_t *gnrc_netdev2);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETDEV2_H */
 /** @} */

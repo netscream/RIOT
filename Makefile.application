@@ -5,6 +5,6 @@ DIRS += $(RIOTCPU)/$(CPU) $(RIOTBOARD)/$(BOARD)
 DIRS += $(RIOTBASE)/core $(RIOTBASE)/drivers $(RIOTBASE)/sys
 else
 DIRS += $(RIOTCPU)/$(CPU) $(RIOTBOARD)/$(BOARD)
-DIRS += $(RIOTBASE)/core8051 $(RIOTBASE)/drivers $(RIOTBASE)/sys8051
+DIRS += $(RIOTBASE)/core8051 $(RIOTBASE)/drivers8051 $(RIOTBASE)/sys8051
 endif
 include $(RIOTBASE)/Makefile.base

@@ -1,3 +1,8 @@
+ifeq (mcs51, $(TOOLCHAIN))
+    ifneq (, $(filter posix,$(USEMODULE)))
+    	INCLUDE += -I$(RIOTBASE)/sys8051/posix/include 
+    endif
+endif
 ifneq (,$(filter csma_sender,$(USEMODULE)))
     DIRS += net/link_layer/csma_sender
 endif
@@ -45,7 +50,6 @@ ifneq (,$(filter ipv6_hdr,$(USEMODULE)))
 endif
 ifneq (,$(filter gnrc gnrc_%,$(USEMODULE)))
     DIRS += net/gnrc
-    DIRS += net/addr
 endif
 ifneq (,$(filter inet_csum,$(USEMODULE)))
     DIRS += net/crosslayer/inet_csum

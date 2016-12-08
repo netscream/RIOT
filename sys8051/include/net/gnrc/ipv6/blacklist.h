@@ -26,9 +26,9 @@
 
 #include "net/ipv6/addr.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * Maximum size of the blacklist.
@@ -71,9 +71,9 @@ bool gnrc_ipv6_blacklisted(const ipv6_addr_t *addr);
  */
 void gnrc_ipv6_blacklist_print(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IPV6_BLACKLIST_H_ */
 /** @} */

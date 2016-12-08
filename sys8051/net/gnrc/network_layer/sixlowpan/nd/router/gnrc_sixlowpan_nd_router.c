@@ -44,7 +44,7 @@ static gnrc_sixlowpan_nd_router_abr_t *_get_abr(ipv6_addr_t *addr)
 
 static gnrc_sixlowpan_nd_router_prf_t *_get_free_prefix(gnrc_ipv6_netif_t *ipv6_iface,
                                                         ipv6_addr_t *prefix,
-                                                        size_t prefix_len)
+                                                        uint32_t prefix_len)
 {
     gnrc_sixlowpan_nd_router_prf_t *prf = NULL;
 

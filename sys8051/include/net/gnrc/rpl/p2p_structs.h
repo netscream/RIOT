@@ -21,9 +21,9 @@
 #ifndef GNRC_RPL_P2P_STRUCTS_H_
 #define GNRC_RPL_P2P_STRUCTS_H_
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #include "net/ipv6/addr.h"
 #include "net/gnrc/rpl/structs.h"
@@ -31,7 +31,7 @@ extern "C" {
 /**
  * @brief   Address vector length in RDO DIO options and maximal hop count for the P2P-DODAG
  */
-#define GNRC_RPL_P2P_ADDR_VEC_NUMOF    (8)
+//#define GNRC_RPL_P2P_ADDR_VEC_NUMOF    (8)
 
 /**
  * @brief P2P Route Discovery Object (RDO) Option
@@ -96,9 +96,9 @@ typedef struct {
     ipv6_addr_t addr_vec[GNRC_RPL_P2P_ADDR_VEC_NUMOF];   /**< address vector */
 } gnrc_rpl_p2p_ext_t;
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_RPL_P2P_STRUCTS_H_ */
 /**

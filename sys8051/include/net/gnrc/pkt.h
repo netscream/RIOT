@@ -23,14 +23,14 @@
 #define GNRC_PKT_H_
 
 #include <inttypes.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "kernel_types.h"
 #include "net/gnrc/nettype.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Type to represent parts (either headers or payload) of a packet,
@@ -109,7 +109,7 @@ typedef struct gnrc_pktsnip {
     unsigned int users;
     struct gnrc_pktsnip *next;      /**< next snip in the packet */
     void *data;                     /**< pointer to the data of the snip */
-    size_t size;                    /**< the length of the snip in byte */
+    uint32_t size;                    /**< the length of the snip in byte */
     gnrc_nettype_t type;            /**< protocol of the packet snip */
 #ifdef MODULE_GNRC_NETERR
     kernel_pid_t err_sub;           /**< subscriber to errors related to this
@@ -124,9 +124,9 @@ typedef struct gnrc_pktsnip {
  *
  * @return  length of the list of headers.
  */
-static inline size_t gnrc_pkt_len(gnrc_pktsnip_t *pkt)
-{
-    size_t len = 0;
+uint32_t gnrc_pkt_len(gnrc_pktsnip_t* XDATA pkt);
+/*{
+    uint32_t len = 0;
 
     while (pkt) {
         len += pkt->size;
@@ -134,7 +134,7 @@ static inline size_t gnrc_pkt_len(gnrc_pktsnip_t *pkt)
     }
 
     return len;
-}
+}*/
 
 /**
  * @brief Calculates length of a packet in byte upto (including) a snip with the given type.
@@ -144,9 +144,9 @@ static inline size_t gnrc_pkt_len(gnrc_pktsnip_t *pkt)
  *
  * @return  length of the list of headers.
  */
-static inline size_t gnrc_pkt_len_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type)
-{
-    size_t len = 0;
+uint32_t gnrc_pkt_len_upto(gnrc_pktsnip_t* XDATA pkt, gnrc_nettype_t XDATA type);
+/*{
+    uint32_t len = 0;
 
     while (pkt) {
         len += pkt->size;
@@ -159,7 +159,7 @@ static inline size_t gnrc_pkt_len_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type)
     }
 
     return len;
-}
+}*/
 
 /**
  * @brief Count the numbers of snips in the given packet
@@ -168,9 +168,9 @@ static inline size_t gnrc_pkt_len_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type)
  *
  * @return  number of snips in the given packet
  */
-static inline size_t gnrc_pkt_count(const gnrc_pktsnip_t *pkt)
-{
-    size_t count = 0;
+uint32_t gnrc_pkt_count(const gnrc_pktsnip_t* XDATA pkt);
+/*{
+    uint32_t count = 0;
 
     while (pkt) {
         ++count;
@@ -178,7 +178,7 @@ static inline size_t gnrc_pkt_count(const gnrc_pktsnip_t *pkt)
     }
 
     return count;
-}
+}*/
 
 /**
  * @brief   Searches the packet for a packet snip of a specific type
@@ -189,12 +189,12 @@ static inline size_t gnrc_pkt_count(const gnrc_pktsnip_t *pkt)
  * @return  the packet snip in @p pkt with @ref gnrc_nettype_t @p type
  * @return  NULL, if none of the snips in @p pkt is of @p type
  */
-gnrc_pktsnip_t *gnrc_pktsnip_search_type(gnrc_pktsnip_t *pkt,
-                                         gnrc_nettype_t type);
+gnrc_pktsnip_t *gnrc_pktsnip_search_type(gnrc_pktsnip_t* XDATA pkt,
+                                         gnrc_nettype_t XDATA type);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_PKT_H_ */
 /** @} */

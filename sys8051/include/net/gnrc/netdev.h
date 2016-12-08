@@ -34,14 +34,14 @@
 #include "net/gnrc/pkt.h"
 #include "net/netopt.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Type for @ref msg_t if device fired an event
  */
-#define GNRC_NETDEV_MSG_TYPE_EVENT  (0x0100)
+//#define GNRC_NETDEV_MSG_TYPE_EVENT  (0x0100)
 
 /**
  * @brief   Possible event types that are send from the device driver to the
@@ -185,9 +185,9 @@ struct gnrc_netdev {
     kernel_pid_t mac_pid;               /**< the driver's thread's PID */
 };
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_NETDEV_H_ */
 /** @} */

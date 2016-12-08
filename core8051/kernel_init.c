@@ -43,7 +43,7 @@
 volatile int lpm_prevent_sleep = 0;
 
 extern int main(void);
-static void *main_trampoline(void *arg)
+void *main_trampoline(void* arg)
 {
     (void) arg;
 
@@ -62,7 +62,7 @@ static void *main_trampoline(void *arg)
     return NULL;
 }
 
-static void *idle_thread(void *arg)
+void *idle_thread(void *arg)
 {
     (void) arg;
 
@@ -83,23 +83,19 @@ static void *idle_thread(void *arg)
 const char CODE *main_name = "main";
 const char CODE *idle_name = "idle";
 
-static char XDATA main_stack[THREAD_STACKSIZE_MAIN];
-static char XDATA idle_stack[THREAD_STACKSIZE_IDLE];
+char XDATA main_stack[THREAD_STACKSIZE_MAIN];
+char XDATA idle_stack[THREAD_STACKSIZE_IDLE];
 
 void kernel_init(void)
 {
     (void) irq_disable();
     thread_create(idle_stack, sizeof(idle_stack),
-            //THREAD_PRIORITY_IDLE,
             15,
-            //THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
             4 | 8,
             idle_thread, NULL, idle_name);
        
     thread_create(main_stack, sizeof(main_stack),
-	    //THREAD_PRIORITY_MAIN,
             7,
-            //THREAD_CREATE_WOUT_YIELD | THREAD_CREATE_STACKTEST,
             4 | 8,
             main_trampoline, NULL, main_name);
 

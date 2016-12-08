@@ -50,7 +50,7 @@ typedef struct list_node {
  * @param[in] new_node  list node to insert
  */
 /* 8051 implementation */
-static void list_add(list_node_t *node, list_node_t *new_node);
+void list_add(list_node_t* node, list_node_t* new_node);
 /*static inline void list_add(list_node_t *node, list_node_t *new_node) {
     new_node->next = node->next;
     node->next = new_node;
@@ -65,7 +65,7 @@ static void list_add(list_node_t *node, list_node_t *new_node);
  * @return  removed old list head, or NULL if empty
  */
 /* 8051 implementation */
-static list_node_t* list_remove_head(list_node_t *list);
+list_node_t* list_remove_head(list_node_t* list);
 /*static inline list_node_t* list_remove_head(list_node_t *list) {
     list_node_t* head = list->next;
     if (head) {

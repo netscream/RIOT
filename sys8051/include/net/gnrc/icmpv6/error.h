@@ -29,9 +29,9 @@
 #include "net/gnrc/netapi.h"
 #include "net/gnrc/pkt.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Builds an ICMPv6 destination unreachable message for sending.
@@ -85,8 +85,8 @@ gnrc_pktsnip_t *gnrc_icmpv6_error_param_prob_build(uint8_t code, void *ptr,
  * @param[in] code      The code for the message @see net/icmpv6.h.
  * @param[in] orig_pkt  The invoking packet.
  */
-static inline void gnrc_icmpv6_error_dst_unr_send(uint8_t code, gnrc_pktsnip_t *orig_pkt)
-{
+void gnrc_icmpv6_error_dst_unr_send(uint8_t code, gnrc_pktsnip_t *orig_pkt);
+/*{
     gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_dst_unr_build(code, orig_pkt);
 
     if (pkt != NULL) {
@@ -97,7 +97,7 @@ static inline void gnrc_icmpv6_error_dst_unr_send(uint8_t code, gnrc_pktsnip_t *
 #else
     (void)orig_pkt;
 #endif
-}
+}*/
 
 /**
  * @brief   Sends an ICMPv6 packet too big message for sending.
@@ -105,8 +105,8 @@ static inline void gnrc_icmpv6_error_dst_unr_send(uint8_t code, gnrc_pktsnip_t *
  * @param[in] mtu       The maximum transission unit of the next-hop link.
  * @param[in] orig_pkt  The invoking packet.
  */
-static inline void gnrc_icmpv6_error_pkt_too_big_send(uint32_t mtu, gnrc_pktsnip_t *orig_pkt)
-{
+void gnrc_icmpv6_error_pkt_too_big_send(uint32_t mtu, gnrc_pktsnip_t *orig_pkt);
+/*{
     gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_pkt_too_big_build(mtu, orig_pkt);
 
     if (pkt != NULL) {
@@ -117,7 +117,7 @@ static inline void gnrc_icmpv6_error_pkt_too_big_send(uint32_t mtu, gnrc_pktsnip
 #else
     (void)orig_pkt;
 #endif
-}
+}*/
 
 /**
  * @brief   Sends an ICMPv6 time exceeded message for sending.
@@ -125,8 +125,8 @@ static inline void gnrc_icmpv6_error_pkt_too_big_send(uint32_t mtu, gnrc_pktsnip
  * @param[in] code      The code for the message @see net/icmpv6.h.
  * @param[in] orig_pkt  The invoking packet.
  */
-static inline void gnrc_icmpv6_error_time_exc_send(uint8_t code, gnrc_pktsnip_t *orig_pkt)
-{
+void gnrc_icmpv6_error_time_exc_send(uint8_t code, gnrc_pktsnip_t *orig_pkt);
+/*{
     gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_time_exc_build(code, orig_pkt);
 
     if (pkt != NULL) {
@@ -137,7 +137,7 @@ static inline void gnrc_icmpv6_error_time_exc_send(uint8_t code, gnrc_pktsnip_t 
 #else
     (void)orig_pkt;
 #endif
-}
+}*/
 
 /**
  * @brief   Sends an ICMPv6 parameter problem message for sending.
@@ -146,9 +146,9 @@ static inline void gnrc_icmpv6_error_time_exc_send(uint8_t code, gnrc_pktsnip_t 
  * @param[in] ptr       Pointer to the errorneous octet in @p orig_pkt.
  * @param[in] orig_pkt  The invoking packet.
  */
-static inline void gnrc_icmpv6_error_param_prob_send(uint8_t code, void *ptr,
-                                                     gnrc_pktsnip_t *orig_pkt)
-{
+void gnrc_icmpv6_error_param_prob_send(uint8_t code, void *ptr,
+                                                     gnrc_pktsnip_t *orig_pkt);
+/*{
     gnrc_pktsnip_t *pkt = gnrc_icmpv6_error_param_prob_build(code, ptr, orig_pkt);
 
     if (pkt != NULL) {
@@ -159,11 +159,11 @@ static inline void gnrc_icmpv6_error_param_prob_send(uint8_t code, void *ptr,
 #else
     (void)orig_pkt;
 #endif
-}
+}*/
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_ICMPV6_ERROR_H_ */
 /** @} */

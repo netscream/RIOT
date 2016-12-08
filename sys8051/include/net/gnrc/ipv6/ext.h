@@ -27,15 +27,15 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "kernel_types.h"
 #include "net/gnrc/pkt.h"
 #include "net/ipv6/ext.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief   Demultiplex extension headers according to @p nh.
@@ -77,9 +77,9 @@ void gnrc_ipv6_ext_demux(kernel_pid_t iface,
 gnrc_pktsnip_t *gnrc_ipv6_ext_build(gnrc_pktsnip_t *ipv6, gnrc_pktsnip_t *next,
                                     uint8_t nh, size_t size);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* GNRC_IPV6_EXT_H_ */
 /**

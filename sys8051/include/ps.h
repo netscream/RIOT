@@ -23,18 +23,18 @@
 #ifndef __PS_H
 #define __PS_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Print information to all active threads to stdout.
  */
 void ps(void);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* __PS_H */
 /** @} */

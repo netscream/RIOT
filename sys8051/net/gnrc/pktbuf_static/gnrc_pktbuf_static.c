@@ -15,11 +15,11 @@
  * @author  Martine Lenders <mlenders@inf.fu-berlin.de>
  */
 
-#include <assert.h>
-#include <errno.h>
+//#include <assert.h>
+//#include <errno.h>
 #include <inttypes.h>
-#include <stdbool.h>
-#include <string.h>
+//#include <stdbool.h>
+//#include <string.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/uio.h>
@@ -34,42 +34,45 @@
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
-#define _ALIGNMENT_MASK    (sizeof(void *) - 1)
+//#define _ALIGNMENT_MASK    (sizeof(void *) - 1)
 
-typedef struct _unused {
+/*typedef struct _unused {
     struct _unused *next;
     unsigned int size;
-} _unused_t;
+} _unused_t;*/
 
 /* 8051 implementation */
-static mutex_t _mutex; //= MUTEX_INIT;
-static uint8_t _pktbuf[GNRC_PKTBUF_SIZE];
-static _unused_t *_first_unused = NULL;
+mutex_t XDATA _mutex; //= MUTEX_INIT;
+//uint8_t _pktbuf[GNRC_PKTBUF_SIZE];
+uint8_t XDATA _pktbuf[8];
+_unused_t* XDATA _first_unused = NULL;
 
-#ifdef DEVELHELP
+//#ifdef DEVELHELP
 /* maximum number of bytes allocated */
-static uint16_t max_byte_count = 0;
-#endif
+//static uint16_t max_byte_count = 0;
+//#endif
 
 /* internal gnrc_pktbuf functions */
-static gnrc_pktsnip_t *_create_snip(gnrc_pktsnip_t *next, void *data, size_t size,
-                                    gnrc_nettype_t type);
-static void *_pktbuf_alloc(size_t size);
-static void _pktbuf_free(void *data, size_t size);
+//gnrc_pktsnip_t *_create_snip(gnrc_pktsnip_t *next, void* XDATA data, size_t size,
+                                    //gnrc_nettype_t type);
+//void *_pktbuf_alloc(size_t size);
+//void _pktbuf_free(void* XDATA data, size_t size);
 
-static inline bool _pktbuf_contains(void *ptr)
+bool _pktbuf_contains(void* XDATA ptr)
 {
-    return (unsigned)((uint8_t *)ptr - _pktbuf) < GNRC_PKTBUF_SIZE;
+    //return (unsigned)((uint8_t *)ptr - _pktbuf) < GNRC_PKTBUF_SIZE;
+    return (unsigned)((uint8_t *)ptr - _pktbuf) < 8;
 }
 
 /* fits size to byte alignment */
-static inline size_t _align(size_t size)
+uint32_t _align(uint32_t XDATA size)
 {
-    return (size + _ALIGNMENT_MASK) & ~(_ALIGNMENT_MASK);
+    //return (size + _ALIGNMENT_MASK) & ~(_ALIGNMENT_MASK);
+    return (size + sizeof(void *) - 1 & ~(sizeof(void *) - 1));
 }
 
-static inline void _set_pktsnip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *next,
-                                void *data, size_t size, gnrc_nettype_t type)
+void _set_pktsnip(gnrc_pktsnip_t* XDATA pkt, gnrc_pktsnip_t* XDATA next,
+                                void* XDATA data, uint32_t XDATA size, gnrc_nettype_t XDATA type)
 {
     pkt->next = next;
     pkt->data = data;
@@ -77,7 +80,7 @@ static inline void _set_pktsnip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *next,
     pkt->type = type;
     pkt->users = 1;
 #ifdef MODULE_GNRC_NETERR
-    pkt->err_sub = KERNEL_PID_UNDEF;
+    pkt->err_sub = 0;
 #endif
 }
 
@@ -90,12 +93,13 @@ void gnrc_pktbuf_init(void)
     mutex_unlock(&_mutex);
 }
 
-gnrc_pktsnip_t *gnrc_pktbuf_add(gnrc_pktsnip_t *next, void *data, size_t size,
-                                gnrc_nettype_t type)
+gnrc_pktsnip_t* gnrc_pktbuf_add(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size,
+                                gnrc_nettype_t XDATA type)
 {
-    gnrc_pktsnip_t *pkt = NULL;
+    gnrc_pktsnip_t* pkt = NULL;
 
-    if (size > GNRC_PKTBUF_SIZE) {
+    //if (size > GNRC_PKTBUF_SIZE) {
+    if (size > 8) {
         DEBUG("pktbuf: size (%u) > GNRC_PKTBUF_SIZE (%u)\n",
               (unsigned)size, GNRC_PKTBUF_SIZE);
         return NULL;
@@ -106,13 +110,13 @@ gnrc_pktsnip_t *gnrc_pktbuf_add(gnrc_pktsnip_t *next, void *data, size_t size,
     return pkt;
 }
 
-gnrc_pktsnip_t *gnrc_pktbuf_mark(gnrc_pktsnip_t *pkt, size_t size, gnrc_nettype_t type)
+gnrc_pktsnip_t* gnrc_pktbuf_mark(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA size, gnrc_nettype_t XDATA type)
 {
-    gnrc_pktsnip_t *marked_snip = NULL;
+    gnrc_pktsnip_t* marked_snip = NULL;
     /* size required for chunk */
-    size_t required_new_size = (size < sizeof(_unused_t)) ?
+    uint32_t required_new_size = (size < sizeof(_unused_t)) ?
                                _align(sizeof(_unused_t)) : _align(size);
-    void *new_data_marked;
+    void* new_data_marked;
 
     mutex_lock(&_mutex);
     if ((size == 0) || (pkt == NULL) || (size > pkt->size) || (pkt->data == NULL)) {
@@ -169,9 +173,9 @@ gnrc_pktsnip_t *gnrc_pktbuf_mark(gnrc_pktsnip_t *pkt, size_t size, gnrc_nettype_
     return marked_snip;
 }
 
-int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t *pkt, size_t size)
+int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA size)
 {
-    size_t aligned_size = (size < sizeof(_unused_t)) ?
+   uint32_t aligned_size = (size < sizeof(_unused_t)) ?
                           _align(sizeof(_unused_t)) : _align(size);
 
     mutex_lock(&_mutex);
@@ -214,7 +218,7 @@ int gnrc_pktbuf_realloc_data(gnrc_pktsnip_t *pkt, size_t size)
     return 0;
 }
 
-void gnrc_pktbuf_hold(gnrc_pktsnip_t *pkt, unsigned int num)
+void gnrc_pktbuf_hold(gnrc_pktsnip_t* XDATA pkt, unsigned int XDATA num)
 {
     mutex_lock(&_mutex);
     while (pkt) {
@@ -224,10 +228,10 @@ void gnrc_pktbuf_hold(gnrc_pktsnip_t *pkt, unsigned int num)
     mutex_unlock(&_mutex);
 }
 
-static void _release_error_locked(gnrc_pktsnip_t *pkt, uint32_t err)
+void _release_error_locked(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA err)
 {
     while (pkt) {
-        gnrc_pktsnip_t *tmp;
+        gnrc_pktsnip_t* tmp;
         assert(_pktbuf_contains(pkt));
         tmp = pkt->next;
         if (pkt->users == 1) {
@@ -238,20 +242,20 @@ static void _release_error_locked(gnrc_pktsnip_t *pkt, uint32_t err)
         else {
             pkt->users--;
         }
-        DEBUG("pktbuf: report status code %" PRIu32 "\n", err);
-        gnrc_neterr_report(pkt, err);
+        //DEBUG("pktbuf: report status code %" PRIu32 "\n", err);
+        //gnrc_neterr_report(pkt, err);
         pkt = tmp;
     }
 }
 
-void gnrc_pktbuf_release_error(gnrc_pktsnip_t *pkt, uint32_t err)
+void gnrc_pktbuf_release_error(gnrc_pktsnip_t* XDATA pkt, uint32_t XDATA err)
 {
     mutex_lock(&_mutex);
     _release_error_locked(pkt, err);
     mutex_unlock(&_mutex);
 }
 
-gnrc_pktsnip_t *gnrc_pktbuf_start_write(gnrc_pktsnip_t *pkt)
+gnrc_pktsnip_t* gnrc_pktbuf_start_write(gnrc_pktsnip_t* XDATA pkt)
 {
     mutex_lock(&_mutex);
     if ((pkt == NULL) || (pkt->size == 0)) {
@@ -271,11 +275,11 @@ gnrc_pktsnip_t *gnrc_pktbuf_start_write(gnrc_pktsnip_t *pkt)
     return pkt;
 }
 
-gnrc_pktsnip_t *gnrc_pktbuf_get_iovec(gnrc_pktsnip_t *pkt, size_t *len)
+gnrc_pktsnip_t* gnrc_pktbuf_get_iovec(gnrc_pktsnip_t* XDATA pkt, uint32_t* XDATA len)
 {
-    size_t length = 0;
-    gnrc_pktsnip_t *head = NULL;
-    struct iovec *vec = NULL;
+    uint32_t length = 0;
+    gnrc_pktsnip_t* head = NULL;
+    struct iovec* vec = NULL;
 
     if (pkt == NULL) {
         *len = 0;
@@ -304,7 +308,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_get_iovec(gnrc_pktsnip_t *pkt, size_t *len)
 
 #ifdef DEVELHELP
 #ifdef MODULE_OD
-static inline void _print_chunk(void *chunk, size_t size, int num)
+void _print_chunk(void* XDATA chunk, uint32_t XDATA size, int XDATA num)
 {
     printf("=========== chunk %3d (%-10p size: %4u) ===========\n", num, chunk,
            (unsigned int)size);
@@ -312,7 +316,7 @@ static inline void _print_chunk(void *chunk, size_t size, int num)
        OD_FLAGS_ADDRESS_HEX | OD_FLAGS_BYTES_HEX | OD_FLAGS_LENGTH_1);
 }
 
-static inline void _print_unused(_unused_t *ptr)
+void _print_unused(_unused_t* XDATA ptr)
 {
     printf("~ unused: %p (next: %p, size: %4u) ~\n", (void *)ptr,
            (void *)ptr->next, ptr->size);
@@ -322,8 +326,8 @@ static inline void _print_unused(_unused_t *ptr)
 void gnrc_pktbuf_stats(void)
 {
 #ifdef MODULE_OD
-    _unused_t *ptr = _first_unused;
-    uint8_t *chunk = &_pktbuf[0];
+    _unused_t* ptr = _first_unused;
+    uint8_t* chunk = &_pktbuf[0];
     int count = 0;
 
     printf("packet buffer: first byte: %p, last byte: %p (size: %u)\n",
@@ -340,7 +344,7 @@ void gnrc_pktbuf_stats(void)
     }
 
     while (ptr) {
-        size_t size = ((uint8_t *)ptr) - chunk;
+        uint32_t size = ((uint8_t *)ptr) - chunk;
         if ((size == 0) && (!_pktbuf_contains(ptr)) &&
             (!_pktbuf_contains(chunk)) && (size > GNRC_PKTBUF_SIZE)) {
             puts("ERROR");
@@ -370,7 +374,7 @@ bool gnrc_pktbuf_is_empty(void)
 
 bool gnrc_pktbuf_is_sane(void)
 {
-    _unused_t *ptr = _first_unused;
+    _unused_t* ptr = _first_unused;
 
     /* Invariants of this implementation:
      *  - the head of _unused_t list is _first_unused
@@ -388,9 +392,9 @@ bool gnrc_pktbuf_is_sane(void)
         if ((ptr->next != NULL) && (ptr >= ptr->next)) {
             return false;
         }
-        if (((ptr->next == NULL) || (ptr->size > (size_t)((uint8_t *)(ptr->next) - (uint8_t *)ptr))) &&
+        if (((ptr->next == NULL) || (ptr->size > (uint32_t)((uint8_t *)(ptr->next) - (uint8_t *)ptr))) &&
             ((ptr->next != NULL) ||
-             (ptr->size != (size_t)(GNRC_PKTBUF_SIZE - ((uint8_t *)ptr - &_pktbuf[0]))))) {
+             (ptr->size != (uint32_t)(GNRC_PKTBUF_SIZE - ((uint8_t *)ptr - &_pktbuf[0]))))) {
             return false;
         }
         ptr = ptr->next;
@@ -400,11 +404,11 @@ bool gnrc_pktbuf_is_sane(void)
 }
 #endif
 
-static gnrc_pktsnip_t *_create_snip(gnrc_pktsnip_t *next, void *data, size_t size,
-                                    gnrc_nettype_t type)
+gnrc_pktsnip_t* _create_snip(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size,
+                                    gnrc_nettype_t XDATA type)
 {
-    gnrc_pktsnip_t *pkt = _pktbuf_alloc(sizeof(gnrc_pktsnip_t));
-    void *_data = NULL;
+    gnrc_pktsnip_t* pkt = _pktbuf_alloc(sizeof(gnrc_pktsnip_t));
+    void* _data = NULL;
 
     if (pkt == NULL) {
         DEBUG("pktbuf: error allocating new packet snip\n");
@@ -425,11 +429,12 @@ static gnrc_pktsnip_t *_create_snip(gnrc_pktsnip_t *next, void *data, size_t siz
     return pkt;
 }
 
-static void *_pktbuf_alloc(size_t size)
+void* _pktbuf_alloc(uint32_t XDATA size)
 {
-    _unused_t *prev = NULL, *ptr = _first_unused;
+    _unused_t* prev = NULL;
+    _unused_t* ptr = _first_unused;
 
-    size = (size < sizeof(_unused_t)) ? _align(sizeof(_unused_t)) : _align(size);
+   size = (size < sizeof(_unused_t)) ? _align(sizeof(_unused_t)) : _align(size);
     while (ptr && (size > ptr->size)) {
         prev = ptr;
         ptr = ptr->next;
@@ -457,21 +462,21 @@ static void *_pktbuf_alloc(size_t size)
         new->next = ptr->next;
         new->size = ptr->size - size;
     }
-#ifdef DEVELHELP
+/*#ifdef DEVELHELP
     uint16_t last_byte = (uint16_t)((((uint8_t *)ptr) + size) - &(_pktbuf[0]));
     if (last_byte > max_byte_count) {
         max_byte_count = last_byte;
     }
-#endif
+#endif*/
     return (void *)ptr;
 }
 
-static inline bool _too_small_hole(_unused_t *a, _unused_t *b)
+bool _too_small_hole(_unused_t* XDATA a, _unused_t* XDATA b)
 {
-    return sizeof(_unused_t) > (size_t)(((uint8_t *)b) - (((uint8_t *)a) + a->size));
+    return sizeof(_unused_t) > (uint32_t)(((uint8_t *)b) - (((uint8_t *)a) + a->size));
 }
 
-static inline _unused_t *_merge(_unused_t *a, _unused_t *b)
+_unused_t* _merge(_unused_t* XDATA a, _unused_t* XDATA b)
 {
     assert(b != NULL);
 
@@ -480,9 +485,11 @@ static inline _unused_t *_merge(_unused_t *a, _unused_t *b)
     return a;
 }
 
-static void _pktbuf_free(void *data, size_t size)
+void _pktbuf_free(void* XDATA data, uint32_t XDATA size)
 {
-    _unused_t *new = (_unused_t *)data, *prev = NULL, *ptr = _first_unused;
+    _unused_t* new = (_unused_t *)data; 
+    _unused_t* prev = NULL; 
+    _unused_t* ptr = _first_unused;
 
     if (!_pktbuf_contains(data)) {
         return;
@@ -508,9 +515,9 @@ static void _pktbuf_free(void *data, size_t size)
 }
 
 /* 8051 implementation */
-gnrc_pktsnip_t *gnrc_pktbuf_remove_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *snip)
+gnrc_pktsnip_t* gnrc_pktbuf_remove_snip(gnrc_pktsnip_t* XDATA pkt, gnrc_pktsnip_t* XDATA snip)
 {
-    gnrc_pktsnip_t *tmp = pkt;
+    gnrc_pktsnip_t* tmp = pkt;
     LL_DELETE(tmp, snip);
     snip->next = NULL;
     gnrc_pktbuf_release(snip);
@@ -518,7 +525,7 @@ gnrc_pktsnip_t *gnrc_pktbuf_remove_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *sni
     return pkt;
 }
 /* 8051 implementation */
-gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *old, gnrc_pktsnip_t *add)
+gnrc_pktsnip_t* gnrc_pktbuf_replace_snip(gnrc_pktsnip_t* XDATA pkt, gnrc_pktsnip_t* XDATA old, gnrc_pktsnip_t* XDATA add)
 {
     /* If add is a list we need to preserve its tail */
     if (add->next != NULL) {
@@ -544,15 +551,15 @@ gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *ol
 }
 
 /* 8051 implementation */
-gnrc_pktsnip_t *gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type)
+gnrc_pktsnip_t* gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t* XDATA pkt, gnrc_nettype_t XDATA type)
 { 
     bool is_shared = false; //(pkt->users > 1);
-    size_t size = 0;
+    uint32_t size = 0;
 
-    gnrc_pktsnip_t *tmp = NULL;
-    gnrc_pktsnip_t *target = NULL;
-    gnrc_pktsnip_t *next = NULL;
-    gnrc_pktsnip_t *new = NULL;
+    gnrc_pktsnip_t* tmp = NULL;
+    gnrc_pktsnip_t* target = NULL;
+    gnrc_pktsnip_t* next = NULL;
+    gnrc_pktsnip_t* new = NULL;
 
     mutex_lock(&_mutex);
 
@@ -590,7 +597,8 @@ gnrc_pktsnip_t *gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t t
         target->next = NULL;
     }
 
-    _release_error_locked(pkt, GNRC_NETERR_SUCCESS);
+    //_release_error_locked(pkt, GNRC_NETERR_SUCCESS);
+    _release_error_locked(pkt, 0);
 
     if (is_shared && (target != NULL)) {
         target->next = next;
@@ -599,6 +607,12 @@ gnrc_pktsnip_t *gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t t
     mutex_unlock(&_mutex);
 
     return new;
+}
+
+void gnrc_pktbuf_release(gnrc_pktsnip_t* XDATA pkt)
+{   
+    //gnrc_pktbuf_release_error(pkt, GNRC_NETERR_SUCCESS);
+    gnrc_pktbuf_release_error(pkt, 0);
 }
 
 /** @} */
