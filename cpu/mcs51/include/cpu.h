@@ -29,4 +29,6 @@
 /*{
    //puts("n/a");
 }*/
+extern int XDATA _in_isr;
+void cpu_print_last_instruction(void);
 #endif

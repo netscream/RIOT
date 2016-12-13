@@ -49,14 +49,18 @@ int32 CODE param_radio_channel = 128;
  *                0 |                1 | rxBuffer[0]
  *                0 |                2 | rxBuffer[0 and 1]
  */
-#define RX_PACKET_COUNT  3
-static volatile uint8 XDATA radioQueueRxPacket[RX_PACKET_COUNT][1 + RADIO_MAX_PACKET_SIZE + 2];  // The first byte is the length.
+//#define RX_PACKET_COUNT  3
+/*static volatile uint8 XDATA radioQueueRxPacket[RX_PACKET_COUNT][1 + RADIO_MAX_PACKET_SIZE + 2];  // The first byte is the length.
 static volatile uint8 DATA radioQueueRxMainLoopIndex = 0;   // The index of the next rxBuffer to read from the main loop.
 static volatile uint8 DATA radioQueueRxInterruptIndex = 0;  // The index of the next rxBuffer to write to when a packet comes from the radio.
+*/
+uint8 XDATA radioQueueRxPacket[3][1 + RADIO_MAX_PACKET_SIZE + 2];
+uint8 DATA radioQueueRxMainLoopIndex = 0;   // The index of the next rxBuffer to read from the main loop
+uint8 DATA radioQueueRxInterruptIndex = 0;
 
 /* txPackets are handled similarly */
-#define TX_PACKET_COUNT 16
-static volatile uint8 XDATA radioQueueTxPacket[TX_PACKET_COUNT][1 + RADIO_MAX_PACKET_SIZE];  // The first byte is the length.
+//#define TX_PACKET_COUNT 16
+static volatile uint8 XDATA radioQueueTxPacket[16][1 + RADIO_MAX_PACKET_SIZE];  // The first byte is the length.
 static volatile uint8 DATA radioQueueTxMainLoopIndex = 0;   // The index of the next txPacket to write to in the main loop.
 static volatile uint8 DATA radioQueueTxInterruptIndex = 0;  // The index of the current txPacket we are trying to send on the radio.
 
@@ -87,12 +91,12 @@ static uint8 randomTxDelay()
 uint8 radioQueueTxAvailable(void)
 {
     // Assumption: TX_PACKET_COUNT is a power of 2
-    return (radioQueueTxInterruptIndex - radioQueueTxMainLoopIndex - 1) & (TX_PACKET_COUNT - 1);
+    return (radioQueueTxInterruptIndex - radioQueueTxMainLoopIndex - 1) & (16 - 1);
 }
 
 uint8 radioQueueTxQueued(void)
 {
-    return (radioQueueTxMainLoopIndex - radioQueueTxInterruptIndex) & (TX_PACKET_COUNT - 1);
+    return (radioQueueTxMainLoopIndex - radioQueueTxInterruptIndex) & (16 - 1);
 }
 
 uint8 XDATA * radioQueueTxCurrentPacket()
@@ -108,7 +112,7 @@ uint8 XDATA * radioQueueTxCurrentPacket()
 void radioQueueTxSendPacket(void)
 {
     // Update our index of which packet to populate in the main loop.
-    if (radioQueueTxMainLoopIndex == TX_PACKET_COUNT - 1)
+    if (radioQueueTxMainLoopIndex == 16 - 1)
     {
         radioQueueTxMainLoopIndex = 0;
     }
@@ -135,7 +139,7 @@ uint8 XDATA * radioQueueRxCurrentPacket(void)
 
 void radioQueueRxDoneWithPacket(void)
 {
-    if (radioQueueRxMainLoopIndex == RX_PACKET_COUNT - 1)
+    if (radioQueueRxMainLoopIndex == 3 - 1)
     {
         radioQueueRxMainLoopIndex = 0;
     }
@@ -170,7 +174,7 @@ void radioMacEventHandler(uint8 event) // called by the MAC in an ISR
     else if (event == RADIO_MAC_EVENT_TX)
     {
         // Give ownership of the current TX packet back to the main loop by updated radioQueueTxInterruptIndex.
-        if (radioQueueTxInterruptIndex == TX_PACKET_COUNT - 1)
+        if (radioQueueTxInterruptIndex == 16 - 1)
         {
             radioQueueTxInterruptIndex = 0;
         }
@@ -207,7 +211,7 @@ void radioMacEventHandler(uint8 event) // called by the MAC in an ISR
             uint8 nextradioQueueRxInterruptIndex;
 
             // See if we can give the data to the main loop.
-            if (radioQueueRxInterruptIndex == RX_PACKET_COUNT - 1)
+            if (radioQueueRxInterruptIndex == 3 - 1)
             {
                 nextradioQueueRxInterruptIndex = 0;
             }

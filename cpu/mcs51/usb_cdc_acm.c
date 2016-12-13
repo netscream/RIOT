@@ -95,7 +95,7 @@ HandlerFunction *usbComLineCodingChangeHandler = doNothing;
 // The number of bytes that we have loaded into the IN FIFO that are NOT yet
 // queued up to be sent.  This will always be less than 64 because
 // once we've loaded up a full packet we should always send it immediately.
-static uint8 DATA inFifoBytesLoaded = 0;
+static uint8 XDATA inFifoBytesLoaded = 0;
 //uint8 XDATA inFifoBytesLoaded = 0;
 
 // True iff we have received a command from the user to enter bootloader mode.

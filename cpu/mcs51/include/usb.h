@@ -269,7 +269,7 @@ void usbPoll(void);
  * This should only be called from usbCallbackSetupHandler() or
  * usbCallbackClassDescriptorHandler().
  */
-void usbControlRead(uint16 XDATA bytesCount, uint8 XDATA* source);
+void usbControlRead(uint16 XDATA bytesCount, uint8* XDATA source);
 
 /*! Tells the USB library to start a Control Write
  * (Host-to-Device) transfer.
@@ -281,7 +281,7 @@ void usbControlRead(uint16 XDATA bytesCount, uint8 XDATA* source);
  * This should only be called from usbCallbackSetupHandler() or
  * usbCallbackClassDescriptorHandler().
  */
-void usbControlWrite(uint16 XDATA bytesCount, uint8 XDATA* source);
+void usbControlWrite(uint16 XDATA bytesCount, uint8* XDATA source);
 
 /*! Tells the USB library to acknowledge the request.
  * This is the right way to handle Control Write transfers with
@@ -309,27 +309,27 @@ void usbControlStall(void);
  * (device-to-host) transactions.
  *
  * This should only be called from usbCallbackInitEndpoints(). */
-void usbInitEndpointIn(uint8 endpointNumber, uint8 maxPacketSize);
+void usbInitEndpointIn(uint8 XDATA endpointNumber, uint8 XDATA maxPacketSize);
 
 /*! Configures the specified endpoint to do double-buffered OUT
  * (host-to-device) transactions.
  *
  * This should only be called from usbCallbackInitEndpoints(). */
-void usbInitEndpointOut(uint8 endpointNumber, uint8 maxPacketSize);
+void usbInitEndpointOut(uint8 XDATA endpointNumber, uint8 XDATA maxPacketSize);
 
 /*! Writes the specified data to a USB FIFO.
  * This is equivalent to writing data to the FIFO register (e.g. USBF4)
  * one byte at a time.
  * Please refer to the CC2511 datasheet to understand when you can and
  * can not write data to a USB FIFO. */
-void usbWriteFifo(uint8 endpointNumber, uint8 count, const uint8 * buffer);
+void usbWriteFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8* XDATA buffer);
 
 /*! Reads data from a USB FIFO and writes to the specified memory buffer.
  * This is equivalent to reading data from the FIFO register (e.g. USBF4)
  * one byte at a time.
  * Please refer to the CC2511 datasheet to understand when you can and
  * can not read data from a USB FIFO. */
-void usbReadFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8 XDATA* buffer);
+void usbReadFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8* XDATA buffer);
 
 /*! Returns 1 if we are connected to a USB bus that is suspended.
  * Returns 0 otherwise.

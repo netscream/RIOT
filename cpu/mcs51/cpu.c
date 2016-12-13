@@ -8,7 +8,7 @@
  * @author  Hlynur Hansen <hlynur@tolvur.net>
  * @}
  */
-
+#include <stdio.h>
 #include "cpu.h"
 #include "irq.h"
 #include "sched.h"
@@ -21,28 +21,45 @@
  */
 void thread_yield_higher(void)
 {
+	//char *XDATA sp;
+	//void (*foo)(void* arg);
+	if (_in_isr == 0) {
+		_in_isr = 1;
+		irq_disable();
+		sched_run();
+		//sp = sched_active_thread->sp;
+		sched_active_thread->function(1);	
+		irq_enable();
+	}	
+}
+
+/*void thread_yield_higher(void)
+{
     // __asm__("push ar2");
    return;
-}
+}*/
 
 /* This function calculates the ISR_usage */
-int thread_arch_isr_stack_usage(void)
-{
+//int thread_arch_isr_stack_usage(void)
+//{
     /* TODO */
-    return -1;
-}
+    //return -1;
+//    return 0;
+//}
 
-void *thread_arch_isr_stack_pointer(void)
-{
+//void *thread_arch_isr_stack_pointer(void)
+//{
     /* TODO */
-    return (void *)-1;
-}
+    //return (void *)-1;
+  //  return NULL;
+//}
 
-void *thread_arch_isr_stack_start(void)
+/*void *thread_arch_isr_stack_start(void)
 {
-    /* TODO */
-    return (void *)-1;
-}
+  */  /* TODO */
+    //return (void *)-1;
+    /*return NULL;
+}*/
 
 
 /*
@@ -50,12 +67,12 @@ void *thread_arch_isr_stack_start(void)
  *
  *
  */
-char *thread_stack_init(thread_task_func_t *task_func, void *arg, void *stack_start, int stack_size)
+char *thread_stack_init(void (*task_func)(void *arg), void* XDATA arg, void* XDATA stack_start, int XDATA stack_size)
 {
-    char stk;
-    char *stkptr;
-    stk = (char)((uintptr_t) stack_start+stack_size);
-    stk &= 0xfe; //stack alignment 8 bit
+    unsigned int* XDATA stk;
+    char* XDATA stkptr;
+    stk = (unsigned int*)((uintptr_t) stack_start+stack_size);
+    //stk &= 0xfe; //stack alignment 8 bit
     stkptr = (char*) stk;
     --stkptr;
     *stkptr = (char) sched_task_exit;
@@ -63,7 +80,7 @@ char *thread_stack_init(thread_task_func_t *task_func, void *arg, void *stack_st
     *stkptr = (char) task_func;
     --stkptr;
     *stkptr = (char) arg;
-    return (char *) stkptr;	
+    return stkptr;
 }
 
 void reboot(void)

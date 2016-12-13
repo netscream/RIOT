@@ -91,7 +91,7 @@ extern ACM_LINE_CODING XDATA usbComLineCoding;
 
 /*! A pointer to a function that will be called whenever #usbComLineCoding gets set
  * by the USB host. */
-extern HandlerFunction * usbComLineCodingChangeHandler;
+extern HandlerFunction *usbComLineCodingChangeHandler;
 
 /*! This function should be called regularly (at least every 50&nbsp;ms) if you are
  * using this library.

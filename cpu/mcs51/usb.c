@@ -22,7 +22,7 @@ uint8 XDATA controlTransferState = 0;
 //uint16 XDATA controlTransferBytesLeft;
 //uint8 XDATA *controlTransferPointer;
 uint16 XDATA controlTransferBytesLeft;
-uint8 XDATA *controlTransferPointer;
+uint8* XDATA controlTransferPointer;
 
 volatile BIT usbSuspendMode = 0;
 
@@ -34,9 +34,9 @@ void usbInit()
 }
 
 // TODO: try using DMA in usbReadFifo and usbWriteFifo and see how that affects the speed of usbComTxSend(x, 128).
-void usbReadFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8 XDATA* buffer)
+void usbReadFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8* XDATA buffer)
 {
-    XDATA uint8 * fifo = ((XDATA uint8 *)(0xDE20 + (uint8)(endpointNumber<<1)));
+    uint8* XDATA fifo = ((uint8* XDATA)(0xDE20 + (uint8)(endpointNumber<<1)));
     while(count > 0)
     {
         count--;
@@ -46,9 +46,9 @@ void usbReadFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8 XDATA* buf
     usbActivityFlag = 1;
 }
 
-void usbWriteFifo(uint8 endpointNumber, uint8 count, const uint8 * buffer)
+void usbWriteFifo(uint8 XDATA endpointNumber, uint8 XDATA count, uint8* XDATA buffer)
 {
-    uint8 * fifo = (uint8 *)(0xDE20 + (uint8)(endpointNumber<<1));
+    uint8* XDATA fifo = (uint8* XDATA)(0xDE20 + (uint8)(endpointNumber<<1));
     while(count > 0)
     {
         count--;
@@ -612,14 +612,14 @@ void usbSleep()
     P0IE = savedP0IE;
 }
 
-void usbControlRead(uint16 XDATA bytesCount, uint8 XDATA* source)
+void usbControlRead(uint16 XDATA bytesCount, uint8* XDATA source)
 {
     controlTransferState = 2;
     controlTransferBytesLeft = bytesCount;
     controlTransferPointer = source;
 }
 
-void usbControlWrite(uint16 XDATA bytesCount, uint8 XDATA* source)
+void usbControlWrite(uint16 XDATA bytesCount, uint8* XDATA source)
 {
     controlTransferState = 1;
     controlTransferBytesLeft = bytesCount;
@@ -637,14 +637,14 @@ void usbControlStall()
     controlTransferState = 0;
 }
 
-void usbInitEndpointIn(uint8 endpointNumber, uint8 maxPacketSize)
+void usbInitEndpointIn(uint8 XDATA endpointNumber, uint8 XDATA maxPacketSize)
 {
     USBINDEX = endpointNumber;
     USBMAXI = (maxPacketSize + 7) >> 3;
     USBCSIH = 1;                    // Enable Double buffering
 }
 
-void usbInitEndpointOut(uint8 endpointNumber, uint8 maxPacketSize)
+void usbInitEndpointOut(uint8 XDATA endpointNumber, uint8 XDATA maxPacketSize)
 {
     USBINDEX = endpointNumber;
     USBMAXO = (maxPacketSize + 7) >> 3;
