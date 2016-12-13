@@ -40,7 +40,8 @@
 //#define MUTEX_LOCKED (((void*)0)-1)
 void* MUTEX_LOCKED()
 {
-	return ((void*)-1);
+	return NULL;
+	//return ((void*)-1)
 }
 
 /* 8051 implementation */

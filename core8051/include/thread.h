@@ -90,7 +90,6 @@ struct _thread {
     uint8_t priority;               /**< thread's priority              */
 
     kernel_pid_t pid;               /**< thread's process id            */
-
 #ifdef MODULE_CORE_THREAD_FLAGS
     thread_flags_t flags;           /**< currently set flags            */
 #endif
@@ -115,6 +114,7 @@ struct _thread {
     const char *name;               /**< thread's name                  */
     int stack_size;                 /**< thread's stack size            */
 #endif
+    void (*function)(void* arg);
 };
 
 /**
@@ -284,7 +284,7 @@ struct _thread {
                   void *arg,
                   const char *name);
 */
-kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA priority, int XDATA flags, thread_task_func_t XDATA function, void* XDATA arg, const char* XDATA name);
+kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA priority, int XDATA flags, void PDATA (* function)(void* arg), void* XDATA arg, const char* XDATA name);
 
 /**
  * @brief       Retreive a thread control block by PID.
@@ -370,7 +370,7 @@ kernel_pid_t thread_getpid(void);
  *
  * @return stack pointer
  */
-char *thread_stack_init(thread_task_func_t* task_func, void* XDATA arg, void* XDATA stack_start, int XDATA stack_size);
+char *thread_stack_init(void (*task_func)(void* arg), void* XDATA arg, void* XDATA stack_start, int XDATA stack_size);
 
 /**
  * @brief Add thread to list, sorted by priority (internal)

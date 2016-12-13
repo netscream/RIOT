@@ -64,7 +64,7 @@ int msg_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid)
     return _msg_send(m, target_pid, true, irq_disable());
 }
 
-int msg_try_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid)
+int msg_try_send(msg_t* XDATA m, kernel_pid_t target_pid)
 {
     if (irq_is_in()) {
         return msg_send_int(m, target_pid);

@@ -43,7 +43,7 @@
 volatile int lpm_prevent_sleep = 0;
 
 extern int main(void);
-void *main_trampoline(void* arg)
+void main_trampoline(void* arg)
 {
     (void) arg;
 
@@ -59,10 +59,10 @@ void *main_trampoline(void* arg)
     LOG_INFO("main(): This is RIOT! (Version: " RIOT_VERSION ")\n");
 
     main();
-    return NULL;
+    //return NULL;
 }
 
-void *idle_thread(void *arg)
+void idle_thread(void *arg)
 {
     (void) arg;
 
@@ -77,11 +77,11 @@ void *idle_thread(void *arg)
         }
     }
 
-    return NULL;
+    //return NULL;
 }
 
-const char CODE *main_name = "main";
-const char CODE *idle_name = "idle";
+const char* CODE main_name = "main";
+const char* CODE idle_name = "idle";
 
 char XDATA main_stack[THREAD_STACKSIZE_MAIN];
 char XDATA idle_stack[THREAD_STACKSIZE_IDLE];

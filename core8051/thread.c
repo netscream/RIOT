@@ -113,11 +113,11 @@ void thread_yield(void)
 {
     unsigned XDATA old_state = irq_disable();
     thread_t* XDATA me = (thread_t *)sched_active_thread;
+    
     if (me->status >= STATUS_ON_RUNQUEUE) {
         clist_lpoprpush(&sched_runqueues[me->priority]);
     }
     irq_restore(old_state);
-
     thread_yield_higher();
 }
 
@@ -160,20 +160,20 @@ uintptr_t thread_measure_stack_free(char *stack)
 #endif*/
 
 //8051 implementation
-kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA priority, int XDATA flags, thread_task_func_t XDATA function, void* XDATA arg, const char* XDATA name)
+kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA priority, int XDATA flags, void PDATA (* function)(void* arg), void* XDATA arg, const char* XDATA name)
 {
-    thread_t* XDATA cb = NULL;
+    thread_t* cb;
     unsigned XDATA state = 0;
     kernel_pid_t XDATA pid;
     kernel_pid_t XDATA i;
-    uintptr_t XDATA misalignment;
-    
+    uintptr_t XDATA misalignment; 
     if (priority >= SCHED_PRIO_LEVELS) {
 	//8051 implementation EINVAL = 22
         //return -EINVAL;
-        return -22;
+        return 22;
     }
-
+     
+    //printf("s %x", &arg);
 /*#ifdef DEVELHELP
     int total_stacksize = stacksize;
 #else
@@ -199,12 +199,14 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
     stacksize -= sizeof(thread_t);
     
     /* round down the stacksize to a multiple of thread_t alignments (usually 16/32bit) */
-    //stacksize -= stacksize % ALIGN_OF(thread_t);
-     //stacksize needs fixing 8051
+    stacksize -= stacksize % ALIGN_OF(thread_t);
+    //stacksize needs fixing 8051
+    
     if (stacksize < 0) {
         //DEBUG("thread_create: stacksize is too small!\n");
 	return 0;
-    }
+    } 
+    
     /* allocate our thread control block at the top of our stackspace */
     //8051 implementation
     //thread_t *cb = (thread_t *) (stack + stacksize);
@@ -229,7 +231,7 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
 #endif
 
     state = irq_disable();
-    
+     
     //kernel_pid_t pid = KERNEL_PID_UNDEF;
     //pid = KERNEL_PID_UNDEF;
     pid = 0;
@@ -248,14 +250,13 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
         irq_restore(state);
 	//8051 implementation EOVERFLOW = 75
         //return -EOVERFLOW;
-        return -75;
+        return 75;
     }
-
+    
     sched_threads[pid] = cb;
 
     cb->pid = pid;
     cb->sp = thread_stack_init(function, arg, stack, stacksize);
-
 #if defined(DEVELHELP) || defined(SCHED_TEST_STACK)
     cb->stack_start = stack;
 #endif
@@ -266,6 +267,7 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
 #endif
 
     cb->priority = priority;
+   
     cb->status = 0;
 
     cb->rq_entry.next = NULL;
@@ -276,13 +278,13 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
     cib_init(&(cb->msg_queue), 0);
     cb->msg_array = NULL;
 #endif
-    
+    cb->function = function; 
     sched_num_threads++;
+     
+    //printf("Created thread %s. PID: %u. Priority: %u.\n", name, cb->pid, priority);
     
-    DEBUG("Created thread %s. PID: %" PRIkernel_pid ". Priority: %u.\n", name, cb->pid, priority);
-
     //if (flags & THREAD_CREATE_SLEEPING) {
-    if (flags & 1) {	
+    if (flags & 1) {
         sched_set_status(cb, STATUS_SLEEPING);
     }
     else {
@@ -296,6 +298,6 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
     }
     
     irq_restore(state);
-
+ 
     return pid;
 }

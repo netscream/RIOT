@@ -229,7 +229,7 @@ int msg_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid);
  * @return 0, if receiver is not waiting or has a full message queue
  * @return -1, on error (invalid PID)
  */
-int msg_try_send(msg_t* XDATA m, kernel_pid_t XDATA target_pid);
+int msg_try_send(msg_t* XDATA m, kernel_pid_t target_pid);
 
 
 /**

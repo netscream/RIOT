@@ -50,7 +50,7 @@ thread_t* XDATA sched_active_thread;
 kernel_pid_t XDATA sched_active_pid = 0; //KERNEL_PID_UNDEF
 
 clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
-uint32_t XDATA runqueue_bitcache = 0;
+uint16_t XDATA runqueue_bitcache = 0;
 
 /*#ifdef MODULE_SCHEDSTATISTICS
 static void (*sched_cb) (uint32_t timestamp, uint32_t value) = NULL;
@@ -61,30 +61,33 @@ int sched_run(void)
 {
     thread_t *active_thread = NULL;
     int nextrq = 0;
-    thread_t *next_thread = NULL;
+    thread_t *next_thread;
     sched_context_switch_request = 0;
     
     active_thread = (thread_t *)sched_active_thread;
-   
+    
     /* The bitmask in runqueue_bitcache is never empty,
      * since the threading should not be started before at least the idle thread was started.
      */
     nextrq = bitarithm_lsb(runqueue_bitcache);
+    
     //*next_thread = container_of(sched_runqueues[nextrq].next->next, thread_t, rq_entry);
-    next_thread = ((thread_t *) sched_runqueues[nextrq].next->next) - offsetof(thread_t, rq_entry);
-    DEBUG("sched_run: active thread: %" PRIkernel_pid ", next thread: %" PRIkernel_pid "\n",
+    
+    next_thread = (thread_t *)(((char *) sched_runqueues[nextrq].next->next) - offsetof(thread_t, rq_entry));
+     
+    DEBUG("sched_run: active thread: %d, next thread: %d\n",
           //(active_thread == NULL) ? KERNEL_PID_UNDEF : active_thread->pid,
 	  (active_thread == NULL) ? 0 : active_thread->pid,
           next_thread->pid);
-
+     
     if (active_thread == next_thread) {
         DEBUG("sched_run: done, sched_active_thread was not changed.\n");
         return 0;
     }
 
-/*#ifdef MODULE_SCHEDSTATISTICS
+#ifdef MODULE_SCHEDSTATISTICS
     unsigned long time = xtimer_now();
-#endif*/
+#endif
 
     if (active_thread) {
         if (active_thread->status == STATUS_RUNNING) {
@@ -106,6 +109,7 @@ int sched_run(void)
     }
 
 #ifdef MODULE_SCHEDSTATISTICS
+    
     schedstat *next_stat = &sched_pidlist[next_thread->pid];
     next_stat->laststart = time;
     next_stat->schedules++;
@@ -113,13 +117,14 @@ int sched_run(void)
         sched_cb(time, next_thread->pid);
     }
 #endif
-
+    
     next_thread->status = STATUS_RUNNING;
+    
     sched_active_pid = next_thread->pid;
     sched_active_thread = (thread_t *) next_thread;
 
     DEBUG("sched_run: done, changed sched_active_thread.\n");
-
+     
     return 1;
 }
 
@@ -137,7 +142,7 @@ void sched_set_status(thread_t* XDATA process, unsigned int XDATA status)
             //DEBUG("sched_set_status: adding thread %" PRIkernel_pid " to runqueue %" PRIu16 ".\n",
             //      process->pid, process->priority);
             clist_rpush(&sched_runqueues[process->priority], &(process->rq_entry));
-            runqueue_bitcache |= 1 << process->priority;
+            runqueue_bitcache |= (1 << process->priority); 
         }
     }
     else {
@@ -160,9 +165,7 @@ void sched_switch(uint16_t XDATA other_prio)
     thread_t *active_thread = (thread_t *) sched_active_thread;
     uint16_t current_prio = active_thread->priority;
     int on_runqueue = (active_thread->status >= STATUS_ON_RUNQUEUE);   
-    DEBUG("sched_switch: active pid=%" PRIkernel_pid" prio=%" PRIu16 " on_runqueue=%i "
-          ", other_prio=%" PRIu16 "\n",
-          active_thread->pid, current_prio, on_runqueue, other_prio);
+    DEBUG("sched_switch: active pid=%d prio=%d  on_runqueue=%d other_prio=%d\n", active_thread->pid, current_prio, on_runqueue, other_prio);
 
     if (!on_runqueue || (current_prio > other_prio)) {
         if (irq_is_in()) {
@@ -172,7 +175,6 @@ void sched_switch(uint16_t XDATA other_prio)
         else {
             DEBUG("sched_switch: yielding immediately.\n");
             thread_yield_higher();
-	    LED_YELLOW(1);
         }
     }
     else {
