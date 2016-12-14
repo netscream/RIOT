@@ -90,8 +90,7 @@ void gnrc_pktbuf_init(void);
  * @return  Pointer to the packet part that represents the new gnrc_pktsnip_t.
  * @retunrn  NULL, if no space is left in the packet buffer.
  */
-gnrc_pktsnip_t* gnrc_pktbuf_add(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size,
-                                gnrc_nettype_t XDATA type);
+gnrc_pktsnip_t* gnrc_pktbuf_add(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size, gnrc_nettype_t XDATA type);
 
 /**
  * @brief   Marks the first @p size bytes in a received packet with a new

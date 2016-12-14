@@ -44,7 +44,7 @@ int gnrc_netreg_register(gnrc_nettype_t type, gnrc_netreg_entry_t* XDATA entry)
 
     //if (_INVALID_TYPE(type)) {
     if (type < 0 || type >= 1){
-        return -22;
+        return 22;
     }
 
     LL_PREPEND(netreg[type], entry);
@@ -120,7 +120,7 @@ int gnrc_netreg_calc_csum(gnrc_pktsnip_t* XDATA hdr, gnrc_pktsnip_t* XDATA pseud
         /* XXX: Might be allowed for future checksums.
          *      If this is the case: move this to the branches were it
          *      is needed. */
-        return -22;
+        return 22;
     }
 
     switch (hdr->type) {
@@ -137,7 +137,7 @@ int gnrc_netreg_calc_csum(gnrc_pktsnip_t* XDATA hdr, gnrc_pktsnip_t* XDATA pseud
             return gnrc_udp_calc_csum(hdr, pseudo_hdr);
 #endif
         default:
-            return -64;
+            return 64;
     }
 }
 

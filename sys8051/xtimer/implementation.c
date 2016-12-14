@@ -11,7 +11,7 @@ uint32_t _xtimer_lltimer_now(void)
 #endif
 }
 
-uint32_t _xtimer_lltimer_mask(uint32_t val)
+uint32_t _xtimer_lltimer_mask(uint32_t XDATA val)
 {
     //return val & ~XTIMER_MASK_SHIFTED;
     return val & ~(0 << -0);
@@ -37,7 +37,7 @@ uint32_t xtimer_now(void)
 #endif
 }
 
-void xtimer_spin(uint32_t offset) {
+void xtimer_spin(uint32_t XDATA offset) {
     uint32_t start = _xtimer_lltimer_now();
 #if XTIMER_MASK
     offset = _xtimer_lltimer_mask(offset);
@@ -47,12 +47,12 @@ void xtimer_spin(uint32_t offset) {
 #endif
 }
 
-void xtimer_usleep(uint32_t microseconds)
+void xtimer_usleep(uint32_t XDATA microseconds)
 {
     _xtimer_sleep(microseconds, 0);
 }
 
-void xtimer_nanosleep(uint32_t nanoseconds)
+void xtimer_nanosleep(uint32_t XDATA nanoseconds)
 {
     _xtimer_sleep(nanoseconds / USEC_IN_NS, 0);
 }

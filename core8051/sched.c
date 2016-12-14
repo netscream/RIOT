@@ -166,7 +166,7 @@ void sched_switch(uint16_t XDATA other_prio)
     uint16_t current_prio = active_thread->priority;
     int on_runqueue = (active_thread->status >= STATUS_ON_RUNQUEUE);   
     DEBUG("sched_switch: active pid=%d prio=%d  on_runqueue=%d other_prio=%d\n", active_thread->pid, current_prio, on_runqueue, other_prio);
-
+    
     if (!on_runqueue || (current_prio > other_prio)) {
         if (irq_is_in()) {
             DEBUG("sched_switch: setting sched_context_switch_request.\n");
@@ -185,7 +185,7 @@ void sched_switch(uint16_t XDATA other_prio)
 NORETURN void sched_task_exit(void)
 {
     DEBUG("sched_task_exit: ending thread %" PRIkernel_pid "...\n", sched_active_thread->pid);
-
+    
     (void) irq_disable();
     sched_threads[sched_active_pid] = NULL;
     sched_num_threads--;

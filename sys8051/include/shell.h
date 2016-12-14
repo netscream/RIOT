@@ -32,7 +32,7 @@ extern "C" {
  * @brief Default shell buffer size (maximum line length shell can handle)
  */
 #define SHELL_DEFAULT_BUFSIZE   (128)
-
+#define getchar usbComRxReceiveByte
 /**
  * @brief           Protype of a shell callback handler.
  * @details         The functions supplied to shell_run() must use this signature.
@@ -50,7 +50,7 @@ extern "C" {
  * @return 0 on success
  * @return Anything else on failure
  */
-typedef int (*shell_command_handler_t)(int argc, char **argv);
+typedef int (*shell_command_handler_t)(char** argv);
 
 /**
  * @brief           A single command in the list of the supported commands.
@@ -60,7 +60,8 @@ typedef int (*shell_command_handler_t)(int argc, char **argv);
 typedef struct shell_command_t {
     const char *name; /**< Name of the function */
     const char *desc; /**< Description to print in the "help" command. */
-    shell_command_handler_t handler; /**< The callback function. */
+    //shell_command_handler_t handler; /**< The callback function. */
+    int (*handler)(char* argv);
 } shell_command_t;
 
 /**
@@ -90,7 +91,7 @@ int readline(char *buf, size_t size);
  *
  * @returns	Returns nothing
  */
-void handle_input_line(const shell_command_t *command_list, char *line);
+void handle_input_line(const shell_command_t *command_list, char* line);
 
 /*
  * @brief	prints the prompt
@@ -98,6 +99,9 @@ void handle_input_line(const shell_command_t *command_list, char *line);
  * @returns	nothing
  */
 void print_prompt(void);
+
+void print_help(const shell_command_t *command_list);
+//shell_command_handler_t find_handler(const shell_command_t* command_list, char* XDATA command);
 /*#ifdef __cplusplus
 }
 #endif*/

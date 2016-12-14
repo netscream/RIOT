@@ -49,11 +49,12 @@ typedef void (*xtimer_callback_t)(void*);
  * @brief xtimer timer structure
  */
 typedef struct xtimer {
-    struct xtimer *next;        /**< reference to next timer in timer lists */
+    struct xtimer* next;        /**< reference to next timer in timer lists */
     uint32_t target;            /**< lower 32bit absolute target time */
     uint32_t long_target;       /**< upper 32bit absolute target time */
-    xtimer_callback_t callback;  /**< callback function to call when timer
-                                     expires */
+    void (*callback)(void* XDATA arg);
+   // xtimer_callback_t* callback;  /**< callback function to call when timer
+                            /*         expires */
     void *arg;                  /**< argument to pass to callback function */
 } xtimer_t;
 
@@ -81,7 +82,7 @@ extern uint32_t xtimer_now(void);
  *
  * @param[out] out  pointer to timex_t the time will be written to
  */
-void xtimer_now_timex(timex_t *out);
+void xtimer_now_timex(timex_t* XDATA out);
 
 /**
  * @brief xtimer initialization function
@@ -102,7 +103,7 @@ void xtimer_init(void);
  */
 /* 8051 implementation */
 //static void xtimer_sleep(uint32_t seconds);
-void xtimer_sleep(uint32_t seconds);
+void xtimer_sleep(uint32_t XDATA seconds);
 
 /**
  * @brief Pause the execution of a thread for some microseconds
@@ -115,7 +116,7 @@ void xtimer_sleep(uint32_t seconds);
  */
 /* 8051 implementation */
 //static void xtimer_usleep(uint32_t microseconds);
-void xtimer_usleep(uint32_t microseconds);
+void xtimer_usleep(uint32_t XDATA microseconds);
 
 /**
  * @brief Stop execution of a thread for some time, 64bit version
@@ -142,7 +143,7 @@ void xtimer_usleep(uint32_t microseconds);
  */
 /* 8051 implementation */
 //static void xtimer_nanosleep(uint32_t nanoseconds);
-void xtimer_nanosleep(uint32_t nanoseconds);
+void xtimer_nanosleep(uint32_t XDATA nanoseconds);
 
 /**
  * @brief Stop execution of a thread for some time, blocking
@@ -153,7 +154,7 @@ void xtimer_nanosleep(uint32_t nanoseconds);
  */
 /* 8051 implementation */
 //static inline void xtimer_spin(uint32_t microseconds);
-extern void xtimer_spin(uint32_t microseconds);
+extern void xtimer_spin(uint32_t XDATA microseconds);
 
 /**
  * @brief will cause the calling thread to be suspended until the absolute
@@ -172,7 +173,7 @@ extern void xtimer_spin(uint32_t microseconds);
  * @param[in] last_wakeup   base time stamp for the wakeup
  * @param[in] period        time in microseconds that will be added to last_wakeup
  */
-void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period);
+void xtimer_periodic_wakeup(uint32_t* XDATA last_wakeup, uint32_t XDATA period);
 
 /**
  * @brief Set a timer that sends a message
@@ -190,7 +191,7 @@ void xtimer_periodic_wakeup(uint32_t *last_wakeup, uint32_t period);
  * @param[in] msg           ptr to msg that will be sent
  * @param[in] target_pid    pid the message will be sent to
  */
-void xtimer_set_msg(xtimer_t* XDATA timer, uint32_t offset, msg_t *msg, kernel_pid_t target_pid);
+void xtimer_set_msg(xtimer_t* XDATA timer, uint32_t XDATA offset, msg_t* XDATA msg, kernel_pid_t XDATA target_pid);
 
 /**
  * @brief Set a timer that sends a message, 64bit version
@@ -223,7 +224,7 @@ void xtimer_set_msg(xtimer_t* XDATA timer, uint32_t offset, msg_t *msg, kernel_p
  * @param[in] offset        microseconds from now
  * @param[in] pid           pid of the thread that will be woken up
  */
-void xtimer_set_wakeup(xtimer_t* XDATA timer, uint32_t offset, kernel_pid_t pid);
+void xtimer_set_wakeup(xtimer_t* XDATA timer, uint32_t XDATA offset, kernel_pid_t XDATA pid);
 
 /**
  * @brief Set a timer that wakes up a thread, 64bit version
@@ -258,7 +259,7 @@ void xtimer_set_wakeup(xtimer_t* XDATA timer, uint32_t offset, kernel_pid_t pid)
  * @param[in] offset    time in microseconds from now specifying that timer's
  *                      callback's execution time
  */
-void xtimer_set(xtimer_t* XDATA timer, uint32_t offset);
+void xtimer_set(xtimer_t* XDATA timer, uint32_t XDATA offset);
 
 /**
  * @brief remove a timer
@@ -278,7 +279,7 @@ void xtimer_remove(xtimer_t* XDATA timer);
  *
  * @return       < 0 on error, other value otherwise
  */
-int xtimer_msg_receive_timeout(msg_t *msg, uint32_t us);
+int xtimer_msg_receive_timeout(msg_t* XDATA msg, uint32_t XDATA us);
 
 /**
  * @brief receive a message blocking but with timeout, 64bit version

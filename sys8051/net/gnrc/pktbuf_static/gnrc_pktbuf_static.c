@@ -93,8 +93,7 @@ void gnrc_pktbuf_init(void)
     mutex_unlock(&_mutex);
 }
 
-gnrc_pktsnip_t* gnrc_pktbuf_add(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size,
-                                gnrc_nettype_t XDATA type)
+gnrc_pktsnip_t* gnrc_pktbuf_add(gnrc_pktsnip_t* XDATA next, void* XDATA data, uint32_t XDATA size, gnrc_nettype_t XDATA type)
 {
     gnrc_pktsnip_t* pkt = NULL;
 

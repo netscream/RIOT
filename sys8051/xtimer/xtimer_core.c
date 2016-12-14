@@ -18,7 +18,8 @@
 #include <stdint.h>
 #include <string.h>
 #include "board.h"
-#include "periph/timer.h"
+//#include "periph/timer.h"
+#include "cpu.h"
 #include "periph_conf.h"
 
 #include "xtimer.h"
@@ -54,23 +55,23 @@ static void _timer_callback(void);
 static void _periph_timer_callback(void *arg, int chan);
 
 static inline int _this_high_period(uint32_t target);*/
-void xtimer_spin_until(uint32_t value);
+void xtimer_spin_until(uint32_t XDATA value);
 
 xtimer_t* XDATA timer_list_head = NULL;
 xtimer_t* XDATA overflow_list_head = NULL;
 xtimer_t* XDATA long_list_head = NULL;
 
-void _add_timer_to_list(xtimer_t **list_head, xtimer_t* XDATA timer);
-void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t* XDATA timer);
+void _add_timer_to_list(xtimer_t** XDATA list_head, xtimer_t* XDATA timer);
+void _add_timer_to_long_list(xtimer_t** XDATA list_head, xtimer_t* XDATA timer);
 void _shoot(xtimer_t* XDATA timer);
 void _remove(xtimer_t* XDATA timer);
-inline void _lltimer_set(uint32_t target);
-uint32_t _time_left(uint32_t target, uint32_t reference);
+inline void _lltimer_set(uint32_t XDATA target);
+uint32_t _time_left(uint32_t XDATA target, uint32_t XDATA reference);
 
 void _timer_callback(void);
-void _periph_timer_callback(void *arg, int chan);
+void _periph_timer_callback(void* arg, int chan);
 
-int _this_high_period(uint32_t target);*
+int _this_high_period(uint32_t XDATA target);
 
 /* 8051 implementation */
 //static inline int _is_set(xtimer_t *timer)
@@ -80,7 +81,7 @@ int _is_set(xtimer_t* XDATA timer)
 }
 /* 8051 implementation */
 //static inline void xtimer_spin_until(uint32_t target) {
-void xtimer_spin_until(uint32_t target) {
+void xtimer_spin_until(uint32_t XDATA target) {
 #if XTIMER_MASK
     target = _xtimer_lltimer_mask(target);
 #endif
@@ -99,7 +100,7 @@ void xtimer_init(void)
     _lltimer_set(0xFFFFFFFF);
 }
 
-void _xtimer_now64(uint32_t *short_term, uint32_t *long_term)
+void _xtimer_now64(uint32_t* XDATA short_term, uint32_t* XDATA long_term)
 {
     uint32_t before, after, long_value;
 
@@ -124,7 +125,7 @@ void _xtimer_now64(uint32_t *short_term, uint32_t *long_term)
     return ((uint64_t)long_term<<32) + short_term;
 }*/
 
-void _xtimer_set64(xtimer_t* XDATA timer, uint32_t offset, uint32_t long_offset)
+void _xtimer_set64(xtimer_t* XDATA timer, uint32_t XDATA offset, uint32_t XDATA long_offset)
 {
     DEBUG(" _xtimer_set64() offset=%" PRIu32 " long_offset=%" PRIu32 "\n", offset, long_offset);
     if (!long_offset) {
@@ -151,7 +152,7 @@ void _xtimer_set64(xtimer_t* XDATA timer, uint32_t offset, uint32_t long_offset)
     }
 }
 
-void xtimer_set(xtimer_t* XDATA timer, uint32_t offset)
+void xtimer_set(xtimer_t* XDATA timer, uint32_t XDATA offset)
 {
     DEBUG("timer_set(): offset=%" PRIu32 " now=%" PRIu32 " (%" PRIu32 ")\n", offset, xtimer_now(), _xtimer_lltimer_now());
     if (!timer->callback) {
@@ -174,7 +175,7 @@ void xtimer_set(xtimer_t* XDATA timer, uint32_t offset)
 
 /* 8051 implementation */
 //static void _periph_timer_callback(void *arg, int chan)
-void _periph_timer_callback(void *arg, int chan)
+void _periph_timer_callback(void* arg, int chan)
 {
     (void)arg;
     (void)chan;
@@ -188,7 +189,7 @@ void _shoot(xtimer_t* XDATA timer)
 }
 /* 8051 implementation */
 //static inline void _lltimer_set(uint32_t target)
-void _lltimer_set(uint32_t target)
+void _lltimer_set(uint32_t XDATA target)
 {
     if (_in_handler) {
         return;
@@ -204,7 +205,7 @@ void _lltimer_set(uint32_t target)
     timer_set_absolute(0, 0, _xtimer_lltimer_mask(target));
 }
 /* 8051 implementation */
-int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t target)
+int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t XDATA target)
 {
     uint32_t now = xtimer_now();
     int res = 0;
@@ -229,11 +230,12 @@ int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t target)
 
     timer->target = target;
     timer->long_target = _long_cnt;
+    
     if (target < now) {
         timer->long_target++;
     }
-
-    if ( (timer->long_target > _long_cnt) || !_this_high_period(target) ) {
+    return res;
+/*    if ( (timer->long_target > _long_cnt) || !_this_high_period(target) ) {
         DEBUG("xtimer_set_absolute(): the timer doesn't fit into the low-level timer's mask.\n");
         _add_timer_to_long_list(&long_list_head, timer);
     }
@@ -255,13 +257,13 @@ int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t target)
     }
 
     irq_restore(state);
-
-    return res;
+    
+    return res;*/
 }
 
 /* 8051 implementation */
 //static void _add_timer_to_list(xtimer_t **list_head, xtimer_t *timer)
-void _add_timer_to_list(xtimer_t **list_head, xtimer_t* XDATA timer)
+void _add_timer_to_list(xtimer_t** XDATA list_head, xtimer_t* XDATA timer)
 {
     while (*list_head && (*list_head)->target <= timer->target) {
         list_head = &((*list_head)->next);
@@ -272,7 +274,7 @@ void _add_timer_to_list(xtimer_t **list_head, xtimer_t* XDATA timer)
 }
 /* 8051 implementation */
 //static void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t *timer)
-void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t* XDATA timer)
+void _add_timer_to_long_list(xtimer_t** XDATA list_head, xtimer_t* XDATA timer)
 {
     while (*list_head
         && (((*list_head)->long_target < timer->long_target)
@@ -286,7 +288,7 @@ void _add_timer_to_long_list(xtimer_t **list_head, xtimer_t* XDATA timer)
 
 /* 8051 implementation */
 //static int _remove_timer_from_list(xtimer_t **list_head, xtimer_t *timer)
-int _remove_timer_from_list(xtimer_t **list_head, xtimer_t* XDATA timer)
+int _remove_timer_from_list(xtimer_t** XDATA list_head, xtimer_t* XDATA timer)
 {
     while (*list_head) {
         if (*list_head == timer) {
@@ -335,7 +337,7 @@ void xtimer_remove(xtimer_t* XDATA timer)
 }
 /* 8051 implementation */
 //static uint32_t _time_left(uint32_t target, uint32_t reference)
-uint32_t _time_left(uint32_t target, uint32_t reference)
+uint32_t _time_left(uint32_t XDATA target, uint32_t XDATA reference)
 {
     uint32_t now = _xtimer_lltimer_now();
 
@@ -352,7 +354,7 @@ uint32_t _time_left(uint32_t target, uint32_t reference)
 }
 /* 8051 implementation */
 //static inline int _this_high_period(uint32_t target) {
-int _this_high_period(uint32_t target) {
+int _this_high_period(uint32_t XDATA target) {
 #if XTIMER_MASK
     return (target & XTIMER_MASK_SHIFTED) == _xtimer_high_cnt;
 #else

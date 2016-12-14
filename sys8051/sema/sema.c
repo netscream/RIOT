@@ -16,8 +16,8 @@
  * @author  René Kijewski <kijewski@inf.fu-berlin.de>
  */
 
-#include <assert.h>
-#include <errno.h>
+//#include <assert.h>
+//#include <errno.h>
 #include <limits.h>
 
 #include "irq.h"
@@ -33,10 +33,10 @@
 #define MSG_TIMEOUT        (0x0502)
 #define MSG_DESTROYED      (0x0503)
 
-int sema_create(sema_t *sema, unsigned int value)
+int sema_create(sema_t* XDATA sema, unsigned int XDATA value)
 {
     if (sema == NULL) {
-        return -EINVAL;
+        return -22;//-22;
     }
     sema->value = value;
     /* waiters for the mutex */
@@ -44,13 +44,13 @@ int sema_create(sema_t *sema, unsigned int value)
     return 0;
 }
 
-int sema_destroy(sema_t *sema)
+int sema_destroy(sema_t* XDATA sema)
 {
     unsigned int old_state;
     priority_queue_node_t *next;
 
     if (sema == NULL) {
-        return -EINVAL;
+        return -22;
     }
     old_state = irq_disable();
     while ((next = priority_queue_remove_head(&sema->queue)) != NULL) {
@@ -64,14 +64,14 @@ int sema_destroy(sema_t *sema)
     return 0;
 }
 
-int sema_wait_timed_msg(sema_t *sema, uint64_t timeout, msg_t *msg)
+int sema_wait_timed_msg(sema_t* XDATA sema, uint32_t XDATA timeout, msg_t* XDATA msg)
 {
     unsigned old_state;
     msg_t timeout_msg;
     xtimer_t timeout_timer;
 
     if (sema == NULL) {
-        return -EINVAL;
+        return -22;//-22;
     }
     if (timeout != 0) {
         old_state = irq_disable();
@@ -79,7 +79,7 @@ int sema_wait_timed_msg(sema_t *sema, uint64_t timeout, msg_t *msg)
         timeout_msg.type = MSG_TIMEOUT;
         timeout_msg.content.ptr = sema;
         /* we will stay in the same stack context so we can use timeout_msg */
-        xtimer_set_msg64(&timeout_timer, timeout, &timeout_msg, sched_active_pid);
+        xtimer_set_msg(&timeout_timer, timeout, &timeout_msg, sched_active_pid);
         irq_restore(old_state);
     }
     while (1) {
@@ -112,23 +112,23 @@ int sema_wait_timed_msg(sema_t *sema, uint64_t timeout, msg_t *msg)
         priority_queue_remove(&sema->queue, &n);
         irq_restore(old_state);
         if (msg->content.ptr != sema) {
-            return -EAGAIN;
+            return -11;//-11;
         }
 
         switch (msg->type) {
             case MSG_SIGNAL:
                 continue;
             case MSG_TIMEOUT:
-                return -ETIMEDOUT;
+                return -110;//-ETIMEDOUT;
             case MSG_DESTROYED:
-                return -ECANCELED;
+                return 125;// -ECANCELED;
             default:
-                return -EAGAIN;
+                return -11;
         }
     }
 }
 
-int sema_wait_timed(sema_t *sema, uint64_t timeout)
+int sema_wait_timed(sema_t* XDATA sema, uint32_t XDATA timeout)
 {
     int result;
 
@@ -137,23 +137,23 @@ int sema_wait_timed(sema_t *sema, uint64_t timeout)
         result = sema_wait_timed_msg(sema, timeout, &msg);
         DEBUG("sema_wait: %" PRIkernel_pid ": Discarding message from %" PRIkernel_pid "\n",
               sched_active_thread->pid, msg->sender_pid);
-    } while (result == -EAGAIN);
+    } while (result == -11);
     return result;
 }
 
-int sema_post(sema_t *sema)
+int sema_post(sema_t* XDATA sema)
 {
     unsigned int old_state, value;
     priority_queue_node_t *next;
 
     if (sema == NULL) {
-        return -EINVAL;
+        return -22;
     }
     old_state = irq_disable();
     value = sema->value;
     if (value == UINT_MAX) {
         irq_restore(old_state);
-        return -EOVERFLOW;
+        return -75;
     }
     ++sema->value;
     next = priority_queue_remove_head(&sema->queue);
@@ -176,7 +176,7 @@ int sema_post(sema_t *sema)
     return 0;
 }
 
-int sema_wait_msg(sema_t *sema, msg_t *msg)
+int sema_wait_msg(sema_t* XDATA sema, msg_t* XDATA msg)
 {
     return sema_wait_timed_msg(sema, 0, msg);
 }

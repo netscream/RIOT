@@ -166,6 +166,57 @@ void ipv6_addr_print(const ipv6_addr_t *addr)
 #endif
 }
 
+uint16_t ipv6_addr_is_unspecified(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_unspecified, sizeof(ipv6_addr_t)) == 0);
+}
+
+bool ipv6_addr_is_loopback(const ipv6_addr_t *addr)
+{
+   return (memcmp(addr, &ipv6_addr_loopback, sizeof(ipv6_addr_t)) == 0);
+}
+
+bool ipv6_addr_is_ipv4(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_unspecified,
+                   sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t)) == 0);
+}
+
+bool ipv6_addr_is_ipv4_mapped(const ipv6_addr_t *addr)
+{
+    return ((memcmp(addr, &ipv6_addr_unspecified,
+                    sizeof(ipv6_addr_t) - sizeof(ipv4_addr_t) - 2) == 0) &&
+            (addr->u16[5].u16 == 0xffff));
+}
+
+bool ipv6_addr_is_multicast(const ipv6_addr_t *addr)
+{
+    return (addr->u8[0] == 0xff);
+}
+
+bool ipv6_addr_is_link_local(const ipv6_addr_t *addr)
+{
+    return (memcmp(addr, &ipv6_addr_link_local_prefix, sizeof(addr->u32)) == 0) ||
+           (ipv6_addr_is_multicast(addr) &&
+            //(addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_LINK_LOCAL);
+              (addr->u8[1] & 0x0f) == 0x2);
+}
+
+bool ipv6_addr_is_site_local(const ipv6_addr_t *addr)
+{
+    network_uint16_t tmp = { addr->u16[0].u16 };
+    //return ((byteorder_ntohs(&tmp) & 0xffc0) == (uint16_t)IPV6_ADDR_SITE_LOCAL_PREFIX);
+    return (((byteorder_ntohs(&tmp) & 0xffc0) ==
+             //IPV6_ADDR_SITE_LOCAL_PREFIX) ||
+            (ipv6_addr_is_multicast(addr) && (addr->u8[1] & 0x0f) == 0x2)));
+             //(addr->u8[1] & 0x0f) == IPV6_ADDR_MCAST_SCP_SITE_LOCAL));
+}
+
+bool ipv6_addr_is_unique_local_unicast(const ipv6_addr_t *addr)
+{
+    return ((addr->u8[0] == 0xfc) || (addr->u8[0] == 0xfd));
+}
+
 /**
  * @}
  */

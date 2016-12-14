@@ -56,7 +56,7 @@ void main_trampoline(void* arg)
     stat->laststart = 0;
 #endif
 
-    LOG_INFO("main(): This is RIOT! (Version: " RIOT_VERSION ")\n");
+    printf("main(): This is RIOT! (Version: " RIOT_VERSION ")\n");
 
     main();
     //return NULL;
@@ -80,11 +80,11 @@ void idle_thread(void *arg)
     //return NULL;
 }
 
-const char* CODE main_name = "main";
-const char* CODE idle_name = "idle";
+//const char* CODE main_name = "main";
+//const char* CODE idle_name = "idle";
 
-char XDATA main_stack[THREAD_STACKSIZE_MAIN];
-char XDATA idle_stack[THREAD_STACKSIZE_IDLE];
+char XDATA main_stack[128];
+char XDATA idle_stack[128];
 
 void kernel_init(void)
 {
@@ -92,12 +92,12 @@ void kernel_init(void)
     thread_create(idle_stack, sizeof(idle_stack),
             15,
             4 | 8,
-            idle_thread, NULL, idle_name);
+            idle_thread, NULL, "idle");
        
     thread_create(main_stack, sizeof(main_stack),
             7,
             4 | 8,
-            main_trampoline, NULL, main_name);
+            main_trampoline, NULL, "main");
 
     cpu_switch_context_exit();
 }

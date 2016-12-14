@@ -31,14 +31,14 @@
 
 #include "semaphore.h"
 
-int sem_timedwait(sem_t *sem, const struct timespec *abstime)
+int sem_timedwait(sem_t* XDATA sem, struct timespec* XDATA abstime)
 {
-    uint64_t now, timeout = (((uint64_t)abstime->tv_sec) * SEC_IN_USEC) +
+    uint32_t now, timeout = (((uint32_t)abstime->tv_sec) * SEC_IN_USEC) +
                             (abstime->tv_nsec / USEC_IN_NS);
     int res;
-    now = xtimer_now64();
+    now = xtimer_now();
     if (now > timeout) {
-        errno = ETIMEDOUT;
+        errno = 110;//ETIMEDOUT;
         return -1;
     }
     timeout = timeout - now;
@@ -50,18 +50,20 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime)
     return 0;
 }
 
-int sem_trywait(sem_t *sem)
+int sem_trywait(sem_t* XDATA sem)
 {
     unsigned int old_state, value;
     int result;
     if (sem == NULL) {
-        errno = EINVAL;
+        //errno = EINVAL;
+	errno = 22;
         return -1;
     }
     old_state = irq_disable();
     value = sem->value;
     if (value == 0) {
-        errno = EAGAIN;
+        //errno = EAGAIN;
+	errno = 11;
         result = -1;
     }
     else {
@@ -71,6 +73,79 @@ int sem_trywait(sem_t *sem)
 
     irq_restore(old_state);
     return result;
+}
+
+int sem_init(sem_t* XDATA sem, int XDATA pshared, unsigned XDATA value)
+{
+    int res = sema_create((sema_t *)sem, value);
+    (void)pshared;
+    if (res < 0) {
+        errno = -res;
+        return -1;
+    }
+    return 0;
+}
+
+int sem_destroy(sem_t* XDATA sem)
+{
+    int res = sema_destroy((sema_t *)sem);
+    if (res < 0) {
+        errno = -res;
+        return -1;
+    }
+    return 0;
+}
+
+int sem_post(sem_t* XDATA sem)
+{
+    int res = sema_post((sema_t *)sem);
+    if (res < 0) {
+        errno = -res;
+        return -1;
+    }
+    return 0;
+}
+
+int sem_wait(sem_t* XDATA sem)
+{
+    int res = sema_wait((sema_t *)sem);
+    if (res < 0) {
+        errno = -res;
+        return -1;
+    }
+    return 0;
+}
+
+sem_t *sem_open(const char* name, int oflag, ...)
+{
+    (void)name;
+    (void)oflag;
+    errno = 12;
+    return SEM_FAILED;
+}
+
+int sem_close(sem_t* XDATA sem)
+{
+    (void)sem;
+    errno = 22;
+    return -1;
+}
+
+int sem_unlink(const char* XDATA name)
+{
+    (void)name;
+    errno = 2;
+    return -1;
+}
+
+int sem_getvalue(sem_t* XDATA sem, int* XDATA sval)
+{
+    if (sem != NULL) {
+        *sval = (int)sem->value;
+        return 0;
+    }
+    errno = 22;
+    return -1;
 }
 
 /** @} */

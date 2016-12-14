@@ -70,17 +70,17 @@ int _snd_rcv(kernel_pid_t XDATA pid, uint16_t XDATA type, gnrc_pktsnip_t* XDATA 
     msg.content.ptr = (void *)pkt;
     /* send message */
     ret = msg_try_send(&msg, pid);
-    if (ret < 1) {
+    //if (ret < 1) {
         //DEBUG("gnrc_netapi: dropped message to %" PRIkernel_pid " (%s)\n", pid,
         //      (ret == 0) ? "receiver queue is full" : "invalid receiver");
-    }
+    //}
     return ret;
 }
 
 int gnrc_netapi_dispatch(gnrc_nettype_t XDATA type, uint32_t XDATA demux_ctx,
                          uint16_t XDATA cmd, gnrc_pktsnip_t* XDATA pkt)
 {
-    int numof = gnrc_netreg_num(type, demux_ctx);
+    int XDATA numof = gnrc_netreg_num(type, demux_ctx);
 
     if (numof != 0) {
         gnrc_netreg_entry_t *sendto = gnrc_netreg_lookup(type, demux_ctx);

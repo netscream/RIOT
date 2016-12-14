@@ -69,7 +69,8 @@ uint32_t _xtimer_lltimer_now(void);
  */
 /* 8051 implementation */ 
 //static inline uint32_t _xtimer_lltimer_mask(uint32_t val)
-uint32_t _xtimer_lltimer_mask(uint32_t val);
+
+uint32_t _xtimer_lltimer_mask(uint32_t XDATA val);
 /*{
     //return val & ~XTIMER_MASK_SHIFTED;
     return val & ~(0 << -0);
@@ -80,9 +81,9 @@ uint32_t _xtimer_lltimer_mask(uint32_t val);
  * @brief xtimer internal stuff
  * @internal
  */
-int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t target);
-void _xtimer_set64(xtimer_t* XDATA timer, uint32_t offset, uint32_t long_offset);
-void _xtimer_sleep(uint32_t offset, uint32_t long_offset);
+int _xtimer_set_absolute(xtimer_t* XDATA timer, uint32_t XDATA target);
+void _xtimer_set64(xtimer_t* XDATA timer, uint32_t XDATA offset, uint32_t XDATA long_offset);
+void _xtimer_sleep(uint32_t XDATA offset, uint32_t XDATA long_offset);
 /** @} */
 
 #ifndef XTIMER_MIN_SPIN
@@ -117,7 +118,7 @@ uint32_t xtimer_now(void);
 }*/
 /* 8051 implemetntation */
 //static inline void xtimer_spin(uint32_t offset) {
-void xtimer_spin(uint32_t offset);/* {
+void xtimer_spin(uint32_t XDATA offset);/* {
     uint32_t start = _xtimer_lltimer_now();
 #if XTIMER_MASK
     offset = _xtimer_lltimer_mask(offset);
@@ -128,7 +129,7 @@ void xtimer_spin(uint32_t offset);/* {
 }*/
 /* 8051 implementation */
 //static inline void xtimer_usleep(uint32_t microseconds)
-void xtimer_usleep(uint32_t microseconds);
+void xtimer_usleep(uint32_t XDATA microseconds);
 /*{
     _xtimer_sleep(microseconds, 0);
 }*/
@@ -141,13 +142,13 @@ void xtimer_usleep(uint32_t microseconds);
 
 /* 8051 implementation */
 //static inline void xtimer_sleep(uint32_t seconds);
-void xtimer_sleep(uint32_t seconds);
+void xtimer_sleep(uint32_t XDATA seconds);
 /*{
     xtimer_usleep64((uint64_t)seconds * SEC_IN_USEC);
 }*/
 /* 8051 implementation */
 //static inline void xtimer_nanosleep(uint32_t nanoseconds)
-void xtimer_nanosleep(uint32_t nanoseconds);
+void xtimer_nanosleep(uint32_t XDATA nanoseconds);
 /*{
     _xtimer_sleep(nanoseconds / USEC_IN_NS, 0);
 }*/

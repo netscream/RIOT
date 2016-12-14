@@ -60,7 +60,7 @@ typedef struct {
  * @return  0 on success.
  * @return  -EINVAL, if semaphore is invalid.
  */
-int sema_create(sema_t *sema, unsigned int value);
+int sema_create(sema_t* XDATA sema, unsigned int XDATA value);
 
 /**
  * @brief   Destroys a semaphore.
@@ -74,7 +74,7 @@ int sema_create(sema_t *sema, unsigned int value);
  * @return  0 on success.
  * @return  -EINVAL, if semaphore is invalid.
  */
-int sema_destroy(sema_t *sema);
+int sema_destroy(sema_t* XDATA sema);
 
 /**
  * @brief   Wait for a semaphore being posted.
@@ -91,7 +91,7 @@ int sema_destroy(sema_t *sema);
  * @return  -ECANCELED, if the semaphore was destroyed.
  * @return  -EAGAIN, if the thread received a message while waiting for the lock.
  */
-int sema_wait_timed_msg(sema_t *sema, uint64_t timeout, msg_t *msg);
+int sema_wait_timed_msg(sema_t* XDATA sema, uint32_t XDATA timeout, msg_t* XDATA msg); //uint64_t
 
 /**
  * @brief   Wait for a semaphore being posted (without timeout).
@@ -104,7 +104,7 @@ int sema_wait_timed_msg(sema_t *sema, uint64_t timeout, msg_t *msg);
  * @return  -ECANCELED, if the semaphore was destroyed.
  * @return  -EAGAIN, if the thread received a message while waiting for the lock.
  */
-int sema_wait_msg(sema_t *sema, msg_t *msg);
+int sema_wait_msg(sema_t* XDATA sema, msg_t* XDATA msg);
 /*{
     return sema_wait_timed_msg(sema, 0, msg);
 }*/
@@ -121,7 +121,7 @@ int sema_wait_msg(sema_t *sema, msg_t *msg);
  * @return  -ETIMEDOUT, if the semaphore times out.
  * @return  -ECANCELED, if the semaphore was destroyed.
  */
-int sema_wait_timed(sema_t *sema, uint64_t timeout);
+int sema_wait_timed(sema_t* XDATA sema, uint32_t XDATA timeout); //uint32_t
 
 /**
  * @brief   Wait for a semaphore being posted (without timeout, dropping spurious messages).
@@ -132,7 +132,7 @@ int sema_wait_timed(sema_t *sema, uint64_t timeout);
  * @return  -EINVAL, if semaphore is invalid.
  * @return  -ECANCELED, if the semaphore was destroyed.
  */
-int sema_wait(sema_t *sema);
+int sema_wait(sema_t* XDATA sema);
 /*{
     return sema_wait_timed(sema, 0);
 }*/
@@ -146,7 +146,7 @@ int sema_wait(sema_t *sema);
  * @return  -EINVAL, if semaphore is invalid.
  * @return  -EOVERFLOW, if the semaphore's value would overflow.
  */
-int sema_post(sema_t *sema);
+int sema_post(sema_t* XDATA sema);
 
 /*#ifdef __cplusplus
 }

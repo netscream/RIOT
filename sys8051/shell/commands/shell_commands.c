@@ -23,110 +23,110 @@
 //#include <stdlib.h> // not needed 
 #include "shell_commands.h"
 
-extern int _reboot_handler(int argc, char **argv);
+extern int _reboot_handler(char *argv);
 
 #ifdef MODULE_CONFIG
-extern int _id_handler(int argc, char **argv);
+extern int _id_handler(char *argv);
 #endif
 
 #ifdef MODULE_LPC_COMMON
-extern int _heap_handler(int argc, char **argv);
+extern int _heap_handler(char *argv);
 #endif
 
 #ifdef MODULE_PS
-extern int _ps_handler(int argc, char **argv);
+extern int _ps_handler(char *argv);
 #endif
 
 #ifdef MODULE_SHT11
-extern int _get_temperature_handler(int argc, char **argv);
-extern int _get_humidity_handler(int argc, char **argv);
-extern int _get_weather_handler(int argc, char **argv);
-extern int _set_offset_handler(int argc, char **argv);
+extern int _get_temperature_handler(char *argv);
+extern int _get_humidity_handler(char *argv);
+extern int _get_weather_handler(char *argv);
+extern int _set_offset_handler(char *argv);
 #endif
 
 #ifdef MODULE_LTC4150
-extern int _get_current_handler(int argc, char **argv);
-extern int _reset_current_handler(int argc, char **argv);
+extern int _get_current_handler(char *argv);
+extern int _reset_current_handler(char *argv);
 #endif
 
 #ifdef MODULE_AT30TSE75X
-extern int _at30tse75x_handler(int argc, char **argv);
+extern int _at30tse75x_handler(char *argv);
 #endif
 
 #ifdef MODULE_SAUL_REG
-extern int _saul(int argc, char **argv);
+extern int _saul(char *argv);
 #endif
 
 #if FEATURE_PERIPH_RTC
-extern int _rtc_handler(int argc, char **argv);
+extern int _rtc_handler(char *argv);
 #endif
 
 #ifdef CPU_X86
-extern int _x86_lspci(int argc, char **argv);
+extern int _x86_lspci(char *argv);
 #endif
 
 #ifdef MODULE_MCI
-extern int _get_sectorsize(int argc, char **argv);
-extern int _get_blocksize(int argc, char **argv);
-extern int _get_sectorcount(int argc, char **argv);
-extern int _read_sector(int argc, char **argv);
-extern int _read_bytes(int argc, char **argv);
+extern int _get_sectorsize(char *argv);
+extern int _get_blocksize(char *argv);
+extern int _get_sectorcount(char *argv);
+extern int _read_sector(char *argv);
+extern int _read_bytes(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_ICMPV6_ECHO
 #ifdef MODULE_XTIMER
-extern int _icmpv6_ping(int argc, char **argv);
+extern int _icmpv6_ping(char *argv);
 #endif
 #endif
 
 #ifdef MODULE_RANDOM
-extern int _random_init(int argc, char **argv);
-extern int _random_get(int argc, char **argv);
+extern int _random_init(char *argv);
+extern int _random_get(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_NETIF
-extern int _netif_config(int argc, char **argv);
-extern int _netif_send(int argc, char **argv);
+extern int _netif_config(char *argv);
+extern int _netif_send(char *argv);
 #endif
 
 #ifdef MODULE_FIB
-extern int _fib_route_handler(int argc, char **argv);
+extern int _fib_route_handler(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_IPV6_NC
-extern int _ipv6_nc_manage(int argc, char **argv);
-extern int _ipv6_nc_routers(int argc, char **argv);
+extern int _ipv6_nc_manage(char *argv);
+extern int _ipv6_nc_routers(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_IPV6_WHITELIST
-extern int _whitelist(int argc, char **argv);
+extern int _whitelist(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_IPV6_BLACKLIST
-extern int _blacklist(int argc, char **argv);
+extern int _blacklist(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_ZEP
 #ifdef MODULE_IPV6_ADDR
-extern int _zep_init(int argc, char **argv);
+extern int _zep_init(char *argv);
 #endif
 #endif
 
 #ifdef MODULE_GNRC_RPL
-extern int _gnrc_rpl(int argc, char **argv);
+extern int _gnrc_rpl(char *argv);
 #endif
 
 #ifdef MODULE_GNRC_SIXLOWPAN_CTX
 #ifdef MODULE_GNRC_SIXLOWPAN_ND_BORDER_ROUTER
-extern int _gnrc_6ctx(int argc, char **argv);
+extern int _gnrc_6ctx(char *argv);
 #endif
 #endif
 
 #ifdef MODULE_CCN_LITE_UTILS
-extern int _ccnl_open(int argc, char **argv);
-extern int _ccnl_content(int argc, char **argv);
-extern int _ccnl_interest(int argc, char **argv);
-extern int _ccnl_fib(int argc, char **argv);
+extern int _ccnl_open(char *argv);
+extern int _ccnl_content(char *argv);
+extern int _ccnl_interest(char *argv);
+extern int _ccnl_fib(char *argv);
 #endif
 
 const shell_command_t _shell_command_list[] = {

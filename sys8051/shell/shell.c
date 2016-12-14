@@ -44,21 +44,24 @@ static void _putchar(int c) {
 //#endif
 //#endif
 
-static shell_command_handler_t find_handler(const shell_command_t *command_list, char *command)
+shell_command_handler_t find_handler(const shell_command_t *command_list, char* command)
 {
-    const shell_command_t *command_lists[] = {
+    /*const shell_command_t *command_lists[] = {
         command_list,
 #ifdef MODULE_SHELL_COMMANDS
         _shell_command_list,
 #endif
-    };
+    };*/
 
-    const shell_command_t *entry;
     int i = 0;
     /* iterating over command_lists */
-    for (i = 0; i < sizeof(command_lists) / sizeof(entry); i++) {
-        if ((entry = command_lists[i])) {
-            /* iterating over commands in command_lists entry */
+    for (i = 0; i < sizeof(command_list); i++){
+	//printf("%s %s \n", command, command_list[i].name);
+	if (strcmp(command_list[i].name, command) == 0)
+	{
+		return command_list[i].handler;
+	}
+        /*if ((entry = command_lists[i])) {
             while (entry->name != NULL) {
                 if (strcmp(entry->name, command) == 0) {
                     return entry->handler;
@@ -67,20 +70,20 @@ static shell_command_handler_t find_handler(const shell_command_t *command_list,
                     entry++;
                 }
             }
-        }
+        }*/
     }
 
     return NULL;
 }
 
-static void print_help(const shell_command_t *command_list)
+void print_help(const shell_command_t *command_list)
 {
-    shell_command_t* command_lists[] = {NULL};
-    shell_command_t* entry = NULL;
+   // shell_command_t* command_lists[] = {NULL};
+   // shell_command_t* entry = NULL;
  
     unsigned i = 0;
-    printf("%-20s %s\n", "Command", "Description");
-    puts("---------------------------------------");
+    printf("Command           Description\n");
+    printf("---------------------------------------\n");
 
     /*command_lists = {
         command_list,
@@ -90,18 +93,20 @@ static void print_help(const shell_command_t *command_list)
     };*/
  
     /* iterating over command_lists */
-    for (i = 0; i < sizeof(command_lists) / sizeof(entry); i++) {
-        if ((entry = command_lists[i])) {
-            /* iterating over commands in command_lists entry */
-            while (entry->name != NULL) {
-                printf("%-20s %s\n", entry->name, entry->desc);
+    for (i = 0; i < sizeof(command_list); i++) {
+	if (command_list[i].name != NULL) {
+		printf("%s %s\n", command_list[i].name, command_list[i].desc);
+	}
+        /*if ((entry = command_lists[i])) {
+                    while (entry->name != NULL) {
+                printf("%s %s", entry->name, entry->desc);
                 entry++;
             }
-        }
+        }*/
     }
 }
 
-void handle_input_line(const shell_command_t *command_list, char *line)
+void handle_input_line(const shell_command_t *command_list, char* line)
 {
     const char *INCORRECT_QUOTING = "shell: incorrect quoting";
 
@@ -109,17 +114,19 @@ void handle_input_line(const shell_command_t *command_list, char *line)
     unsigned argc = 0;
     char *pos = line;
     int contains_esc_seq = 0;
-    char *argv = NULL;
+    char* argv;
+    char* lin = "";
     char **arg = NULL;
     char *c = NULL;
     char *d = NULL;
     unsigned i = 0;
-    shell_command_handler_t *handler;  
-    while (1) {
+    int (*handler)(char** argv); 
+
+    /*while (1) {
         if ((unsigned char) *pos > ' ') {
-            /* found an argument */
+        
             if (*pos == '"' || *pos == '\'') {
-                /* it's a quoted argument */
+                
                 const char quote_char = *pos;
                 do {
                     ++pos;
@@ -128,7 +135,7 @@ void handle_input_line(const shell_command_t *command_list, char *line)
                         return;
                     }
                     else if (*pos == '\\') {
-                        /* skip over the next character */
+                        
                         ++contains_esc_seq;
                         ++pos;
                         if (!*pos) {
@@ -144,10 +151,10 @@ void handle_input_line(const shell_command_t *command_list, char *line)
                 }
             }
             else {
-                /* it's an unquoted argument */
+               
                 do {
                     if (*pos == '\\') {
-                        /* skip over the next character */
+                        
                         ++contains_esc_seq;
                         ++pos;
                         if (!*pos) {
@@ -163,11 +170,10 @@ void handle_input_line(const shell_command_t *command_list, char *line)
                 } while ((unsigned char) *pos > ' ');
             }
 
-            /* count the number of arguments we got */
+            
             ++argc;
         }
 
-        /* zero out the current position (space or quotation mark) and advance */
         if (*pos > 0) {
             *pos = 0;
             ++pos;
@@ -177,13 +183,14 @@ void handle_input_line(const shell_command_t *command_list, char *line)
         }
     }
     if (!argc) {
+	printf("No arguments\n");
         return;
-    }
-
+    }*/
+    
     /* then we fill the argv array */
     //argv[argc + 1];
     //argv[argc] = NULL;
-    pos = line;
+    /*pos = line;
     for (i = 0; i < argc; ++i) {
         while (!*pos) {
             ++pos;
@@ -208,21 +215,42 @@ void handle_input_line(const shell_command_t *command_list, char *line)
                 break;
             }
         }
+    }*/ 
+    
+    for (i = 0; i < 30; i++)
+    {
+	if (*line == 32)
+	{
+	   *line = '\0';
+	   //pos[i] = '\0';
+	   *line++;
+	   //*pos  = '\0';
+	   //pos++;
+	   //argv[argc] = *pos;
+	   //argc++;
+	   break;
+	}
+	else
+	{
+		*line++;
+	}
     }
-
+     
     /* then we call the appropriate handler */
-    handler = find_handler(command_list, argv[0]);
+    
+    handler =  find_handler(command_list, pos);
     if (handler != NULL) {
-        //handler(argc, argv);
+	handler(line);
     }
     else {
-        if (strcmp("help", argv[0]) == 0) {
+        if (strcmp("help", pos) == 0) {
             print_help(command_list);
         }
         else {
-            printf("shell: command not found: %s\n", argv[0]);
+            printf("shell: command not found: %s\n", pos);
         }
     }
+    *pos = 0;
 }
 
 int readline(char *buf, size_t size)

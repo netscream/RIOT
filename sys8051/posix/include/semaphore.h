@@ -24,10 +24,10 @@
 #define POSIX_SEMAPHORE_H_
 
 #include <errno.h>
-#include <time.h>
+//#include <time.h>
 
 #include "sema.h"
-
+#include "time.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -60,8 +60,8 @@ typedef sema_t sem_t;
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-static inline int sem_init(sem_t *sem, int pshared, unsigned value)
-{
+int sem_init(sem_t* XDATA sem, int XDATA pshared, unsigned XDATA value);
+/*{
     int res = sema_create((sema_t *)sem, value);
     (void)pshared;
     if (res < 0) {
@@ -69,7 +69,7 @@ static inline int sem_init(sem_t *sem, int pshared, unsigned value)
         return -1;
     }
     return 0;
-}
+}*/
 
 /**
  * @brief destroy an unnamed semaphore
@@ -92,15 +92,15 @@ static inline int sem_init(sem_t *sem, int pshared, unsigned value)
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-static inline int sem_destroy(sem_t *sem)
-{
+int sem_destroy(sem_t* XDATA sem);
+/*{
     int res = sema_destroy((sema_t *)sem);
     if (res < 0) {
         errno = -res;
         return -1;
     }
     return 0;
-}
+}*/
 
 /**
  * @brief Unlock a semaphore.
@@ -124,15 +124,15 @@ static inline int sem_destroy(sem_t *sem)
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-static inline int sem_post(sem_t *sem)
-{
+int sem_post(sem_t* XDATA sem);
+/*{
     int res = sema_post((sema_t *)sem);
     if (res < 0) {
         errno = -res;
         return -1;
     }
     return 0;
-}
+}*/
 
 /**
  * @brief Lock a semaphore.
@@ -151,15 +151,15 @@ static inline int sem_post(sem_t *sem)
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-static inline int sem_wait(sem_t *sem)
-{
+int sem_wait(sem_t* XDATA sem);
+/*{
     int res = sema_wait((sema_t *)sem);
     if (res < 0) {
         errno = -res;
         return -1;
     }
     return 0;
-}
+}*/
 
 /**
  * @brief Open a named semaphore @p name with open flags @p oflag.
@@ -175,13 +175,13 @@ static inline int sem_wait(sem_t *sem)
  *
  * @return  Always @ref SEM_FAILED, since it is not implemented currently.
  */
-static inline sem_t *sem_open(const char *name, int oflag, ...)
-{
+sem_t *sem_open(const char* name, int oflag, ...);
+/*{
     (void)name;
     (void)oflag;
-    errno = ENOMEM;
+    errno = 12;
     return SEM_FAILED;
-}
+}*/
 
 /**
  * @brief Close descriptor for named semaphore @p sem.
@@ -196,12 +196,12 @@ static inline sem_t *sem_open(const char *name, int oflag, ...)
  *
  * @return  Always -1, since it is not implemented currently.
  */
-static inline int sem_close(sem_t *sem)
-{
+int sem_close(sem_t* XDATA sem);
+/*{
     (void)sem;
-    errno = EINVAL;
+    errno = 22;
     return -1;
-}
+}*/
 
 /**
  * @brief Remove named semaphore @p name.
@@ -216,12 +216,12 @@ static inline int sem_close(sem_t *sem)
  *
  * @return  Always -1, since it is not implemented currently.
  */
-static inline int sem_unlink(const char *name)
-{
+int sem_unlink(const char* XDATA name);
+/*{
     (void)name;
-    errno = ENOENT;
+    errno = 2;
     return -1;
-}
+}*/
 
 /**
  * @brief Similar to `sem_wait' but wait only until @p abstime.
@@ -243,7 +243,7 @@ static inline int sem_unlink(const char *name)
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-int sem_timedwait(sem_t *sem, const struct timespec *abstime);
+int sem_timedwait(sem_t* XDATA sem, struct timespec* XDATA abstime);
 
 /**
  * @brief Test whether @p sem is posted.
@@ -257,7 +257,7 @@ int sem_timedwait(sem_t *sem, const struct timespec *abstime);
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-int sem_trywait(sem_t *sem);
+int sem_trywait(sem_t* XDATA sem);
 
 /**
  * @brief Get current value of @p sem and store it in @p sval.
@@ -272,15 +272,15 @@ int sem_trywait(sem_t *sem);
  * @return  0 on success.
  * @return  -1, on error and errno set to indicate the error.
  */
-static inline int sem_getvalue(sem_t *sem, int *sval)
-{
+int sem_getvalue(sem_t* XDATA sem, int* XDATA sval);
+/*{
     if (sem != NULL) {
         *sval = (int)sem->value;
         return 0;
     }
-    errno = EINVAL;
+    errno = 22;
     return -1;
-}
+}*/
 
 #ifdef __cplusplus
 }
