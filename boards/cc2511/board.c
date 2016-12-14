@@ -25,13 +25,21 @@
  *            1 if VBUS is high (USB connected).
  *  This variable is updated by wixelDetectVbus(). */
 static BIT vbusHighBit;
-
+/*extern char* XDATA report;
+extern uint32 XDATA reportLength;*/
 void systemInit()
 {
     boardIoInit();
     boardClockInit();
     timeInit();
     dmaInit();
+}
+
+void updateLeds()
+{
+    usbShowStatusWithGreenLed();
+    LED_YELLOW(0);
+    LED_RED(0);
 }
 
 void boardService()
@@ -81,6 +89,7 @@ void boardIoInit()
  * The check is only performed if it has not been performed within the last 25 milliseconds.
  * (USB spec says we have to detect power loss within 100 ms).
  * This function updates the bit variable vbusHigh. */
+//static void boardDetectVbus()
 static void boardDetectVbus()
 {
     static uint8 lastCheck = 128;
@@ -160,3 +169,10 @@ void enableUsbPullup()
     P2_0 = 1;
     P2DIR |= (1<<0);   // Drive P2_0 high.
 }
+
+/*void putchar(char c)
+{
+    report[reportLength] = c;
+    reportLength++;
+}*/
+

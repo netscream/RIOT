@@ -27,8 +27,7 @@ void thread_yield_higher(void)
 		_in_isr = 1;
 		irq_disable();
 		sched_run();
-		//sp = sched_active_thread->sp;
-		sched_active_thread->function(1);	
+		sched_active_thread->function(1);
 		irq_enable();
 	}	
 }
@@ -88,14 +87,19 @@ void reboot(void)
  
 }
 
+
 NORETURN void cpu_switch_context_exit(void)
 {
-    //sched_active_thread = sched_threads[0];
-    //sched_run();
-
+    //systemInit();
+    
+    //irq_disable();
+    sched_run();
+    //thread_yield_higher();
+    _in_isr = 0;
+    irq_enable();
+    
     //restore_context();
 
-    //UNREACHABLE();
 }
 
 void cpu_print_last_instruction(void)

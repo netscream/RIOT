@@ -138,5 +138,5 @@ void enableUsbPullup();
  * if you are using that library you should not call this
  * function yourself. */
 void disableUsbPullup();
-
+void updateLeds();
 #endif

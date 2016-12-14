@@ -19,7 +19,11 @@
 #define _WIXEL_TIME_H
 
 #include <cc2511_map.h>
-
+typedef unsigned long time_t;
+struct timespec {
+    time_t  tv_sec;   /* Seconds */
+    long  tv_nsec;    /* Nanoseconds */
+};
 /*! Initializes the library.  This sets up Timer 4 to tick (approximately)
  * every millisecond and enables the Timer 4 interrupt.  Note that you
  * will also have to call boardClockInit() or systemInit(), to get the system clock running
