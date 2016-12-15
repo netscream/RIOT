@@ -14,7 +14,23 @@
 #include "sched.h"
 #include "thread.h"
 
-
+void context_swap(void)
+{
+	if (_in_isr == 0)
+	{
+		irq_disable();
+		_context_save();
+		sched_run();
+		sched_active_thread->function(1);
+		irq_enable();
+	}
+	else
+	{
+		irq_disable();
+		_context_restore();
+		irq_enable();
+	}
+}
 /*
  *
  *
@@ -24,11 +40,12 @@ void thread_yield_higher(void)
 	//char *XDATA sp;
 	//void (*foo)(void* arg);
 	if (_in_isr == 0) {
-		_in_isr = 1;
-		irq_disable();
-		sched_run();
-		sched_active_thread->function(1);
-		irq_enable();
+		context_swap();
+		//irq_disable();
+		//sched_run();
+		//sched_active_thread->function(1);
+		//irq_enable();
+		context_swap();
 	}	
 }
 
@@ -86,7 +103,29 @@ void reboot(void)
 {
  
 }
+void _context_save(void)
+{
+	__asm__ ("push ar1");
+	__asm__ ("push ar2");
+	__asm__ ("push ar3");
+	__asm__ ("push ar4");
+	__asm__ ("push ar5");
+	__asm__ ("push ar6");
+	__asm__ ("push ar7");
+	//__asm__ ("push acc");
+}
 
+void _context_restore(void)
+{
+	__asm__ ("pop ar7");
+	__asm__ ("pop ar6");
+	__asm__ ("pop ar5");
+	__asm__ ("pop ar4");
+	__asm__ ("pop ar3");
+	__asm__ ("pop ar2");
+	__asm__ ("pop ar1");
+
+}
 
 NORETURN void cpu_switch_context_exit(void)
 {

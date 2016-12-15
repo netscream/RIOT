@@ -1,4 +1,4 @@
-APPLICATION = sched_testing
+APPLICATION = wixel_sched_testing
 BOARD=cc2511
 TOOLCHAIN=mcs51
 QUIET = 0

@@ -28,24 +28,14 @@ int32 CODE param_report_period_ms = 40;
 /* variables */
 uint8 XDATA report[2048];
 uint16 XDATA reportLength = 0;
-uint16 XDATA reportBytesSent = 0;
-//char snd_thread_stack[THREAD_STACKSIZE_MAIN];
 char XDATA snd_thread_stack[128];
 uint8 XDATA first = 0;
 uint8 XDATA st = 0;
-
-void updateLeds()
-{
-    usbShowStatusWithGreenLed();
-    LED_YELLOW(0);
-    LED_RED(0);
-}
 
 
 void snd_thread(void* arg)
 {
     printf("snd_thread running\n");
-    //return NULL;
 }
 
 void putchar(char c)
@@ -54,32 +44,28 @@ void putchar(char c)
     reportLength++;
 }
 
+void resetOutput()
+{
+	int i = 0;
+	for (i = 0; i < reportLength; i++)
+	{
+		report[i] = '\0';
+	}
+	reportLength = 0;
+}
+
+
 void sendReport()
 {
-   uint8 XDATA bytesToSend = 0;
-   reportBytesSent = 0;
-
    if (getMs() >= param_report_period_ms)
    {
        if(reportLength > 0)
        {
-            bytesToSend = usbComTxAvailable();
-            if(bytesToSend > reportLength - reportBytesSent)
+            if(usbComTxAvailable() && reportLength > 0)
             {
-                 usbComTxSend(report+reportBytesSent, reportLength - reportBytesSent);
-                 reportLength = 0;
+                 usbComTxSend(report, reportLength);
+                 resetOutput();
             }
-            else
-            {
-                 usbComTxSend(report+reportBytesSent, bytesToSend);
-                 reportBytesSent += bytesToSend;
-            }
-       }
-       else
-       if(reportLength == 0 && first == 1)
-       {
-           //printf("Hello world Program\n\n");
-	   first == 2;
        }
    }
 }

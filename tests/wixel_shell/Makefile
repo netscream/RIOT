@@ -1,4 +1,4 @@
-APPLICATION = shell
+APPLICATION = wixel_shell
 include ../Makefile.tests_common
 BOARD = cc2511
 TOOLCHAIN = mcs51

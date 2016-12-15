@@ -94,7 +94,6 @@ ISR(UTX1, 0)
 #define RF_VECTOR     16
 #define WDT_VECTOR    17
 
-//ISR(T1, 0);
 
 // Special Function Registers (SWRS055F Table 30)
 
