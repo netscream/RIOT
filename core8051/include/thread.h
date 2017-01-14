@@ -41,7 +41,7 @@
  * @brief Thread status list
  * @{
  */
-#define STATUS_NOT_FOUND        (-1)            /**< Describes an illegal thread status */
+//#define STATUS_NOT_FOUND        (-1)            /**< Describes an illegal thread status */
 
 /**
  * @brief Blocked states.
@@ -107,13 +107,13 @@ struct _thread {
     msg_t *msg_array;               /**< memory holding messages        */
 #endif
 
-#if defined DEVELHELP || defined(SCHED_TEST_STACK)
-    char *stack_start;              /**< thread's stack start address   */
-#endif
-#ifdef DEVELHELP
-    const char *name;               /**< thread's name                  */
-    int stack_size;                 /**< thread's stack size            */
-#endif
+//#if defined DEVELHELP || defined(SCHED_TEST_STACK)
+//    char *stack_start;              /**< thread's stack start address   */
+//#endif
+//#ifdef DEVELHELP
+//    const char *name;               /**< thread's name                  */
+//    int stack_size;                 /**< thread's stack size            */
+//#endif
     void (*function)(void* arg);
 };
 
@@ -124,12 +124,12 @@ struct _thread {
  * @note This value must be defined by the CPU specific implementation, please
  *       take a look at @c cpu/$CPU/include/cpu_conf.h
  */
-#ifndef THREAD_STACKSIZE_DEFAULT
+/*#ifndef THREAD_STACKSIZE_DEFAULT
 #error THREAD_STACKSIZE_DEFAULT must be defined per CPU
 #endif
 #ifdef DOXYGEN
 #define THREAD_STACKSIZE_DEFAULT
-#endif
+#endif*/
 
 /**
  * @def THREAD_STACKSIZE_IDLE
@@ -138,12 +138,12 @@ struct _thread {
  * @note This value must be defined by the CPU specific implementation, please
  *       take a look at @c cpu/$CPU/include/cpu_conf.h
  */
-#ifndef THREAD_STACKSIZE_IDLE
+/*#ifndef THREAD_STACKSIZE_IDLE
 #error THREAD_STACKSIZE_IDLE must be defined per CPU
 #endif
 #ifdef DOXYGEN
 #define THREAD_STACKSIZE_IDLE
-#endif
+#endif*/
 
 /**
  * @def THREAD_EXTRA_STACKSIZE_PRINTF
@@ -153,20 +153,20 @@ struct _thread {
  * @note This value must be defined by the CPU specific implementation, please
  *       take a look at @c cpu/$CPU/include/cpu_conf.h
  */
-#ifndef THREAD_EXTRA_STACKSIZE_PRINTF
+/*#ifndef THREAD_EXTRA_STACKSIZE_PRINTF
 #error THREAD_EXTRA_STACKSIZE_PRINTF must be defined per CPU
 #endif
 #ifdef DOXYGEN
 #define THREAD_EXTRA_STACKSIZE_PRINTF
-#endif
+#endif*/
 
 /**
  * @def THREAD_STACKSIZE_MAIN
  * @brief Size of the main task's stack in bytes
  */
-#ifndef THREAD_STACKSIZE_MAIN
+/*#ifndef THREAD_STACKSIZE_MAIN
 #define THREAD_STACKSIZE_MAIN      (THREAD_STACKSIZE_DEFAULT + THREAD_EXTRA_STACKSIZE_PRINTF)
-#endif
+#endif*/
 
 /**
  * @brief Minimum stack size

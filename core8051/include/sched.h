@@ -100,9 +100,9 @@ typedef struct _thread thread_t;
  * @def SCHED_PRIO_LEVELS
  * @brief The number of thread priority levels
  */
-#ifndef SCHED_PRIO_LEVELS
+/*#ifndef SCHED_PRIO_LEVELS
 #define SCHED_PRIO_LEVELS 16
-#endif
+#endif*/
 
 /**
  * @brief   Triggers the scheduler to schedule the next thread
@@ -168,7 +168,9 @@ extern kernel_pid_t XDATA sched_active_pid;
 /**
  * List of runqueues per priority level
  */
-extern clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
+//extern clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
+extern clist_node_t XDATA sched_runqueues[16];
+
 
 /**
  * @brief  Removes thread from scheduler and set status to #STATUS_STOPPED

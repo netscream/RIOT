@@ -23,9 +23,9 @@
 #ifndef NATIVE_SCHEDULER_H
 #define NATIVE_SCHEDULER_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 extern "C" {
-#endif
+#endif*/
 
 #ifdef BOARD_NATIVE
 #include <stdio.h>
@@ -33,8 +33,8 @@ extern "C" {
 /*
  * Required to use some C++11 headers with g++ on the native board.
  */
-#define __CPU_SETSIZE 1024
-#define __NCPUBITS (8* sizeof(__cpu_mask))
+//#define __CPU_SETSIZE 1024
+//#define __NCPUBITS (8* sizeof(__cpu_mask))
 typedef unsigned long int __cpu_mask;
 typedef struct {
     __cpu_mask __bits[__CPU_SETSIZE / __NCPUBITS];
@@ -52,9 +52,9 @@ int sched_yield(void);
 }*/
 #endif /* BOARD_NATIVE */
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* NATIVE_SCHEDULER_H */
 /** @} */

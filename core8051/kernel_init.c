@@ -19,6 +19,9 @@
  */
 //8051 implementation
 #include "riotbuild.h" //riot version
+#include "cpu.h"
+#include <stdio.h>
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <errno.h>
@@ -85,6 +88,8 @@ void idle_thread(void *arg)
 
 char XDATA main_stack[128];
 char XDATA idle_stack[128];
+//static char main_stack[THREAD_STACKSIZE_MAIN];
+//static char idle_stack[THREAD_STACKSIZE_IDLE];
 
 void kernel_init(void)
 {

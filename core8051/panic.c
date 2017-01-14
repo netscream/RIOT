@@ -62,7 +62,7 @@ NORETURN void core_panic(core_panic_t crash_code, const char *message)
 #ifdef DEVELHELP
 #ifdef MODULE_PS
         ps();
-        LOG_ERROR("\n");
+        //LOG_ERROR("\n");
 #endif
 
         LOG_ERROR("*** halted.\n\n");

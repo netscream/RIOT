@@ -86,7 +86,7 @@ kernel_pid_t gnrc_ipv6_init(void)
     //char XDATA __stack[128];
     //if (gnrc_ipv6_pid == KERNEL_PID_UNDEF) {
     if (gnrc_ipv6_pid == 0) {
-        gnrc_ipv6_pid = thread_create(_stack, sizeof(_stack), 4, 8, (thread_task_func_t)_event_loop, NULL, "ipv6");
+        gnrc_ipv6_pid = thread_create(_stack, sizeof(_stack), 4, 8, _event_loop, NULL, "ipv6");
     }
 
 #ifdef MODULE_FIB
@@ -248,7 +248,7 @@ void _dispatch_next_header(gnrc_pktsnip_t *current, gnrc_pktsnip_t *pkt,
     }
 }
 
-void* _event_loop(void* args)
+void _event_loop(void* args)
 {
     msg_t XDATA msg, reply, msg_q[GNRC_IPV6_MSG_QUEUE_SIZE];
     gnrc_netreg_entry_t XDATA me_reg;
@@ -375,7 +375,7 @@ void* _event_loop(void* args)
         }
     }
 
-    return NULL; //if everything is ok then this should be unreachable !!
+    //return NULL; //if everything is ok then this should be unreachable !!
 }
 /* 8051 implementation */
 void _send_to_iface(kernel_pid_t iface, gnrc_pktsnip_t *pkt)

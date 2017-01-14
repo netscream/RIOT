@@ -174,7 +174,7 @@ int msg_send_to_self(msg_t* XDATA m)
     return res;
 }
 
-int msg_send_int(msg_t* XDATA m, kernel_pid_t XDATA target_pid)
+int msg_send_int(msg_t* m, kernel_pid_t target_pid)
 {
 #ifdef DEVELHELP
     if (!pid_is_valid(target_pid)) {

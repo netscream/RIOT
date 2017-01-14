@@ -63,16 +63,16 @@ typedef enum {
      * @name Network layer
      */
 /* 8051 implementation */
-//#ifdef MODULE_GNRC_IPV6
+#ifdef MODULE_GNRC_IPV6
     GNRC_NETTYPE_IPV6 = 4,          /**< Protocol is IPv6 */
-//#endif
+#endif
 #ifdef MODULE_GNRC_IPV6_EXT
     GNRC_NETTYPE_IPV6_EXT = 5,      /**< Protocol is IPv6 extension header */
 #endif
 /* 8051 implementation */
-//#ifdef MODULE_GNRC_ICMPV6
+#ifdef MODULE_GNRC_ICMPV6
     GNRC_NETTYPE_ICMPV6 = 6,        /**< Protocol is ICMPv6 */
-//#endif
+#endif
     /**
      * @}
      */
@@ -84,9 +84,9 @@ typedef enum {
 #ifdef MODULE_GNRC_TCP
     GNRC_NETTYPE_TCP = 7,           /**< Protocol is TCP */
 #endif
-#ifdef MODULE_GNRC_UDP
+//#ifdef MODULE_GNRC_UDP
     GNRC_NETTYPE_UDP = 8,           /**< Protocol is UDP */
-#endif
+//#endif
     /**
      * @}
      */

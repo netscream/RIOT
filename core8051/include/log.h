@@ -32,9 +32,9 @@
 #ifndef LOG_H
 #define LOG_H
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief defined log levels
@@ -96,9 +96,9 @@ enum {
 #define log_write(level, ...) printf(__VA_ARGS__)
 #endif
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* LOG_H */
 /** @} */

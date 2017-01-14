@@ -27,9 +27,9 @@
 #include "list.h"
 #include "atomic.h"
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
  extern "C" {
-#endif
+#endif*/
 
 /**
  * @brief Mutex structure. Must never be modified by the user.
@@ -116,9 +116,9 @@ void mutex_unlock(mutex_t* XDATA mutex);
  */
 void mutex_unlock_and_sleep(mutex_t* XDATA mutex);
 
-#ifdef __cplusplus
+/*#ifdef __cplusplus
 }
-#endif
+#endif*/
 
 #endif /* MUTEX_H_ */
 /** @} */

@@ -20,7 +20,7 @@
 #include <adc.h>
 #include <gpio.h>
 //#include <random.h> //Some problem with random, will fix
-
+//#define THREAD_STACKSIZE_MAIN 128
 /**
  *  * @brief   Prints the last instruction's address
  *    @todo: Not supported

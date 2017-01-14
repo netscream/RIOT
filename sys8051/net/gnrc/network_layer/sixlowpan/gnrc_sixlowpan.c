@@ -309,7 +309,7 @@ void _send(gnrc_pktsnip_t* XDATA pkt)
 #endif
 }
 
-void *_event_loop(void* args)
+void _event_loop(void* args)
 {
     msg_t XDATA msg, reply, msg_q[8U];//msg_q[GNRC_SIXLOWPAN_MSG_QUEUE_SIZE];
     gnrc_netreg_entry_t XDATA me_reg;
@@ -367,7 +367,7 @@ void *_event_loop(void* args)
         }
     }
 
-    return NULL;
+    //return NULL;
 }
 
 bool sixlowpan_frag_is(sixlowpan_frag_t *hdr)

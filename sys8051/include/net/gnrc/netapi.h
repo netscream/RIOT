@@ -41,27 +41,27 @@ extern "C" {
 /**
  * @brief   @ref core_msg type for passing a @ref net_gnrc_pkt up the network stack
  */
-//#define GNRC_NETAPI_MSG_TYPE_RCV        (0x0201)
+#define GNRC_NETAPI_MSG_TYPE_RCV        (0x0201)
 
 /**
  * @brief   @ref core_msg type for passing a @ref net_gnrc_pkt down the network stack
  */
-//#define GNRC_NETAPI_MSG_TYPE_SND        (0x0202)
+#define GNRC_NETAPI_MSG_TYPE_SND        (0x0202)
 
 /**
  * @brief   @ref core_msg type for setting options of network modules
  */
-//#define GNRC_NETAPI_MSG_TYPE_SET        (0x0203)
+#define GNRC_NETAPI_MSG_TYPE_SET        (0x0203)
 
 /**
  * @brief   @ref core_msg type for getting options from network modules
  */
-//#define GNRC_NETAPI_MSG_TYPE_GET        (0x0204)
+#define GNRC_NETAPI_MSG_TYPE_GET        (0x0204)
 
 /**
  * @brief   @ref core_msg type for replying to get and set option messages
  */
-///#define GNRC_NETAPI_MSG_TYPE_ACK        (0x0205)
+#define GNRC_NETAPI_MSG_TYPE_ACK        (0x0205)
 
 /**
  * @brief   Data structure to be send for setting (@ref GNRC_NETAPI_MSG_TYPE_SET)

@@ -270,7 +270,7 @@ int msg_send_to_self(msg_t* XDATA m);
  * @return 0, if receiver is not waiting and ``block == 0``
  * @return -1, on error (invalid PID)
  */
-int msg_send_int(msg_t* XDATA m, kernel_pid_t XDATA target_pid);
+int msg_send_int(msg_t* m, kernel_pid_t target_pid);
 
 /**
  * @brief Test if the message was sent inside an ISR.

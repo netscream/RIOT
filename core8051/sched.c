@@ -49,7 +49,9 @@ thread_t* XDATA sched_active_thread;
 
 kernel_pid_t XDATA sched_active_pid = 0; //KERNEL_PID_UNDEF
 
-clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
+//clist_node_t XDATA sched_runqueues[SCHED_PRIO_LEVELS];
+clist_node_t XDATA sched_runqueues[16];
+
 uint16_t XDATA runqueue_bitcache = 0;
 
 /*#ifdef MODULE_SCHEDSTATISTICS

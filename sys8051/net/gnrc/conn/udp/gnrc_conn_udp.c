@@ -20,7 +20,7 @@
 #include "net/gnrc/conn.h"
 #include "net/gnrc/ipv6.h"
 #include "net/gnrc/udp.h"
-
+#include "net/gnrc/nettype.h"
 #include "net/conn/udp.h"
 
 int conn_udp_create(conn_udp_t *conn, const void *addr, size_t addr_len,

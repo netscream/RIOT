@@ -42,7 +42,8 @@ volatile thread_t *thread_get(kernel_pid_t XDATA pid)
 int thread_getstatus(kernel_pid_t XDATA pid)
 {
     volatile thread_t* XDATA t = thread_get(pid);
-    return t ? (int) t->status : STATUS_NOT_FOUND;
+    //return t ? (int) t->status : STATUS_NOT_FOUND;
+    return t ? (int) t->status : -1;
 }
 
 /*#ifdef DEVELHELP
@@ -99,7 +100,8 @@ int thread_wakeup(kernel_pid_t XDATA pid)
     }
 
     irq_restore(old_state);
-    return STATUS_NOT_FOUND;
+    //return STATUS_NOT_FOUND;
+    return -1;
 }
 
 /* 8051 implementation */
@@ -167,7 +169,8 @@ kernel_pid_t thread_create(char* XDATA stack, int XDATA stacksize, char XDATA pr
     kernel_pid_t XDATA pid;
     kernel_pid_t XDATA i;
     uintptr_t XDATA misalignment; 
-    if (priority >= SCHED_PRIO_LEVELS) {
+    //if (priority >= SCHED_PRIO_LEVELS) {
+    if(priority >= 16) {
 	//8051 implementation EINVAL = 22
         //return -EINVAL;
         return 22;

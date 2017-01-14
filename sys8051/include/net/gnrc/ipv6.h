@@ -149,7 +149,7 @@ ipv6_hdr_t *gnrc_ipv6_get_header(gnrc_pktsnip_t *pkt);
 
 void _receive(gnrc_pktsnip_t* XDATA pkt);
 void _send(gnrc_pktsnip_t* XDATA pkt, bool prep_hdr);
-void* _event_loop(void* args);
+void _event_loop(void* args);
 /*#ifdef __cplusplus
 }
 #endif*/

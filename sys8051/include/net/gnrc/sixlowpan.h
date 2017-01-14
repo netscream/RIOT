@@ -151,7 +151,7 @@ void _receive(gnrc_pktsnip_t* XDATA pkt);
 /* handles GNRC_NETAPI_MSG_TYPE_SND commands */
 void _send(gnrc_pktsnip_t* XDATA pkt);
 /* Main event loop for 6LoWPAN */
-void *_event_loop(void* args);
+void _event_loop(void* args);
 bool _add_uncompr_disp(gnrc_pktsnip_t* XDATA pkt);
 
 /*#ifdef __cplusplus
